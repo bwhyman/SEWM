@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+  <property name="hibernate.show_sql">true</property>
+  <property name="hibernate.default_batch_fetch_size">20</property>
+  <!-- <property name="hibernate.current_session_context_class">thread</property> -->
+  <property name="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</property>
+  <property name="hibernate.hbm2ddl.auto">update</property>
+  <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+  
+  <mapping class="com.se.working.entity.TeacherTitle"/>
+  <mapping class="com.se.working.entity.User"/>
+  <mapping class="com.se.working.entity.UserAuthority"/>
+  <mapping class="com.se.working.invigilation.entity.Course"/>
+  <mapping class="com.se.working.invigilation.entity.CourseSection"/>
+  <mapping class="com.se.working.invigilation.entity.Invigilation"/>
+  <mapping class="com.se.working.invigilation.entity.InvigilationInfo"/>
+  <mapping class="com.se.working.invigilation.entity.InvigilationStatusDetail"/>
+  <mapping class="com.se.working.invigilation.entity.InvigilationStatusType"/>
+  <mapping class="com.se.working.invigilation.entity.SpecialInvigilation"/>
+  <mapping class="com.se.working.invigilation.entity.SpecialInvigilationInfo"/>
+  <mapping class="com.se.working.invigilation.entity.SpecialInvigilationType"/>
+  <mapping class="com.se.working.invigilation.entity.TeacherInvigilation"/>
+ </session-factory>
+</hibernate-configuration>
