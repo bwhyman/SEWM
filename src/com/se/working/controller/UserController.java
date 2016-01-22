@@ -22,18 +22,16 @@ public class UserController {
 		if (user2 != null) {
 			request.getSession().setAttribute("userId", user2.getId());
 			request.getSession().setAttribute("level", user2.getUserAuthority().getLevel());
-			return "index";
+			return "redirect:main";
 		}
 		return "login";
+	}
+	@RequestMapping("/main")
+	public void Index() {
 	}
 	
 	@RequestMapping("/b/{id}")
 	public void build(@PathVariable int id) {
 		System.out.println(id);
 	}
-	
-	public UserController() {
-		// TODO Auto-generated constructor stub
-	}
-
 }

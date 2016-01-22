@@ -15,8 +15,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <title>Insert title here</title>
 </head>
 <body>
-<div><c:import url="top.jsp"></c:import></div>
+<jsp:include page="header.jsp" />
+
+<c:if test="${level<=5}">
+	${level}
+</c:if>
 <div>ddd</div>
-	
+<jsp:include page="footer.jsp" />
 </body>
 </html>

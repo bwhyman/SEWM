@@ -5,14 +5,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-/**
- * 超级管理员操作验证
- * @author BO
- *
- */
-public class SuperInterceptor implements HandlerInterceptor {
 
-	public SuperInterceptor() {
+public class StudentInterceptor implements HandlerInterceptor {
+
+	public StudentInterceptor() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -33,7 +29,7 @@ public class SuperInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("SuperInterceptor");
+		System.out.println("StudentInterceptor");
 		return true;
 	}
 
