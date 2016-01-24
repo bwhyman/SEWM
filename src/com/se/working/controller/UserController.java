@@ -10,9 +10,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.se.working.entity.User;
 import com.se.working.service.UserService;
-
+/**
+ * 用户操作
+ * @author BO
+ *
+ */
 @Controller
 public class UserController {
+	private String redirect = "redirect:";
 	@Autowired
 	private UserService userService;
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -22,18 +27,27 @@ public class UserController {
 		if (user2 != null) {
 			request.getSession().setAttribute("userId", user2.getId());
 			request.getSession().setAttribute("level", user2.getUserAuthority().getLevel());
-			return "index";
+			return redirect + "main";
 		}
-		return "login";
+		return redirect+"login";
 	}
 	
-	@RequestMapping("/b/{id}")
-	public void build(@PathVariable int id) {
-		System.out.println(id);
+	/**
+	 * 直接加载页面时的通配方法
+	 * 不会覆盖显式声明的请求
+	 * 仅对一级目录有效
+	 * @param viewpath
+	 * @return 视图路径
+	 */
+	@RequestMapping(path = "/{viewpath}", method = RequestMethod.GET)
+	public String getView(@PathVariable String viewpath) {
+		System.out.println("viewpath: " + viewpath);
+		return viewpath;
 	}
 	
-	public UserController() {
-		// TODO Auto-generated constructor stub
+	@RequestMapping(path = "/{root}/{viewpath}", method = RequestMethod.GET)
+	public String getView(@PathVariable String root, @PathVariable String viewpath) {
+		System.out.println(root + "/" + viewpath);
+		return root + "/" + viewpath;
 	}
-
 }
