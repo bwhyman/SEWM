@@ -50,10 +50,12 @@
 	<mvc:interceptors>
 		<!-- 登录用户操作 -->
 		<mvc:interceptor>
-			<!-- 主页 -->
-			<mvc:mapping path="/index" />
-			<!-- 所有目录下操作 -->
-			<mvc:mapping path="/*/*" />
+			<!-- 所有操作 -->
+			<mvc:mapping path="/**" />
+			<!-- 排除login操作 -->
+			<mvc:exclude-mapping path="/login"/>
+			<!-- 排除资源 -->
+			<mvc:exclude-mapping path="/resources/**"/> 
 			<bean class="com.se.working.interceptor.UserInterecptor"></bean>
 		</mvc:interceptor>
 		<!-- 管理员操作 -->

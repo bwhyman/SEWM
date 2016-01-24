@@ -7,6 +7,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 
 import com.se.working.entity.User;
+
+/**
+ * 管理员操作
+ * @author BO
+ *
+ */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -16,11 +22,12 @@ public class AdminController {
 	 *  单态，无需设为常量
 	 */
 	private String adminBasePath = "/admin/";
+	private String redirect = "redirect:";
 	@RequestMapping(path = "/adduser", method = RequestMethod.POST)
 	public String addUser(User user, int titleId) {
 		System.out.println(titleId);
 		System.out.println(user.getUserName());
-		return "redirect:" + adminBasePath + "adduser";
+		return redirect + adminBasePath + "adduser";
 	}
 	
 	/**

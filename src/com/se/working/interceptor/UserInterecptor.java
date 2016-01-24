@@ -34,8 +34,7 @@ public class UserInterecptor implements HandlerInterceptor{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
 		// TODO Auto-generated method stub
 		
-		System.out.println("LoginInterecptor");
-		
+		System.out.println("UserInterecptor");
 		return true;
 	}
 
