@@ -15,7 +15,8 @@
 <title>Insert title here</title>
 <!-- Bootstrap -->
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
-
+<!-- Flat-ui -->
+<link href="resources/css/flat-ui.min.css" rel="stylesheet">
 <link href="resources/css/signin.css" rel="stylesheet">
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -28,7 +29,7 @@
 <body>
 	<div class="logindiv">
 	<!-- 按钮触发模态框 -->
-	<button class="btn btn-lg btn-primary btn-block" data-toggle="modal"
+	<button class="btn btn-lg btn-info btn-block" data-toggle="modal"
 		data-target="#myModal">专业工作管理平台</button>
 	</div>
 	
@@ -41,17 +42,21 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h3 class="modal-title" id="myModalLabel">请登录</h3>
+					<h5 class="modal-title" id="myModalLabel">请登录</h5>
 				</div>
 				<div class="modal-body">
-					<form class="form-signin">
+					<form class="form-signin">	
+						<div class="input-group">
 						<label for="userName" class="sr-only">员工号</label> 
-						<input
-							type="text" id="userName" class="form-control" placeholder="员工号"
-							required autofocus> <label for="inputPassword"
-							class="sr-only">密码</label> 
-							<input type="password"
-							id="inputPassword" class="form-control" placeholder="密码" required>
+							<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+							<input type="text" id="userName" class="form-control" placeholder="员工号" required autofocus>
+						</div>
+
+							<div class="input-group">
+							<label for="userName" class="sr-only">密码</label> 
+							<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+							<input type="password" id="inputPassword" class="form-control" placeholder="密码" required>
+						</div>
 						<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
 					</form>
 				</div>
@@ -64,6 +69,7 @@
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
 	<script src="resources/js/jquery.min.js"></script>
-	<script src="resources/js/bootstrap.min.js"></script>
+	<script src="resources/js/flat-ui.min.js"></script>
+	<script src="resources/js/application.js"></script>
 </body>
 </html>

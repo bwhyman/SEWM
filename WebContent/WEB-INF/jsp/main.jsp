@@ -14,10 +14,10 @@
 <title>Insert title here</title>
 <!-- Bootstrap -->
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<!-- Flat-ui -->
+<link href="resources/css/flat-ui.min.css" rel="stylesheet">
 <!-- Custom styles for this template -->
-    <link href="resources/css/bootstrap-theme.min.css" rel="stylesheet">
-<!-- Custom styles for this template -->
-    <link href="resources/css/dashboard.css" rel="stylesheet">
+    <link href="resources/css/default.css" rel="stylesheet">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -216,7 +216,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="resources/js/jquery.min.js"></script>
-    <script src="resources/js/bootstrap.min.js"></script>
-  
+ 	<script src="resources/js/flat-ui.min.js"></script>
+	<script src="resources/js/application.js"></script>
 </body>
 </html>

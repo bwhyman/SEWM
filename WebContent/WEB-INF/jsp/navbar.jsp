@@ -15,7 +15,7 @@
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#"> 王波 老师 <span class="caret"></span>
+					data-toggle="dropdown" href="#"> <strong>王波, 老师</strong><span class="caret"></span>
 				</a>
 					<ul class="dropdown-menu">
 						<li><a href="#">个人设置</a></li>
