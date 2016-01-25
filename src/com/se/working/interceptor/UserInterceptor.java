@@ -10,9 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
  * @author BO
  *
  */
-public class UserInterecptor implements HandlerInterceptor{
+public class UserInterceptor implements HandlerInterceptor{
 
-	public UserInterecptor() {
+	public UserInterceptor() {
 		// TODO Auto-generated constructor stub
 	}
 

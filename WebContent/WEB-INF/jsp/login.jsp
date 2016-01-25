@@ -5,6 +5,9 @@
 	String path = request.getContextPath();  
 	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
 %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt"  uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -42,21 +45,28 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
 						aria-hidden="true">&times;</button>
-					<h5 class="modal-title" id="myModalLabel">请登录</h5>
+					<h6 class="modal-title" id="myModalLabel">请登录</h6>
 				</div>
 				<div class="modal-body">
-					<form class="form-signin">	
+					<form class="form-signin" action="login" method="post">	
 						<div class="input-group">
 						<label for="userName" class="sr-only">员工号</label> 
 							<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-							<input type="text" id="userName" class="form-control" placeholder="员工号" required autofocus>
+							<input type="text" name="userName" class="form-control" placeholder="员工号" required>
 						</div>
 
 							<div class="input-group">
 							<label for="userName" class="sr-only">密码</label> 
 							<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-							<input type="password" id="inputPassword" class="form-control" placeholder="密码" required>
+							<input type="password" name="password" class="form-control" placeholder="密码" required>
 						</div>
+						
+						<div class="alert alert-danger alert-dismissable in fade" id="nouser" hidden="">
+							<button type="button" class="close" data-dismiss="alert"
+								aria-hidden="true">&times;</button>
+							用户名或密码错误
+						</div>
+				
 						<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
 					</form>
 				</div>
@@ -71,5 +81,13 @@
 	<script src="resources/js/jquery.min.js"></script>
 	<script src="resources/js/flat-ui.min.js"></script>
 	<script src="resources/js/application.js"></script>
+	<script>
+	$(document).ready(function(){
+		if("${loginerror}" == "nouser") {
+			$("#myModal").modal("show");
+			$("#nouser").show(); 
+		}
+	})
+	</script>
 </body>
 </html>
