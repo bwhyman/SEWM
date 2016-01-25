@@ -56,7 +56,7 @@
 			<mvc:exclude-mapping path="/login"/>
 			<!-- 排除资源 -->
 			<mvc:exclude-mapping path="/resources/**"/> 
-			<bean class="com.se.working.interceptor.UserInterecptor"></bean>
+			<bean class="com.se.working.interceptor.UserInterceptor"></bean>
 		</mvc:interceptor>
 		<!-- 管理员操作 -->
 		<mvc:interceptor>
