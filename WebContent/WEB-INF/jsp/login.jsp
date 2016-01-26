@@ -83,9 +83,9 @@
 	<script src="resources/js/application.js"></script>
 	<script>
 	$(document).ready(function(){
-		if("${loginerror}" == "nouser") {
-			$("#myModal").modal("show");
-			$("#nouser").show(); 
+		if('${loginerror}' == 'nouser') {
+			$('#myModal').modal('show');
+			$('#nouser').show(); 
 		}
 	})
 	</script>
