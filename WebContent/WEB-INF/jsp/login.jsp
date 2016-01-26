@@ -1,24 +1,93 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
+
+<%  
+	String path = request.getContextPath();  
+	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
+%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt"  uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%  
-String path = request.getContextPath();  
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";  
-%>  
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
 <base href="<%=basePath%>">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Insert title here</title>
+<!-- Bootstrap -->
+<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<!-- Flat-ui -->
+<link href="resources/css/flat-ui.min.css" rel="stylesheet">
+<link href="resources/css/signin.css" rel="stylesheet">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
-	<form action="login" method="post">
-		<label >用户名:</label><input name="userName"> <br>
-		<label >密码:</label><input type="password" name="password">
-		<button>登录</button>
-	</form>
+	<div class="logindiv">
+	<!-- 按钮触发模态框 -->
+	<button class="btn btn-lg btn-info btn-block" data-toggle="modal"
+		data-target="#myModal">专业工作管理平台</button>
+	</div>
+	
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h6 class="modal-title" id="myModalLabel">请登录</h6>
+				</div>
+				<div class="modal-body">
+					<form class="form-signin" action="login" method="post">	
+						<div class="input-group">
+						<label for="userName" class="sr-only">员工号</label> 
+							<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+							<input type="text" name="userName" class="form-control" placeholder="员工号" required>
+						</div>
+
+							<div class="input-group">
+							<label for="userName" class="sr-only">密码</label> 
+							<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+							<input type="password" name="password" class="form-control" placeholder="密码" required>
+						</div>
+						
+						<div class="alert alert-danger alert-dismissable in fade" id="nouser" hidden="">
+							<button type="button" class="close" data-dismiss="alert"
+								aria-hidden="true">&times;</button>
+							用户名或密码错误
+						</div>
+				
+						<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+					</form>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="resources/js/jquery.min.js"></script>
+	<script src="resources/js/flat-ui.min.js"></script>
+	<script src="resources/js/application.js"></script>
+	<script>
+	$(document).ready(function(){
+		if('${loginerror}' == 'nouser') {
+			$('#myModal').modal('show');
+			$('#nouser').show(); 
+		}
+	})
+	</script>
 </body>
 </html>
