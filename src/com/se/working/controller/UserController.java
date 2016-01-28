@@ -17,7 +17,7 @@ import com.se.working.service.UserService;
  *
  */
 @Controller
-@SessionAttributes(value = {"userId", "level"})
+@SessionAttributes(value = "user")
 public class UserController {
 	private String redirect = "redirect:";
 	@Autowired
@@ -33,10 +33,10 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(String userName, String password, Model model, RedirectAttributes errorMap) {
 		
-		User user2 = userService.findByPassword(userName, password);
-		if (user2 != null) {
-			model.addAttribute("userId", user2.getId());
-			model.addAttribute("level", user2.getUserAuthority().getLevel());
+		User user = userService.findByPassword(userName, password);
+		if (user != null) {
+			user.getUserAuthority().getLevel();
+			model.addAttribute("user", user);
 			return redirect + "main";
 		}
 		errorMap.addFlashAttribute("loginerror", "nouser");
