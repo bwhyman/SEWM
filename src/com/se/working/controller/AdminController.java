@@ -1,12 +1,16 @@
 package com.se.working.controller;
 
+import java.util.Map;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-
+import org.springframework.web.bind.annotation.ResponseBody;
 import com.se.working.entity.User;
+import com.se.working.service.UserService;
 
 /**
  * 管理员操作
@@ -23,11 +27,41 @@ public class AdminController {
 	 */
 	private String adminBasePath = "/admin/";
 	private String redirect = "redirect:";
+	@Autowired
+	private UserService userService;
+	
+	/**
+	 * 用户管理初始化
+	 * @param users
+	 * @return
+	 */
+	@RequestMapping("/usermanager")
+	public String listUser(Map<String, Object> users) {
+		users.put("users", userService.findAll());
+		return adminBasePath + "usermanager";
+	}
+	
 	@RequestMapping(path = "/adduser", method = RequestMethod.POST)
-	public String addUser(User user, int titleId) {
-		System.out.println(titleId);
-		System.out.println(user.getUserName());
+	public String addUser(User user, long titleId) {
+		
 		return redirect + adminBasePath + "adduser";
+	}
+	
+	@RequestMapping(path = "/selectuser")
+	@ResponseBody
+	public  User getUserById(long userId) {
+		User user = userService.findById(userId);	
+		/*
+		 * 重新封装需要数据
+		 * 直接使用gson转化，gson会通过getter方法加载全部属性数据
+		 * 在双向关系中会形成死循环
+		 */
+		User user2 = new User();
+		user2.setId(user.getId());
+		user2.setName(user.getName());
+		user2.setPhoneNumber(user.getPhoneNumber());
+		user2.setEmployeeNumber(user.getEmployeeNumber());
+		return user2;
 	}
 	
 	/**

@@ -46,6 +46,11 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
+	
+	
+	
+	<!-- 根目录重定向，设置welcome为空，定向view-name对应的视图名称，不调用controller -->
+	<mvc:view-controller path="/" view-name="main"/>
 	<!-- SpringMVC Interceptor -->
 	<mvc:interceptors>
 		<!-- 登录用户操作 -->

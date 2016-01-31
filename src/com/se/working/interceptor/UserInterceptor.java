@@ -36,10 +36,14 @@ public class UserInterceptor implements HandlerInterceptor{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
 		// TODO Auto-generated method stub
 		System.out.println("UserInterecptor");
-		User user = (User) request.getSession().getAttribute("user");
-		if (user != null) {
-			System.out.println(user.getUserAuthority().getLevel());
-		}
+		/*User user = (User) request.getSession().getAttribute("user");
+		if (user == null) {
+			String path = request.getContextPath();
+			String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ path + "/";
+			response.sendRedirect(basePath + "login");
+			return false;
+		}*/
 		return true;
 	}
 
