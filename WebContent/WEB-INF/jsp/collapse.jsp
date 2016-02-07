@@ -10,56 +10,6 @@
 %>
 
 <myTemplate:template>
-<jsp:attribute name="footer">
-	<script>
-	$(document).ready(function() {
-		$('#selectuserupdate').change(function() {
-			$.ajax({
-	    	    // The URL for the request
-	    	    url: "admin/selectuser",
-	    	 
-	    	    // The data to send (will be converted to a query string)
-	    	    data: {"userId": $(this).val()},
-	    	    // Whether this is a POST or GET request
-	    	    type: "GET",
-	    	  
-	    	    // The type of data we expect back
-	    	    dataType : "text",
-	    	    
-	    	    beforeSend: function(jqXHR){
-	    	    	$("#myloading").show(); 
-	           }, 
-	    	    // Code to run if the request succeeds;
-	    	    // the response is passed to the function
-	    	    success: function(json ) {
-	    	    	var a = JSON.parse(json);
-	    	    	$( '#inputnameupdate').val(a.name); 
-	    	    	$( '#phonenumberupdate').val(a.phoneNumber); 
-	    	    	
-	    	    },
-	    	 
-	    	    // Code to run if the request fails; the raw request and
-	    	    // status codes are passed to the function
-	    	    error: function( xhr, status, errorThrown ) {
-	    	        alert( "Status: " + status + "; Error: " + errorThrown);
-	    	        console.log( "Error: " + errorThrown );
-	    	        console.log( "Status: " + status );
-	    	        console.dir( xhr );
-	    	    },
-	    	 
-	    	    // Code to run regardless of success or failure
-	    	    /*complete: function( xhr, status ) {
-	    	        alert( "The request is complete!" );
-	    	    }*/
-	    	});
-			$('#myloading').hide();
-			$('#fieldsetuserupdate').show();
-			
-			
-		});
-	})
-	</script>
-</jsp:attribute>
 	<jsp:body>
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
@@ -67,13 +17,17 @@
       <h4 class="panel-title">
         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
 							aria-expanded="false" aria-controls="collapseOne">
-          添加用户
+          Collapsible Group Item #1
         </a>
       </h4>
     </div>
     <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
+        1Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+        <hr>
           	<form class="form-horizontal">
+          		<fieldset>
+          			<legend>添加用户</legend>
 					<div class="form-group">
 						<label for="name" class="col-sm-2 col-md-1 control-label">姓名</label>
 						<div class="col-sm-10 col-md-3">
@@ -117,34 +71,19 @@
 							<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"  />
 						</div>
 					</div>	
-					<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label"></div>
-						<div class="col-sm-10 col-md-3">
-							<button type="reset" class="btn btn-danger btn-wide pull-right" id="reset">重置</button>	
-							<button type="submit" class="btn btn-primary btn-wide pull-right">提交</button>
-						</div>
-					</div>
-					
-				</form>	
-      </div>
-    </div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingTwo">
-      <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
-							aria-expanded="false" aria-controls="collapseTwo">
-          修改用户
-        </a>
-      </h4>
-    </div>
-    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-      <div class="panel-body">
-      <form class="form-horizontal">
-      <div class="form-group">
+					<button type="submit" class="btn btn-primary btn-wide">提交</button>
+					<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>
+					</fieldset>
+				</form>
+		<hr>		
+ 			
+ 			<form class="form-horizontal">
+ 				<fieldset>
+ 					<legend>修改用户</legend>
+ 					<div class="form-group">
 						<label for="title" class="col-sm-2 col-md-1 control-label">用户</label>
 						<div class="col-sm-10 col-md-3">
-							<select data-toggle="select" class="select select-primary mrs mbm" name="userId" id="selectuserupdate">
+							<select data-toggle="select" class="select select-primary mrs mbm">
 							<option>用户</option>
 							<c:forEach items="${users}" var="u">
 								<option value="${u.id}">${u.name }</option>
@@ -152,14 +91,10 @@
 						</select>
 						</div>
 						</div>
-						</form>
-						<div id="myloading" hidden><img src="resources/images/loading.gif"/></div>
-        <form class="form-horizontal">
- 					<fieldset hidden=""  id="fieldsetuserupdate">
 						<div class="form-group">
 						<label for="name" class="col-sm-2 col-md-1 control-label">姓名</label>
 						<div class="col-sm-10 col-md-3">
-							<input type="text" class="form-control" id="inputnameupdate" placeholder="姓名" required>
+							<input type="text" class="form-control" id="name" placeholder="姓名" required>
 						</div>
 					</div>
 					<div class="form-group">
@@ -172,7 +107,7 @@
 					<div class="form-group">
 						<label for="phoneNumber" class="col-sm-2 col-md-1 control-label">手机号</label>
 						<div class="col-sm-10 col-md-3">
-							<input type="text" class="form-control" id="phonenumberupdate" placeholder="手机号" required>
+							<input type="text" class="form-control" id="phoneNumber" placeholder="手机号" required>
 						</div>
 					</div>
 					
@@ -193,14 +128,26 @@
 							<textarea class="form-control" rows="5" id="introduction" placeholder="简介"></textarea>
 						</div>
 					</div>
-					<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label"></div>
-						<div class="col-sm-10 col-md-3">
-							<button type="submit" class="btn btn-primary btn-wide pull-right">提交</button>
-						</div>
-					</div>
-					</fieldset>
+					<button type="submit" class="btn btn-primary btn-wide">提交</button>
+					<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>
+ 				</fieldset>
  			</form>
+        
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
+							aria-expanded="false" aria-controls="collapseTwo">
+          Collapsible Group Item #2
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+        2Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
       </div>
     </div>
   </div>
@@ -215,7 +162,7 @@
     </div>
     <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
       <div class="panel-body">
-        
+        3Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
       </div>
     </div>
   </div>

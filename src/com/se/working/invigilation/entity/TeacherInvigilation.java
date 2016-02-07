@@ -2,6 +2,7 @@ package com.se.working.invigilation.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,24 +29,21 @@ public class TeacherInvigilation {
 	private User user;
 	// 监考次数
 	private int invQuantity;
-	// 是否安排监考
-	private boolean enabled = true;
+	// 推荐监考
+	private boolean enabledRecommend = true;
 	// 特殊监考次数
 	private int sqecQuantity;
 	// 课程
-	@OneToMany(mappedBy = "teacher")
-	@OrderBy(value ="id DESC")
+	@OneToMany(mappedBy = "teacher", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OrderBy(value ="id ASC")
 	private Set<Course> courses;
-	// 授课时间
-	@OneToMany(mappedBy = "teacher")
-	private Set<CourseSection> courseSections;
 	// 监考安排
 	@OneToMany(mappedBy = "teacher")
-	@OrderBy(value ="id DESC")
+	@OrderBy(value ="id ASC")
 	private Set<Invigilation> invigilations;
 	// 特殊监考安排
 	@OneToMany(mappedBy = "teacher")
-	@OrderBy(value ="id DESC")
+	@OrderBy(value ="id ASC")
 	private Set<SpecialInvigilation> specialInvigilations;
 
 	public long getId() {
@@ -67,24 +65,17 @@ public class TeacherInvigilation {
 	public int getInvQuantity() {
 		return invQuantity;
 	}
-
-	public Set<CourseSection> getCourseSections() {
-		return courseSections;
-	}
-
-	public void setCourseSections(Set<CourseSection> courseSections) {
-		this.courseSections = courseSections;
-	}
-
 	public void setInvQuantity(int invQuantity) {
 		this.invQuantity = invQuantity;
 	}
-	public boolean isEnabled() {
-		return enabled;
+	
+
+	public boolean isEnabledRecommend() {
+		return enabledRecommend;
 	}
 
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public void setEnabledRecommend(boolean enabledRecommend) {
+		this.enabledRecommend = enabledRecommend;
 	}
 
 	public int getSqecQuantity() {

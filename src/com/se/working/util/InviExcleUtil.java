@@ -16,7 +16,7 @@ import com.se.working.invigilation.entity.InvigilationInfo;
 import com.se.working.invigilation.entity.InvigilationStatusType;
 import com.se.working.invigilation.entity.InvigilationStatusType.InvStatusType;
 
-public class InvigilationExcleUtil {
+public class InviExcleUtil {
 
 	/**
 	 * 从表格中提取专业监考信息集
@@ -53,14 +53,14 @@ public class InvigilationExcleUtil {
 							HSSFCell cell = null;
 							for (int cellIndex = 0; cellIndex <= row.getLastCellNum(); cellIndex++) {
 								cell = row.getCell(cellIndex);
-								if (cell == null || StringConversionUtil
-										.isEmpty(StringConversionUtil.moveBlankSpace(cell.toString()))) {
+								if (cell == null || StringUtils
+										.isEmpty(StringUtils.trimAllWhitespace(cell.toString()))) {
 									continue;
 								} else {
 									rowString += cell.toString() + "&";
 								}
 								// 找出包含软件*人的行
-								if (StringConversionUtil.isContainSoftWareNum(cell.toString())) {
+								if (StringUtils.isContainSoftWareNum(cell.toString())) {
 									isUser = true;
 								}
 							}
@@ -106,19 +106,19 @@ public class InvigilationExcleUtil {
 			for (String string2 : invInfoArray) {
 				if (!string2.isEmpty()) {
 					// 找出包含软件*人的行
-					if (StringConversionUtil.isContainSoftWareNum(string2)) {
+					if (StringUtils.isContainSoftWareNum(string2)) {
 						invInfo.setRequiredNumber(Integer.valueOf(string2.substring(2, 3)));
-					} else if (StringConversionUtil.isContainAddress(string2)) {
+					} else if (StringUtils.isContainAddress(string2)) {
 						invInfo.setLocation(string2);
-					} else if (StringConversionUtil.isContainYYYYMMDD(string2)) {
+					} else if (StringUtils.isContainYYYYMMDD(string2)) {
 						yyyyMMDD = string2;
-					} else if (StringConversionUtil.isContainHHMM(string2)) {
-						timeArray = StringConversionUtil.hhMMSplit(string2);
+					} else if (StringUtils.isContainHHMM(string2)) {
+						timeArray = StringUtils.hhMMSplit(string2);
 					}
 				}
 			}
 
-			if (timeArray != null && !StringConversionUtil.isEmpty(yyyyMMDD)) {
+			if (timeArray != null && !StringUtils.isEmpty(yyyyMMDD)) {
 				try {
 					Calendar calendar = Calendar.getInstance();
 					calendar.setTime(DateConversionUtil.dateFormat(yyyyMMDD, timeArray[0]));
@@ -142,7 +142,7 @@ public class InvigilationExcleUtil {
 		}
 		return invigilationInfos;
 	}
-	public InvigilationExcleUtil() {
+	public InviExcleUtil() {
 	}
 	
 }

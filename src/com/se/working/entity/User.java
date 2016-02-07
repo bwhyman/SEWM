@@ -38,6 +38,14 @@ public class User {
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
 	
+	
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+	public User(long id) {
+		super();
+		this.id = id;
+	}
 	public long getId() {
 		return id;
 	}

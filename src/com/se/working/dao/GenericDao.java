@@ -3,6 +3,8 @@ package com.se.working.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.criteria.Order;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -51,7 +53,7 @@ public abstract class GenericDao<T, ID extends Serializable> {
 	@SuppressWarnings("unchecked")
 	public List<T> list() {
 		// TODO Auto-generated method stub
-		return sessionFactory.getCurrentSession().createCriteria(clazz).list();
+		return sessionFactory.getCurrentSession().createCriteria(clazz).addOrder(org.hibernate.criterion.Order.asc("id")).list();
 	}
 	
 	/**

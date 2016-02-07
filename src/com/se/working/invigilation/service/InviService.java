@@ -13,6 +13,6 @@ import com.se.working.service.GenericService;
  */
 @Service
 @Transactional
-public class invigilationService extends GenericService<Invigilation, Long>{
+public class InviService extends GenericService<Invigilation, Long>{
 
 }

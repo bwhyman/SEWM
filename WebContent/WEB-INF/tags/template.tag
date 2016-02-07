@@ -92,9 +92,9 @@
 							工作管理
 							<span class="sr-only">(current)</span>
 						</a></li>
-					<li><a href="">监考</a></li>
-					<li><a href="">任务</a></li>
-					<li><a href="admin/usermanager">用户</a></li>
+					<li><a href="admin/invimanagement">监考管理</a></li>
+					<li><a href="">任务管理</a></li>
+					<li><a href="admin/usersetting">用户管理</a></li>
 				</ul>
 				<ul class="nav nav-sidebar">
 					<li class="active"><a href="#">
@@ -103,6 +103,7 @@
 						</a></li>
 					<li><a href="">通配符</a></li>
 					<li><a href="">维护日志</a></li>
+					<li><a href="superadmin/initsys">系统初始化</a></li>
 				</ul>
 			</div>
 			<!-- 主界面 -->

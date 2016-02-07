@@ -1,6 +1,6 @@
 package com.se.working.util;
 
-public class StringConversionUtil {
+public class StringUtils {
 	
 	/**
 	 * 判断某个字符串是否为空
@@ -10,27 +10,17 @@ public class StringConversionUtil {
 	public static boolean isEmpty(String string){
 		if (string == null || string.length() == 0) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	/**
-	 * 移除字符串中空格
+	 * 移除字符串全部空格
 	 * @param string
 	 * @return
 	 */
-	public static String moveBlankSpace(String string){
+	public static String trimAllWhitespace(String string){
 		return string.replaceAll("\\s{1,}", "");
-	}
-	
-	/**
-	 * 移除字符串中多余的空格
-	 * @param string
-	 * @return
-	 */
-	public static String moveMoreBlankSpace(String string){
-		return string.replaceAll("\\s{1,}", " ");
 	}
 	
 	/**
@@ -39,11 +29,10 @@ public class StringConversionUtil {
 	 * @return
 	 */
 	public static boolean isContainSoftWareNum(String string){
-		if (string.contains("软件")&&string.contains("人")) {
+		if (string.contains("软件") && string.contains("人")) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
 	/**
@@ -52,11 +41,10 @@ public class StringConversionUtil {
 	 * @return
 	 */
 	public static boolean isContainAddress(String string){
-		if (string.contains("丹青楼")||string.contains("锦绣楼")) {
+		if (string.contains("丹青楼") || string.contains("锦绣楼") || string.contains("成栋楼")) {
 			return true;
-		} else {
-			return false;
-		}
+		} 
+		return false;
 	}
 	
 	/**
@@ -68,9 +56,8 @@ public class StringConversionUtil {
 		//System.out.println(string);
 		if (string.matches("(^\\d{4}-\\d{1,2}-\\d{1,2}$)")||string.matches("(^\\d{4}.\\d{1,2}.\\d{1,2}$)")) {
 			return true;
-		} else {
-			return false;
-		}
+		} 
+		return false;
 	}
 	
 	/**
@@ -81,9 +68,8 @@ public class StringConversionUtil {
 	public static boolean isContainHHMM(String string){
 		if ((string.contains("~")||string.contains("～"))&&(string.contains(":")||string.contains("："))) {
 			return true;
-		} else {
-			return false;
-		}
+		} 
+		return false;
 	}
 	
 	/**
@@ -99,5 +85,12 @@ public class StringConversionUtil {
 		}
 		return null;
 	}
-	
+	/**
+	 * 
+	 * @param path 文件路径
+	 * @return 文件扩展名
+	 */
+	public static String getFilenameExtension(String path) {
+		return path.substring(path.lastIndexOf(".")+1);
+	}
 }

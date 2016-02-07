@@ -32,7 +32,7 @@ public class InvigilationInfo {
 	private Set<Invigilation> invigilations;
 	// 监考安排状态历史信息
 	@OneToMany(mappedBy = "invInfo")
-	@OrderBy(value ="id DESC")
+	@OrderBy(value ="id ASC")
 	private Set<InvigilationStatusDetail> invStatusDetail;
 	// 当前监考安排状态
 	@ManyToOne

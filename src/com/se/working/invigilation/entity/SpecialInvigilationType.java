@@ -25,7 +25,7 @@ public class SpecialInvigilationType {
 	private long id;
 	private String name;
 	@OneToMany(mappedBy = "specType")
-	@OrderBy(value ="id DESC")
+	@OrderBy(value ="id ASC")
 	private Set<SpecialInvigilationInfo> specInv;
 	@Temporal(TemporalType.TIMESTAMP )
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

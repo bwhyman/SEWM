@@ -36,7 +36,7 @@ public class SpecialInvigilationInfo {
 	// 备注
 	private String comment;
 	@OneToMany(mappedBy = "specInv")
-	@OrderBy(value ="id DESC")
+	@OrderBy(value ="id ASC")
 	private Set<SpecialInvigilation> specialInvigilations;
 	// 监考信息载入时间
 	@Temporal(TemporalType.TIMESTAMP)

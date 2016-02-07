@@ -19,21 +19,31 @@ public class TeacherTitle {
 	
 	public interface TeacherTitleType {
 		/**
-		 * 助教
-		 */
-		public static int ASSISTANT = 1;
-		/**
 		 * 讲师
 		 */
-		public static int LECTURER = 2;
+		public static long LECTURER = 1;
 		/**
 		 * 副教授
 		 */
-		public static int AP = 3;
+		public static long AP = 2;
 		/**
 		 * 教授
 		 */
-		public static int PROF = 4;
+		public static int PROF = 3;
+		/**
+		 * 助教
+		 */
+		public static long ASSISTANT = 4;
+	}
+
+	
+	public TeacherTitle(long id) {
+		super();
+		this.id = id;
+	}
+
+	public TeacherTitle() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public long getId() {
