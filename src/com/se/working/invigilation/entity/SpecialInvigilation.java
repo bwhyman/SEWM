@@ -59,5 +59,4 @@ public class SpecialInvigilation {
 	public void setAssignTime(Date assignTime) {
 		this.assignTime = assignTime;
 	}
-
 }

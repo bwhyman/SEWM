@@ -22,8 +22,12 @@
 <link href="resources/css/flat-ui.min.css" rel="stylesheet">
 <!-- Default CSS-->
 <link href="resources/css/default.css" rel="stylesheet">
+
+
 <!-- Private -->
 <jsp:invoke fragment="header" />
+<!-- Flat-ui -->
+<link href="resources/css/flat-ui.min.css" rel="stylesheet">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -31,7 +35,7 @@
       <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-<title>Insert title here</title>
+<title>工作管理</title>
 </head>
 <body>
 	<!-- 导航 -->
@@ -45,7 +49,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Project name</a>
+				<a class="navbar-brand" href="">工作管理</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
@@ -54,7 +58,7 @@
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="#">个人设置</a></li>
+							<li><a href="updateusersetting">个人设置</a></li>
 							<li class="divider"></li>
 							<li><a href="aaa">退出</a></li>
 						</ul></li>
@@ -74,35 +78,36 @@
 			<div class="col-sm-3 col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
 					<li class="active"><a href="#">
-							任务活动
+							任务信息
 							<span class="sr-only">(current)</span>
 						</a></li>
-					<li><a href="#">Reports</a></li>
+					<li><a href="#">任务信息</a></li>
 				</ul>
 				<ul class="nav nav-sidebar">
 					<li class="active"><a href="#">
-							监考安排
+							监考信息
 							<span class="sr-only">(current)</span>
 						</a></li>
-					<li><a href="">添加</a></li>
-					<li><a href="">Nav item again</a></li>
+					<li><a href="">监考信息</a></li>
+
 				</ul>
 				<ul class="nav nav-sidebar">
 					<li class="active"><a href="#">
 							工作管理
 							<span class="sr-only">(current)</span>
 						</a></li>
-					<li><a href="">用户管理</a></li>
-					<li><a href="">监考安排</a></li>
-					<li><a href="">任务活动</a></li>
+					<li><a href="admin/invimanagement">监考管理</a></li>
+					<li><a href="">任务管理</a></li>
+					<li><a href="admin/usersetting">用户管理</a></li>
 				</ul>
 				<ul class="nav nav-sidebar">
 					<li class="active"><a href="#">
-							系统维护
+							系统管理
 							<span class="sr-only">(current)</span>
 						</a></li>
 					<li><a href="">通配符</a></li>
 					<li><a href="">维护日志</a></li>
+					<li><a href="superadmin/initsys">系统初始化</a></li>
 				</ul>
 			</div>
 			<!-- 主界面 -->
@@ -111,11 +116,18 @@
 			</div>
 		</div>
 	</div>
-	
+
+	<footer class="footer">
+		<div class="container">
+			<p class="text-muted">Place sticky footer content here. &copy; Company 2016</p>
+		</div>
+	</footer>
+
 	<!-- Placed at the end of the document so the pages load faster -->
 	<script src="resources/js/jquery.min.js"></script>
 	<script src="resources/js/flat-ui.min.js"></script>
 	<script src="resources/js/application.js"></script>
+	
 	<!--Private JS  -->
 	<jsp:invoke fragment="footer" />
 </body>

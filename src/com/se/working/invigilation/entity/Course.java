@@ -3,6 +3,7 @@ package com.se.working.invigilation.entity;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,8 +19,12 @@ public class Course {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	private String name;
+	// 班级
 	private String teachingClass;
-	@OneToMany(mappedBy = "course")
+	// 地点
+	private String location;
+
+	@OneToMany(mappedBy = "course", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@OrderBy(value ="id DESC")
 	private Set<CourseSection> courseSections;
 	@ManyToOne
@@ -89,6 +94,16 @@ public class Course {
 
 	public Course() {
 		// TODO Auto-generated constructor stub
+	}
+
+
+	public String getLocation() {
+		return location;
+	}
+
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

@@ -5,7 +5,6 @@
  <session-factory>
   <property name="hibernate.show_sql">true</property>
   <property name="hibernate.default_batch_fetch_size">20</property>
-  <!-- <property name="hibernate.current_session_context_class">thread</property> -->
   <property name="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</property>
   <property name="hibernate.hbm2ddl.auto">update</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>

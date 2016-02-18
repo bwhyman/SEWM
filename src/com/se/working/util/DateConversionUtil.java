@@ -7,49 +7,51 @@ import java.util.Date;
 
 public class DateConversionUtil {
 	
+	public static String BASE_DATE = "2016-03-07";
+	public static int BASE_WEEK_OF_YEAR = getBaseWeek();
+	
 	/**
-	 * 指定起始周的年月日、第几周、周几、几点返回具体时间Date类型
-	 * @param baseDateString
-	 * @param myWeek
-	 * @param myDayOfWeek
-	 * @param hours
-	 * @param minutes
+	 * 指定周、星期、时间，基于基点返回日历
+	 * @param week 指定周
+	 * @param dayOfWeek 指定星期
+	 * @param time 指定时间
 	 * @return
 	 * @throws ParseException
 	 */
-	public static Calendar courseTimeToDate(String baseDateString, int myWeek, int myDayOfWeek, int hours, int minutes) throws ParseException{
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date baseDate = simpleDateFormat.parse(baseDateString);
+	public static Calendar courseTimeToDate(int week, int dayOfWeek, String time) throws ParseException{
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date dateTime = simpleDateFormat.parse(BASE_DATE + " " + time);
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(baseDate);
-		calendar.add(Calendar.WEEK_OF_YEAR, myWeek - 1);
-		calendar.add(Calendar.DAY_OF_WEEK,myDayOfWeek - 1);
-		calendar.set(Calendar.HOUR_OF_DAY, hours);
-		calendar.set(Calendar.MINUTE, minutes);
+		calendar.setTime(dateTime);
+		calendar.add(Calendar.WEEK_OF_YEAR, week - 1);
+		calendar.add(Calendar.DAY_OF_WEEK,dayOfWeek - 1);
+		
 		return calendar;
 	}
 	
 	/**
-	 * 字符串连接生成时间Date类型
-	 * @param yyyyMMDD
-	 * @param time
+	 * 返回标准Calendar。yyyy-MM-dd HH:mm
+	 * @param dateTime
 	 * @return
 	 * @throws ParseException
 	 */
-	public static Date dateFormat(String yyyyMMDD, String time) throws ParseException{
-		if (yyyyMMDD.contains(".")) {
-			yyyyMMDD = yyyyMMDD.replace('.', '-');
-		}
-		if (time.contains("：")) {
-			time = time.replace('：', ':');
-		}
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		cal.setTime(simpleDateFormat.parse(yyyyMMDD));
-		String[] timeArray = time.split(":");
-		cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(timeArray[0]));
-		cal.set(Calendar.MINUTE, Integer.valueOf(timeArray[1]));
-		return cal.getTime();
+	public static Calendar getCalendar(String dateTime) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(simpleDateFormat.parse(dateTime));
+		return calendar;
 	}
 	
+	
+	private static int getBaseWeek() {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.setTime(sf.parse(BASE_DATE));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return calendar.get(Calendar.WEEK_OF_YEAR);
+	}
 }

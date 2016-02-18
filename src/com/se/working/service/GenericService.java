@@ -1,6 +1,7 @@
 package com.se.working.service;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,14 +45,23 @@ public abstract class GenericService<T, ID extends Serializable> {
 	public void delete(T entity) {
 		genericDao.delete(entity);
 	}
-	
-	public T findById(Class<T> clazz, ID id) {
-		return genericDao.get(clazz, id);
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public T findById(ID id) {
+		return genericDao.get(id);
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public List<T> findAll() {
+		return genericDao.list();
 	}
 	
-	public GenericService() {
-		// TODO Auto-generated constructor stub
-	}
+	
 	public GenericDao<T, ID> getGenericDao() {
 		return genericDao;
 	}

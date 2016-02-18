@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
@@ -19,15 +23,23 @@
 	<mvc:annotation-driven />
 	<!-- 过滤静态资源请求 -->
 	<mvc:default-servlet-handler />
+	<task:annotation-driven/>
+	
 
-	<!-- DataSource -->
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value="root"></property>
-		<property name="url" value="jdbc:mysql://localhost:3306/sewm"></property>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/sewm" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+		<!-- 池启动时创建的连接数量 -->
+        <property name="initialSize" value="1"/>
+        <property name="minIdle" value="1" />
+        <!-- 设置自动回收超时连接 -->  
+        <property name="removeAbandoned" value="true" />
+         
+		
 	</bean>
+
 	<!-- Hibernate5 Session Factory -->
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
@@ -46,16 +58,15 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
-	<!-- SpringMVC Interceptor -->
 	<mvc:interceptors>
 		<!-- 登录用户操作 -->
 		<mvc:interceptor>
 			<!-- 所有操作 -->
 			<mvc:mapping path="/**" />
 			<!-- 排除login操作 -->
-			<mvc:exclude-mapping path="/login"/>
+			<mvc:exclude-mapping path="/login" />
 			<!-- 排除资源 -->
-			<mvc:exclude-mapping path="/resources/**"/> 
+			<mvc:exclude-mapping path="/resources/**" />
 			<bean class="com.se.working.interceptor.UserInterceptor"></bean>
 		</mvc:interceptor>
 		<!-- 管理员操作 -->
@@ -69,4 +80,21 @@
 			<bean class="com.se.working.interceptor.SuperAdminInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- one of the properties available; the maximum file size in bytes -->
+		<!-- 50MB -->
+		<property name="maxUploadSize" value="50000000" />
+		<!-- 2MB -->
+		<property name="maxInMemorySize" value="2000000"></property>
+		<property name="uploadTempDir" value="WEB-INF/jsp/upload/temp" />
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<!-- 延迟文件解析，判断大小等 -->
+		<property name="resolveLazily" value="true" />
+	</bean>
+
+	<!-- 根目录重定向，设置welcome为空，定向view-name对应的视图名称，不调用controller -->
+	<mvc:view-controller path="/" view-name="main" />
+	<!-- SpringMVC Interceptor -->
+
 </beans>

@@ -6,6 +6,6 @@ import com.se.working.dao.GenericDao;
 import com.se.working.invigilation.entity.Invigilation;
 
 @Repository
-public class InvigilationDao extends GenericDao<Invigilation, Long>{
+public class InviDao extends GenericDao<Invigilation, Long>{
 
 }

@@ -9,5 +9,11 @@ import com.se.working.invigilation.entity.Course;
 public class CourseDao extends GenericDao<Course, Long>{
 
 	
+	
+	private CourseDao() {
+		// TODO Auto-generated constructor stub
+	}
+
+	
 
 }
