@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+
 
 /**
  * 监考信息
@@ -28,10 +31,10 @@ public class InvigilationInfo {
 	// 监考人数
 	private int requiredNumber;
 	// 监考安排
-	@OneToMany(mappedBy = "invInfo")
+	@OneToMany(mappedBy = "invInfo", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	private Set<Invigilation> invigilations;
 	// 监考安排状态历史信息
-	@OneToMany(mappedBy = "invInfo")
+	@OneToMany(mappedBy = "invInfo",  cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@OrderBy(value ="id ASC")
 	private Set<InvigilationStatusDetail> invStatusDetail;
 	// 当前监考安排状态
@@ -49,6 +52,8 @@ public class InvigilationInfo {
 	private Calendar endTime;
 	// 监考地点
 	private String location;
+	// 监考课程
+	private String course;
 	// 备注
 	private String comment;
 	
@@ -134,6 +139,14 @@ public class InvigilationInfo {
 
 	public InvigilationInfo() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getCourse() {
+		return course;
+	}
+
+	public void setCourse(String course) {
+		this.course = course;
 	}
 	
 }

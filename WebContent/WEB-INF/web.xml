@@ -53,6 +53,10 @@
 		<error-code>404</error-code>
 		<location>/resources/error/404.jsp</location>
 	</error-page>
+	<error-page>
+		<error-code>400</error-code>
+		<location>/resources/error/400.jsp</location>
+	</error-page>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>

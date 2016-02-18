@@ -18,7 +18,7 @@
 </ol>
 
 
-	<form class="form-horizontal" action="admin/invimanagement" method="POST">
+	<form class="form-horizontal" action="admin/userinvisetting" method="POST">
 	<div class="form-group">
 			<label class="col-md-1 control-label">姓名</label>
 			<label class="col-md-1 control-label">监考</label>
@@ -26,10 +26,9 @@
 			<label class="col-md-1 control-label">监考推荐</label>
 			</div>
 		<c:forEach items="${inviusers }" var="u" varStatus="s">
-		<input type="hidden" value="${u.id }" name="ids">
 		<div class="form-group">
 			<label class="col-md-1 control-label">${u.user.name }</label>
-			<label class="col-md-1 control-label">${u.invQuantity }</label>
+			<label class="col-md-1 control-label">${u.invigilations.size() }</label>
 			<div class="col-md-1"><input type="text" class="form-control" value="${u.sqecQuantity }" name="invqs"></div>
 			<div class="col-md-1">
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"

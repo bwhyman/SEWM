@@ -27,8 +27,6 @@ public class TeacherInvigilation {
 	@MapsId
 	@OneToOne
 	private User user;
-	// 监考次数
-	private int invQuantity;
 	// 推荐监考
 	private boolean enabledRecommend = true;
 	// 特殊监考次数
@@ -61,14 +59,6 @@ public class TeacherInvigilation {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	public int getInvQuantity() {
-		return invQuantity;
-	}
-	public void setInvQuantity(int invQuantity) {
-		this.invQuantity = invQuantity;
-	}
-	
 
 	public boolean isEnabledRecommend() {
 		return enabledRecommend;

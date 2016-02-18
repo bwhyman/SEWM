@@ -19,8 +19,9 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <!-- Flat-ui -->
 <link href="resources/css/flat-ui.min.css" rel="stylesheet">
+<link href="resources/css/docs.css" rel="stylesheet">
 <!-- Default CSS-->
-<link href="resources/css/default.css" rel="stylesheet">
+<!-- <link href="resources/css/default.css" rel="stylesheet"> -->
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,6 +33,36 @@
 <title>工作管理</title>
 </head>
 <body>
+ 
+          <form action="#">
+            <div class="row">
+              <div class="col-md-6">
+                <label class="checkbox" for="checkbox1">
+                  <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
+                  Checkbox
+                </label>
+                <label class="checkbox" for="checkbox2">
+                  <input type="checkbox" value="" id="checkbox2" checked="checked" data-toggle="checkbox">
+                  Checkbox
+                </label>
+                <label class="checkbox" for="checkbox3">
+                  <input type="checkbox" value="" id="checkbox3" data-toggle="checkbox" disabled="">
+                  Checkbox
+                </label>
+                <label class="checkbox" for="checkbox4">
+                  <input type="checkbox" value="" id="checkbox4" checked="checked" data-toggle="checkbox" disabled="">
+                  Checkbox
+                </label>
+              </div>
+            </div>
+          </form>
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="resources/js/jquery.min.js"></script>
+	<script src="resources/js/flat-ui.min.js"></script>
 	
+	<script src="resources/js/application.js"></script>
+	<script>
+	$(':checkbox').radiocheck();
+	</script>
 </body>
 </html>

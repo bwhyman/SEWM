@@ -1,5 +1,7 @@
 package com.se.working.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
-import com.se.working.service.AdminService;
+import com.se.working.service.UserService;
 /**
  * 用户操作
  * @author BO
@@ -19,8 +22,9 @@ import com.se.working.service.AdminService;
 @Controller
 public class UserController {
 	private String redirect = "redirect:";
+	private String userBasePath = "/user/";
 	@Autowired
-	private AdminService userService;
+	private UserService userService;
 	/**
 	 * 使用redirect重定向时参数会暴露在地址栏，使用RedirectAttributes接口隐藏参数
 	 * @param userName
@@ -41,6 +45,40 @@ public class UserController {
 		errorMap.addFlashAttribute("loginerror", "nouser");
 		return redirect + "login";
 	}
+	/**
+	 * 加载用于基本信息
+	 * @param vMap
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/updateusersetting")
+	public String updateUserSetting(Map<String, Object> vMap, HttpSession session) {
+		User user = userService.findById(5L);
+		// User user = userService.findById(((User)session.getAttribute("user")).getId());
+		vMap.put("user", user);
+		vMap.put("titles", userService.findTeacherTitles());
+		return userBasePath + "updateusersetting";
+	}
+	
+	@RequestMapping(path = "/updatepassword", method = RequestMethod.POST)
+	public String updatePassword(String pwd, HttpSession session) {
+		System.out.println(pwd);
+		// userService.updatePassword(((User)session.getAttribute("user")).getId(), pwd);
+		return redirect + "updateusersetting";
+	}
+	
+	/**
+	 * 更新用户信息
+	 * @param user
+	 * @param titleId
+	 * @return
+	 */
+	@RequestMapping(path = "/updateusersetting", method = RequestMethod.POST)
+	public String updateUserSetting(User user, long titleId) {
+		user.setTitle(new TeacherTitle(titleId));
+		userService.update(user);
+		return redirect + "updateusersetting";
+	}
 	
 	/**
 	 * 直接加载页面时的通配方法
@@ -52,12 +90,12 @@ public class UserController {
 	@RequestMapping(path = "/{viewpath}", method = RequestMethod.GET)
 	public String getView(@PathVariable String viewpath) {
 		
-		return viewpath;
+		return userBasePath + viewpath;
 	}
 	
 	@RequestMapping(path = "/{root}/{viewpath}", method = RequestMethod.GET)
 	public String getView(@PathVariable String root, @PathVariable String viewpath) {
 		
-		return root + "/" + viewpath;
+		return userBasePath + root + "/" + viewpath;
 	}
 }

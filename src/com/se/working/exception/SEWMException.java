@@ -2,9 +2,6 @@ package com.se.working.exception;
 
 public class SEWMException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public SEWMException() {
@@ -31,7 +28,4 @@ public class SEWMException extends Exception {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
-
-	
-
 }

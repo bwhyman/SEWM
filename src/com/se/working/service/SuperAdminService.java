@@ -2,8 +2,7 @@ package com.se.working.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.se.working.controller.ReturnMessage;
+import org.springframework.transaction.annotation.Transactional;
 import com.se.working.dao.TeacherTitleDao;
 import com.se.working.dao.UserAuthorityDao;
 import com.se.working.dao.UserDao;
@@ -13,12 +12,15 @@ import com.se.working.entity.UserAuthority;
 import com.se.working.entity.TeacherTitle.TeacherTitleType;
 import com.se.working.entity.UserAuthority.UserAuthorityLevel;
 import com.se.working.entity.UserAuthority.UserAuthorityType;
-import com.se.working.invigilation.dao.InvigilationStatusTypeDao;
+import com.se.working.invigilation.dao.InviTypeDao;
+import com.se.working.invigilation.dao.SpecialInviTypeDao;
 import com.se.working.invigilation.dao.TeacherInviDao;
 import com.se.working.invigilation.entity.InvigilationStatusType;
+import com.se.working.invigilation.entity.SpecialInvigilationType;
 import com.se.working.invigilation.entity.TeacherInvigilation;
 
 @Service
+@Transactional
 public class SuperAdminService extends GenericService<User, Long>{
 	
 	@Autowired
@@ -26,16 +28,18 @@ public class SuperAdminService extends GenericService<User, Long>{
 	@Autowired
 	private UserAuthorityDao userAuthorityDao;
 	@Autowired
-	private InvigilationStatusTypeDao invigilationStatusTypeDao;
+	private InviTypeDao invigilationStatusTypeDao;
 	@Autowired
 	private UserDao userDao;
 	@Autowired
 	private TeacherInviDao teacherInvigilationDao;
+	@Autowired
+	private SpecialInviTypeDao specialInviTypeDao;
 	/**
 	 * 初始化职称
 	 * @return 
 	 */
-	public String initTeacherTitle() {
+	public void initTeacherTitle() {
 		if (teacherTitleDao.list().size() == 0) {
 			TeacherTitle lecture = new TeacherTitle();
 			lecture.setName("讲师");
@@ -49,16 +53,13 @@ public class SuperAdminService extends GenericService<User, Long>{
 			TeacherTitle ass = new TeacherTitle();
 			ass.setName("助教");
 			teacherTitleDao.persist(ass);
-			return ReturnMessage.SUCCESS;
 		}
-		return ReturnMessage.NONE;
 	}
 	
 	/**
 	 * 初始化权限
-	 * @return
 	 */
-	public String initUserAuthority() {
+	public void initUserAuthority() {
 		if (userAuthorityDao.list().size() == 0) {
 			UserAuthority teacher = new UserAuthority();
 			teacher.setName("教师");
@@ -76,15 +77,12 @@ public class SuperAdminService extends GenericService<User, Long>{
 			student.setName("学生");
 			student.setLevel(UserAuthority.UserAuthorityLevel.STUDENT);
 			userAuthorityDao.persist(student);
-			return ReturnMessage.SUCCESS;
 		}
-		return ReturnMessage.NONE;
 	}
 	/**
 	 * 初始化监考状态
-	 * @return
 	 */
-	public String initInviStatusType() {
+	public void initInviStatusType() {
 		if (invigilationStatusTypeDao.list().size() == 0) {
 			InvigilationStatusType  unass = new InvigilationStatusType();
 			unass.setName("未分配");
@@ -92,20 +90,21 @@ public class SuperAdminService extends GenericService<User, Long>{
 			InvigilationStatusType ass = new InvigilationStatusType();
 			ass.setName("已分配");
 			invigilationStatusTypeDao.persist(ass);
+			InvigilationStatusType reminded = new InvigilationStatusType();
+			reminded.setName("已提醒");
+			invigilationStatusTypeDao.persist(reminded);
 			InvigilationStatusType done = new InvigilationStatusType();
 			done.setName("已完成");
 			invigilationStatusTypeDao.persist(done);
-			return ReturnMessage.SUCCESS;
+			
 		}
 		
-		return ReturnMessage.NONE;
 	}
 
 	/**
 	 * 初始化用户
-	 * @return
 	 */
-	public String initUser() {
+	public void initUser() {
 		if (userDao.list().size() == 0) {
 			User luo = new User();
 			luo.setName("罗嗣卿");
@@ -116,7 +115,6 @@ public class SuperAdminService extends GenericService<User, Long>{
 			userDao.persist(luo);
 			TeacherInvigilation iluo = new TeacherInvigilation();
 			iluo.setUser(luo);
-			iluo.setInvQuantity(10);
 			iluo.setSqecQuantity(10);
 			teacherInvigilationDao.persist(iluo);
 			
@@ -129,7 +127,6 @@ public class SuperAdminService extends GenericService<User, Long>{
 			userDao.persist(lili);
 			TeacherInvigilation ilili = new TeacherInvigilation();
 			ilili.setUser(lili);
-			ilili.setInvQuantity(12);
 			ilili.setSqecQuantity(12);
 			teacherInvigilationDao.persist(ilili);
 			
@@ -142,7 +139,6 @@ public class SuperAdminService extends GenericService<User, Long>{
 			userDao.persist(wu);
 			TeacherInvigilation iwu = new TeacherInvigilation();
 			iwu.setUser(wu);
-			iwu.setInvQuantity(13);
 			iwu.setSqecQuantity(13);
 			teacherInvigilationDao.persist(iwu);
 			
@@ -155,7 +151,6 @@ public class SuperAdminService extends GenericService<User, Long>{
 			userDao.persist(bian);
 			TeacherInvigilation ibian = new TeacherInvigilation();
 			ibian.setUser(bian);
-			ibian.setInvQuantity(14);
 			ibian.setSqecQuantity(14);
 			teacherInvigilationDao.persist(ibian);
 			
@@ -168,12 +163,37 @@ public class SuperAdminService extends GenericService<User, Long>{
 			userDao.persist(bo);
 			TeacherInvigilation ibo = new TeacherInvigilation();
 			ibo.setUser(bo);
-			ibo.setInvQuantity(15);
 			ibo.setSqecQuantity(15);
 			teacherInvigilationDao.persist(ibo);
 			
+			User sunzhe = new User();
+			sunzhe.setName("孙哲");
+			sunzhe.setEmployeeNumber("1020090007");
+			sunzhe.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
+			sunzhe.setPhoneNumber("18946000922");
+			sunzhe.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			userDao.persist(sunzhe);
+			TeacherInvigilation isun = new TeacherInvigilation();
+			isun.setUser(sunzhe);
+			isun.setSqecQuantity(15);
+			teacherInvigilationDao.persist(isun);
+			
 		}
-		return ReturnMessage.NONE;
+	}
+	
+	public void initSpecInviType() {
+		SpecialInvigilationType en46 = new SpecialInvigilationType();
+		en46.setName("英语四六级");
+		specialInviTypeDao.persist(en46);
+		
+		SpecialInvigilationType servant = new SpecialInvigilationType();
+		servant.setName("公务员");
+		specialInviTypeDao.persist(servant);
+		
+		SpecialInvigilationType postgrad = new SpecialInvigilationType();
+		postgrad.setName("研究生");
+		specialInviTypeDao.persist(postgrad);
+
 	}
 	
 	public SuperAdminService() {

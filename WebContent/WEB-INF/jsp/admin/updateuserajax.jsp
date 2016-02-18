@@ -4,60 +4,63 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
-<form:form class="form-horizontal" modelAttribute="selectuser" action="admin/setdefaultpwd" method="POST">
+<form class="form-horizontal" action="admin/setdefaultpwd" method="POST">
 <div class="form-group">
 		<label for="name" class="col-sm-2 col-md-1 control-label">重置密码</label>
 		<div class="form-group">
 		<div class="col-sm-10 col-md-3">
-			<input type="hidden" value="${selectuser.user.id}" name="userId">
+			<input type="hidden" value="${user.id}" name="userId">
 			<button type="submit" class="btn btn-primary btn-block">重置密码为员工号</button>
 		</div>
 	</div>
 	</div>
-</form:form>
-<form:form class="form-horizontal" modelAttribute="selectuser" action="admin/updateuser" method="POST">
+</form>
+<form class="form-horizontal" action="admin/updateuser" method="POST">
 	<div class="form-group">
 		<label for="name" class="col-sm-2 col-md-1 control-label">姓名</label>
 		<div class="col-sm-10 col-md-3">
-			<input type="text" class="form-control" placeholder="姓名" required value="${selectuser.user.name }" name="name">
+			<input type="text" class="form-control" placeholder="姓名" required value="${user.name }" name="name">
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="employeeNumber" class="col-sm-2 col-md-1 control-label">员工号</label>
 		<div class="col-sm-10 col-md-3">
-			<input type="text" class="form-control" placeholder="员工号" required value="${selectuser.user.employeeNumber }" name="employeeNumber">
+			<input type="text" class="form-control" placeholder="员工号" required value="${user.employeeNumber }" name="employeeNumber">
 		</div>
 	</div>
 
 	<div class="form-group">
 		<label for="phoneNumber" class="col-sm-2 col-md-1 control-label">手机号</label>
 		<div class="col-sm-10 col-md-3">
-			<input type="text" class="form-control" placeholder="手机号" required value="${selectuser.user.phoneNumber }" name="phoneNumber">
+			<input type="text" class="form-control" placeholder="手机号" required value="${user.phoneNumber }" name="phoneNumber">
 		</div>
 	</div>
 
 	<div class="form-group">
-		<label for="title" class="col-sm-2 col-md-1 control-label">职称</label>
-		<div class="col-sm-10 col-md-3">
-			<form:select data-toggle="select" class="select select-primary mrs mbm"  path="userTitleId">
-				<form:options items="${selectuser.teacherTitles }" itemValue="id" itemLabel="name" />
-			</form:select>
+			<label for="title" class="col-sm-2 col-md-1 control-label">职称</label>
+			<div class="col-sm-10 col-md-3">
+				<select data-toggle="select" class="select select-primary mrs mbm" name="titleId">
+					<c:forEach items="${titles }" var="t">
+						<option value="${t.id }" <c:if test="${user.title.id == t.id}"> selected='selected'</c:if>>${t.name }
+					</c:forEach>
+				</select>
+			</div>
 		</div>
-	</div>
 	<div class="form-group">
 		<label for="introduction" class="col-sm-2 col-md-1 control-label">简介</label>
 		<div class="col-sm-10 col-md-3">
-			<textarea class="form-control" rows="5" placeholder="简介" name="introduction">${selectuser.user.introduction }</textarea>
+			<textarea class="form-control" rows="5" placeholder="简介" name="introduction">${user.introduction }</textarea>
 		</div>
 	</div>
 	
 	<div class="form-group">
 		<div class="col-sm-2 col-md-1 control-label"></div>
 		<div class="col-sm-10 col-md-3">
-			<input type="hidden" value="${selectuser.user.id}" name="id">
+			<input type="hidden" value="${user.id}" name="id">
 			<button type="submit" class="btn btn-primary btn-wide">提交</button>
 		</div>
 	</div>
-</form:form>
-<script src="resources/js/flat-ui.min.js"></script>
-<script src="resources/js/application.js"></script>
+</form>
+
+	<script src="resources/js/flat-ui.min.js"></script>
+	<script src="resources/js/application.js"></script>

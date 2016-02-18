@@ -15,83 +15,74 @@
   <li><a href="">主页</a></li>
   <li class="active">监考管理</li>
 </ol>
-
-
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<div class="row">
-			<div class="col-md-2">
-			<a class="btn btn-info btn-block" role="button" href="admin/adduser">添加/导入监考信息</a>
-			</div>
-			</div>
-		</div>
-		<div class="panel-body">
-			<ul>
-				<li>添加/导入监考信息</li>
-			</ul>
-		</div>
-	</div>
 	
 		<div class="panel panel-primary">
 		<div class="panel-heading">
 			<div class="row">
 			<div class="col-md-2">
-			<a class="btn btn-info btn-block" role="button" href="admin/updateuser">更新用户基本信息</a>
+			<a class="btn btn-info btn-block" role="button" href="admin/importinvi">导入监考信息</a>
 			</div>
 			</div>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li>更新用户基本信息如，默认密码重置、姓名、员工号、简介等</li>
+				<li>导入监考信息</li>
 			</ul>
 		</div>
 	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<div class="row">
+			<div class="col-md-2">
+			<a class="btn btn-info btn-block" role="button" href="admin/importtimetable">导入课表信息</a>
+			</div>
+			</div>
+		</div>
+		<div class="panel-body">
+			<ul>
+				<li>导入课表信息</li>
+			</ul>
+		</div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<div class="row">
+			<div class="col-md-2">
+			<a class="btn btn-info btn-block" role="button" href="admin/list/unassinvi">监考编辑/分配</a>
+			</div>
+			</div>
+		</div>
+		<div class="panel-body">
+			<ul>
+				<li>对未分配监考完成监考分配。</li>
+				<li>对已分配、已完成监考完成监考分配更新；当教师临时代替监考后，即使监考已完成也可强制重新声明监考安排，用于工作量的精确统计。</li>
+				<li>编辑，修改监考信息，如时间、地点、监考人数等</li>
+			</ul>
+		</div>
+	</div>
+	
+	
 	
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<div class="row">
 			<div class="col-md-2">
-			<a class="btn btn-info btn-block" role="button" href="admin/userauthsetting">用户权限管理</a>
+				<div class="btn-group btn-block">
+  <a class="btn btn-info dropdown-toggle  btn-block" role="button" data-toggle="dropdown">
+   添加监考信息<span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-inverse" role="menu">
+    <li><a href="admin/addinviinfo">添加监考信息</a></li>
+    <li><a href="admin/addspecinviinfo">添加特殊监考</a></li>
+  </ul>
+</div>
 			</div>
 			</div>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li><span class="label label-info">增加/删除</span>系统管理员</li>
-			</ul>
-		</div>
-	</div>
-	
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<div class="row">
-			<div class="col-md-2">
-			<a class="btn btn-info btn-block" role="button" href="admin/userinvisetting">用户监考设置</a>
-			</div>
-			</div>
-		</div>
-		<div class="panel-body">
-			<ul>
-				<li><span class="label label-info">开启/关闭</span>用户监考推荐功能，修改特殊监考次数。</li>
-				<li>为了保证数据一致性，<span class="label label-warning">没有提供</span>修改普通监考次数功能。</li>
-				<li>任务通知功能关闭的用户自动不被推荐。</li>
-			</ul>
-		</div>
-	</div>
-	
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<div class="row">
-			<div class="col-md-2">
-			<a class="btn btn-info btn-block" role="button" href="admin/usernotifsetting">用户通知设置</a>
-			</div>
-			</div>
-		</div>
-		<div class="panel-body">
-			<ul>
-				<li><span class="label label-info">开启/关闭</span>用户通知功能，不会向关闭用户发送通知或推荐监考。</li>
-				<li>如教师出国无法接收通知时，建议<span class="label label-warning">关闭</span>。</li>
-				<li>如教师长期在外学习，但仍需按时完成专业任务时，建议保持<span class="label label-info">开启</span>。</li>
+				<li>添加普通/特殊监考</li>
+				
 			</ul>
 		</div>
 	</div>

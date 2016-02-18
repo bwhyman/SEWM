@@ -30,9 +30,15 @@ public class SpecialInvigilationType {
 	@Temporal(TemporalType.TIMESTAMP )
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
-	
+	// 备注
+	private String comment;
 	public SpecialInvigilationType() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public SpecialInvigilationType(long id) {
+		super();
+		this.id = id;
 	}
 
 	public long getId() {
@@ -66,5 +72,12 @@ public class SpecialInvigilationType {
 	public void setInsertTime(Date insertTime) {
 		this.insertTime = insertTime;
 	}
-	
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 }

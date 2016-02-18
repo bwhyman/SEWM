@@ -22,8 +22,12 @@
 <link href="resources/css/flat-ui.min.css" rel="stylesheet">
 <!-- Default CSS-->
 <link href="resources/css/default.css" rel="stylesheet">
+
+
 <!-- Private -->
 <jsp:invoke fragment="header" />
+<!-- Flat-ui -->
+<link href="resources/css/flat-ui.min.css" rel="stylesheet">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -54,7 +58,7 @@
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="#">个人设置</a></li>
+							<li><a href="updateusersetting">个人设置</a></li>
 							<li class="divider"></li>
 							<li><a href="aaa">退出</a></li>
 						</ul></li>
@@ -123,6 +127,7 @@
 	<script src="resources/js/jquery.min.js"></script>
 	<script src="resources/js/flat-ui.min.js"></script>
 	<script src="resources/js/application.js"></script>
+	
 	<!--Private JS  -->
 	<jsp:invoke fragment="footer" />
 </body>

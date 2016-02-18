@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,22 +21,17 @@ public class SpecialInvigilationInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	// 监考人数
-	private int requiredNumber;
 	// 监考类型
 	@ManyToOne
 	private SpecialInvigilationType specType;
-	// 监考开始时间
+	// 监考时间
 	@Temporal(TemporalType.TIMESTAMP)
-	private Calendar startTime;
-	// 监考结束时间
-	@Temporal(TemporalType.TIMESTAMP)
-	private Calendar endTime;
-	// 监考地点
-	private String location;
+	private Calendar dateTime;
 	// 备注
 	private String comment;
-	@OneToMany(mappedBy = "specInv")
+	// 监考地点
+	private String location = "科学会堂";
+	@OneToMany(mappedBy = "specInv", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
 	@OrderBy(value ="id ASC")
 	private Set<SpecialInvigilation> specialInvigilations;
 	// 监考信息载入时间
@@ -51,35 +47,11 @@ public class SpecialInvigilationInfo {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public int getRequiredNumber() {
-		return requiredNumber;
-	}
-	public void setRequiredNumber(int requiredNumber) {
-		this.requiredNumber = requiredNumber;
-	}
 	public SpecialInvigilationType getSpecType() {
 		return specType;
 	}
 	public void setSpecType(SpecialInvigilationType specType) {
 		this.specType = specType;
-	}
-	public Calendar getStartTime() {
-		return startTime;
-	}
-	public void setStartTime(Calendar startTime) {
-		this.startTime = startTime;
-	}
-	public Calendar getEndTime() {
-		return endTime;
-	}
-	public void setEndTime(Calendar endTime) {
-		this.endTime = endTime;
-	}
-	public String getLocation() {
-		return location;
-	}
-	public void setLocation(String location) {
-		this.location = location;
 	}
 	public String getComment() {
 		return comment;
@@ -98,6 +70,18 @@ public class SpecialInvigilationInfo {
 	}
 	public void setInsertTime(Date insertTime) {
 		this.insertTime = insertTime;
+	}
+	public Calendar getDateTime() {
+		return dateTime;
+	}
+	public void setDateTime(Calendar dateTime) {
+		this.dateTime = dateTime;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 }

@@ -1,19 +1,19 @@
 package com.se.working.util;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.se.working.exception.SEWMException;
 import com.se.working.invigilation.entity.Course;
@@ -29,52 +29,67 @@ public class TimetableExcelUtil {
 	// 单周
 	private static final String REGEX_SINAGLE_WEEK = "(\\d+)";
 	
-
-	public static List<CourseSection> getExcel(File excelFile) throws SEWMException, Exception {
+	/**
+	 * 仅依靠课程名称无法定位具体课程，因为即使课程名称相同，但授课地点，授课对象授课类型(实验)不同无法详细区分。
+	 * 如进一步设计地点班级等实体类过于繁琐。<br>
+	 * 每个cell为一个课程，如果cell中包含多个授课则拆分为多个课程；每个课程包含若干授课时间。
+	 * @param excelFile
+	 * @return 
+	 * @throws SEWMException
+	 * @throws Exception 
+	 * @throws Exception
+	 */
+	public static List<Course> getExcel(File excelFile) throws SEWMException, Exception {
 		Workbook workbook = null;
-		// 根据excel版本创建不同对象
 		try {
-			if (StringUtils.getFilenameExtension(excelFile.getName()).equals("xlsx")) {
-				workbook = new XSSFWorkbook(excelFile);	
-			} else if (StringUtils.getFilenameExtension(excelFile.getName()).equals("xls")) {
-				workbook = new HSSFWorkbook(new FileInputStream(excelFile));
-			} else {
-				throw new SEWMException("不是Excel格式文件");
-			}
-			Sheet sheet = workbook.getSheetAt(0);
-			Row row = sheet.getRow(0);
-			Pattern pattern = Pattern.compile(REGEX_TNAME);
-			Matcher matcher = pattern.matcher(row.getCell(0).getStringCellValue());
-			String name = null;
-			if (matcher.find()) {
-				name = StringUtils.trimAllWhitespace(matcher.group(1));
-			}
-			/*if (name == null || "BO".equals(name)) {
-				throw new SEWMException("教师不存在，或姓名有误");
-			}*/
-			return getRow(sheet);
+			workbook = WorkbookFactory.create(excelFile);
 			
+			return getRow(workbook.getSheetAt(0));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			if (excelFile.exists()) {
+				excelFile.delete();
+			}
+			throw new SEWMException("文件操作错误", e);
 		} finally {
 			if (workbook != null) {
-				workbook.close();
+				try {
+					workbook.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					if (excelFile.exists()) {
+						excelFile.delete();
+					}
+					throw new SEWMException("文件操作错误", e);
+				}
+				workbook = null;
 			}
 		}
 	}
-	private static List<CourseSection> getRow(Sheet sheet) throws ParseException {
-		List<CourseSection> courseSections = new ArrayList<>();
-		/**
-		 * 每次获取的片段
-		 */
-		List<CourseSection> cs =null;
+	/**
+	 * 读取row 
+	 * @param sheet
+	 * @return
+	 * @throws ParseException
+	 */
+	private static List<Course> getRow(Sheet sheet) throws ParseException {
+		List<Course> courses = new ArrayList<>();
+		
 		// 从第4行读取
 		for (int rowIndex = 3; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
 			Row row = sheet.getRow(rowIndex);
+			if (row == null) {
+				break;
+			}
 			// 从第2列读取
 			for (int cellIndex = 1; cellIndex < row.getLastCellNum(); cellIndex++) {
 				Cell cell = row.getCell(cellIndex);
 				if (cell != null && !StringUtils
 						.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
 					Pattern pattern = Pattern.compile(REGEX_SECTION);
+					
 					/**
 					 * 当没有授课地点时无法提取长度为0的内容，使用*替代地点
 					 * 否则后面循环错误
@@ -86,16 +101,17 @@ public class TimetableExcelUtil {
 					String courseLocation = null;
 					String courseClass = null;
 					int  i = 0;	
+					/**
+					 * 每次获取的片段
+					 */
+					List<CourseSection> cs =new ArrayList<>();
 					while(matcher.find()) {
+						
 						/**
 						 * 当授课星期时间相同，但授课周数不同时，4个一组循环
 						 * i = 0，课程名称；i = 1，课程周次；i = 2，授课地点；i = 3，班级
 						 */
 						if (i % 4 == 0) {
-							/**
-							 * 创建本次授课课程片段
-							 */
-							cs = new ArrayList<>();
 							i = 0;
 						}
 						switch (i) {
@@ -146,32 +162,66 @@ public class TimetableExcelUtil {
 							courseClass = matcher.group(1);
 							Course course = new Course();
 							course.setName(courseName);
+							
 							course.setLocation(courseLocation);
 							course.setTeachingClass(courseClass);
 							// 将本次课程片段关联至本课程
-							for (CourseSection s : cs) {
-								s.setCourse(course);
-							}
+							course.setCourseSections(new LinkedHashSet<>(cs));
 							// 将本次课程片段添加至整体课程片段
-							courseSections.addAll(cs);
+							courses.add(course);
 							break;
 						}
+						
 						i++;
 					}		
 				}
 			}	
 		}
-		return courseSections;
+		
+		return courses;
 	}
 	
-	
 	/**
-	 * 
-	 * @param excelPath
-	 * @throws SEWMException
+	 * 读取课表中的教师姓名
+	 * @param excelFile
+	 * @return
 	 * @throws Exception
+	 * @throws SEWMException
 	 */
-	public static List<CourseSection> getExcel(String excelPath) throws SEWMException, Exception {
-		return getExcel(new File(excelPath));
+	public static String getTimetableName(File excelFile) throws Exception, SEWMException {
+		Workbook workbook = null;
+		try {
+			workbook = WorkbookFactory.create(excelFile);
+			Row row =  workbook.getSheetAt(0).getRow(0);
+			Pattern pattern = Pattern.compile(REGEX_TNAME);
+			Matcher matcher = pattern.matcher(row.getCell(0).getStringCellValue());
+			String name = null;
+			if (matcher.find()) {
+				name = StringUtils.trimAllWhitespace(matcher.group(1));
+			}
+			return name;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			if (excelFile.exists()) {
+				excelFile.delete();
+			}
+			throw new SEWMException("文件操作错误", e);
+		} finally {
+			if (workbook != null) {
+				try {
+					workbook.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					if (excelFile.exists()) {
+						excelFile.delete();
+					}
+					throw new SEWMException("文件操作错误", e);
+				}
+				workbook = null;
+			}
+		}
 	}
 }

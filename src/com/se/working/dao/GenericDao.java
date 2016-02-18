@@ -3,8 +3,6 @@ package com.se.working.dao;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.criteria.Order;
-
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -30,6 +28,12 @@ public abstract class GenericDao<T, ID extends Serializable> {
 		Type t = getClass().getGenericSuperclass();
         ParameterizedType pt = (ParameterizedType) t;
         clazz = (Class) pt.getActualTypeArguments()[0];
+	}
+	public void flush() {
+		getSessionFactory().getCurrentSession().flush();
+	}
+	public void refresh(T entity) {
+		getSessionFactory().getCurrentSession().refresh(entity);
 	}
 	public void persist(T entity) {
 		// TODO Auto-generated method stub

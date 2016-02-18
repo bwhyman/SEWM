@@ -17,14 +17,15 @@
   <li class="active">修改权限</li>
 </ol>
 	
-	<form:form class="form-horizontal" modelAttribute="useradmin" action="admin/userauthority" method="POST">
+	<form class="form-horizontal" action="admin/userauthsetting" method="POST">
 		<div class="form-group">
 			<label for="name" class="col-sm-2 col-md-1 control-label">管理员</label>
 			<div class="col-sm-10 col-md-5">
-				<form:select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info"
-					path="newAdminIds">
-					<form:options items="${useradmin.users }" itemValue="id" itemLabel="name" />
-				</form:select>
+				<select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info" name="newAdmins">
+					<c:forEach items="${users }" var="u">
+						<option value="${u.id }" <c:if test="${u.userAuthority.id ==  adminId}">selected="selected"</c:if>>${u.name }	
+					</c:forEach>
+				</select>
 			</div>
 			<div class="col-sm-10 col-md-3">
 				<p class="text-danger">说明</p>
@@ -34,15 +35,10 @@
 						<div class="col-sm-2 col-md-1 control-label"></div>
 						<div class="col-sm-10 col-md-3">
 							
-							<c:forEach items="${useradmin.olderAdminIds }" var="o">
-							<input type="hidden" value="${o }" name="olderAdminIds" />  
-							</c:forEach>
-							 <input type="hidden" value="1" name="_olderAdminIds" />
-							
 							<button type="submit" class="btn btn-primary btn-wide">提交</button>			
 						</div>
 					</div>
-	</form:form>
+	</form>
 			
     </jsp:body>
 </myTemplate:template>

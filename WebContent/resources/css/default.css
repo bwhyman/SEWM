@@ -131,3 +131,7 @@ body {
 .container .text-muted {
   margin: 20px 0;
 }
+
+.checkboxspan {
+	font-size: 16px;
+}

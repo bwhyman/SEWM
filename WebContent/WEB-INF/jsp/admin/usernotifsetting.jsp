@@ -24,7 +24,6 @@
 			<label class="col-md-1 control-label">通知</label>
 			</div>
 		<c:forEach items="${notifusers }" var="u" varStatus="s">
-		<input type="hidden" value="${u.id }" name="ids">
 		<div class="form-group">
 			<label class="col-md-1 control-label">${u.name }</label>
 			<div class="col-md-1">
@@ -33,6 +32,17 @@
 				</div>
 		</div>
 		</c:forEach>
+		<div class="form-group">
+						<div class="col-sm-2 col-md-1 control-label"><p class="text-danger">说明</p></div>
+						<div class="col-sm-10 col-md-11">
+							<p class="text-danger">
+							该功能的关闭意味着教师无法接收任何专业通知，不会推荐监考分配<br>
+							不存在正常参加监考分配，却无需接收专业通知的可能，因此，通知功能
+							<span class="label label-warning">单向</span>自动关联监考推荐功能，
+							即修改监考推荐<span class="label label-warning">不会</span>影响通知功能。<br>
+							</p>
+						</div>
+					</div>
 		<div class="form-group">
 	<div class="col-md-1">
 			<button type="submit" class="btn btn-primary btn-wide">提交</button>

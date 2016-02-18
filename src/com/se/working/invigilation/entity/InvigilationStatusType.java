@@ -33,10 +33,11 @@ public class InvigilationStatusType {
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
 	
-	public interface InvStatusType {
+	public interface InviStatusType {
 		public static long UNASSIGNED = 1;
 		public static long ASSIGNED = 2;
-		public static long DONE = 3;
+		public static int REMINDED = 3;
+		public static long DONE = 4;
 	}
 	public InvigilationStatusType(long id) {
 		super();

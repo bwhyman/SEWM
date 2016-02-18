@@ -1,5 +1,7 @@
 package com.se.working.dao;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +15,15 @@ public class UserDao extends GenericDao<User, Long>{
 				.setString("userName", userName)
 				.setString("password", password);
 		return (User) query.uniqueResult();
+	}
+	/**
+	 * 查找通知关闭用户
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<User> listDisableds() {
+		String HQL = "FROM User u WHERE u.enabledMessage = false";
+		return getSessionFactory().getCurrentSession().createQuery(HQL).list();
 	}
 	
 	public UserDao() {

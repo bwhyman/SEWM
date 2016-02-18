@@ -2,13 +2,13 @@
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
                                          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
- <session-factory name="">
+ <session-factory>
   <property name="hibernate.show_sql">true</property>
   <property name="hibernate.default_batch_fetch_size">20</property>
   <property name="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</property>
   <property name="hibernate.hbm2ddl.auto">update</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-  <property name="hibernate.connection.pool_size">10</property>
+  
   <mapping class="com.se.working.entity.TeacherTitle"/>
   <mapping class="com.se.working.entity.User"/>
   <mapping class="com.se.working.entity.UserAuthority"/>

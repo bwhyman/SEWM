@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.se.working.service.SuperAdminService;
 
 @Controller
-@RequestMapping("superadmin")
+@RequestMapping("/superadmin")
 public class SuperAdminController {
 	private String superAdminBasePath = "/superadmin/";
 	private String redirect = "redirect:";
@@ -17,27 +17,31 @@ public class SuperAdminController {
 	@Autowired
 	private SuperAdminService superAdminService;
 	
-	@RequestMapping("/initteachertitle")
+	@RequestMapping(path = "/initteachertitle", method = RequestMethod.POST)
 	public String initTeacherTitle() {
 		superAdminService.initTeacherTitle();
 		return redirect + superAdminBasePath + "/initsys";
 	}
-	@RequestMapping("/inituserauthority")
+	@RequestMapping(path = "/inituserauthority", method = RequestMethod.POST)
 	public String initUserAuthority() {
 		superAdminService.initUserAuthority();
 		return redirect + superAdminBasePath + "/initsys";
 	}
-	@RequestMapping("/initinvistatustype")
+	@RequestMapping(path = "/initinvistatustype", method = RequestMethod.POST)
 	public String initInviStatusType() {
 		superAdminService.initInviStatusType();
 		return redirect + superAdminBasePath + "/initsys";
 	}
-	@RequestMapping("/inituser")
+	@RequestMapping(path = "/inituser", method = RequestMethod.POST)
 	public String initUser() {
 		superAdminService.initUser();
 		return redirect + superAdminBasePath + "/initsys";
 	}
-	
+	@RequestMapping(path = "/initspecinvitype", method = RequestMethod.POST)
+	public String initSpecInvType() {
+		superAdminService.initSpecInviType();
+		return redirect + superAdminBasePath + "/initsys";
+	}
 	
 	/**
 	 * 直接加载页面时的通配方法

@@ -16,7 +16,7 @@
   <li><a href="admin/usersetting">用户管理</a></li>
   <li class="active">添加用户</li>
 </ol>
-	<form:form class="form-horizontal" modelAttribute="titles" action="admin/adduser" method="POST">
+	<form class="form-horizontal" action="admin/adduser" method="POST">
 					<div class="form-group">
 						<label for="name" class="col-sm-2 col-md-1 control-label">姓名*</label>
 						<div class="col-sm-10 col-md-3">
@@ -40,9 +40,11 @@
 					<div class="form-group">
 						<label for="title" class="col-sm-2 col-md-1 control-label">职称*</label>
 						<div class="col-sm-10 col-md-3">
-							<form:select data-toggle="select" class="select select-primary mrs mbm"  path="userTitleId">
-				<form:options items="${titles.teacherTitles }" itemValue="id" itemLabel="name" />
-			</form:select>
+						<select data-toggle="select" class="select select-primary mrs mbm" name="titleId">
+					<c:forEach items="${titles }" var="t">
+						<option value="${t.id }">${t.name }
+					</c:forEach>
+				</select>
 						</div>
 					</div>
 					<div class="form-group">
@@ -60,6 +62,6 @@
 						</div>
 					</div>
 					
-				</form:form>	
+				</form>	
     </jsp:body>
 </myTemplate:template>

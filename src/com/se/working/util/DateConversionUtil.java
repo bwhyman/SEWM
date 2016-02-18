@@ -7,7 +7,8 @@ import java.util.Date;
 
 public class DateConversionUtil {
 	
-	public static String BASEDATE = "2016-03-07";
+	public static String BASE_DATE = "2016-03-07";
+	public static int BASE_WEEK_OF_YEAR = getBaseWeek();
 	
 	/**
 	 * 指定周、星期、时间，基于基点返回日历
@@ -19,7 +20,7 @@ public class DateConversionUtil {
 	 */
 	public static Calendar courseTimeToDate(int week, int dayOfWeek, String time) throws ParseException{
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Date dateTime = simpleDateFormat.parse(BASEDATE + " " + time);
+		Date dateTime = simpleDateFormat.parse(BASE_DATE + " " + time);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(dateTime);
 		calendar.add(Calendar.WEEK_OF_YEAR, week - 1);
@@ -29,27 +30,28 @@ public class DateConversionUtil {
 	}
 	
 	/**
-	 * 字符串连接生成时间Date类型
-	 * @param yyyyMMDD
-	 * @param time
+	 * 返回标准Calendar。yyyy-MM-dd HH:mm
+	 * @param dateTime
 	 * @return
 	 * @throws ParseException
 	 */
-	public static Date dateFormat(String yyyyMMDD, String time) throws ParseException{
-		if (yyyyMMDD.contains(".")) {
-			yyyyMMDD = yyyyMMDD.replace('.', '-');
-		}
-		// 替换中文引号
-		if (time.contains("：")) {
-			time = time.replace('：', ':');
-		}
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		cal.setTime(simpleDateFormat.parse(yyyyMMDD));
-		String[] timeArray = time.split(":");
-		cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(timeArray[0]));
-		cal.set(Calendar.MINUTE, Integer.valueOf(timeArray[1]));
-		return cal.getTime();
+	public static Calendar getCalendar(String dateTime) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(simpleDateFormat.parse(dateTime));
+		return calendar;
 	}
 	
+	
+	private static int getBaseWeek() {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.setTime(sf.parse(BASE_DATE));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return calendar.get(Calendar.WEEK_OF_YEAR);
+	}
 }
