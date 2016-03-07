@@ -8,16 +8,38 @@ import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import com.se.working.exception.SEWMException;
 
+/**
+ * 用于Controller全局控制
+ * @author BO
+ *
+ */
 @ControllerAdvice
 public class BaseController {
 
+	/**
+	 * 异常页面重定向，携带参数，可以刷新
+	 * 全局SEWMException异常显示，任何可能抛出该异常的页面仅需定义exception即可接收异常信息
+	 * 
+	 * @param e
+	 * @param request
+	 * @return
+	 */
 	@ExceptionHandler(SEWMException.class)  
-	public String  handlerException(Exception e, HttpServletRequest request) {
+	public String  handleSEWMException(Exception e, HttpServletRequest request) {
 		FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
 		flashMap.put("exception", e.getMessage());
 		e.printStackTrace();
-	  return "redirect:" + request.getServletPath();
+	  return "redirect:" + request.getHeader("Referer");
 	}  
+	
+	/*@ExceptionHandler(Exception.class)  
+	public String  handlerException(Exception e, HttpServletRequest request) {
+		FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
+		flashMap.put("exception", e.getMessage());
+		// e.printStackTrace();
+		return "redirect:" + request.getHeader("Referer");
+	}  */
+	
 	public BaseController() {
 		// TODO Auto-generated constructor stub
 	}

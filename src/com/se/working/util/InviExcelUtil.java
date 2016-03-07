@@ -36,7 +36,7 @@ public class InviExcelUtil {
 	 * @throws SEWMException 
 	 */
 
-	public static List<InvigilationInfo> getExcel(File excelFile) throws SEWMException {
+	public static List<InvigilationInfo> getExcel(File excelFile) {
 		Workbook workbook = null;
 		try {
 			workbook = WorkbookFactory.create(excelFile);
@@ -155,8 +155,8 @@ public class InviExcelUtil {
 		Calendar end = Calendar.getInstance();
 		sStartTime = sDate + " " + sStartTime;
 		sEndTime = sDate + " " + sEndTime;
-		start = DateConversionUtil.getCalendar(sStartTime);
-		end = DateConversionUtil.getCalendar(sEndTime);
+		start = DateUtils.getCalendar(sStartTime);
+		end = DateUtils.getCalendar(sEndTime);
 		info.setRequiredNumber(Integer.valueOf(sNumber));
 		info.setLocation(sLocation);
 		info.setStartTime(start);

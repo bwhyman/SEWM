@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.se.working.entity.User;
+import com.se.working.entity.UserAuthority.UserAuthorityType;
 /**
  * 管理员操作验证
  * @author BO
@@ -33,8 +36,11 @@ public class AdminInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("AdminInterceptor");
-		return true;
+		User user = (User) request.getSession().getAttribute("user");
+		if (user.getUserAuthority().getLevel() >= UserAuthorityType.ADAMIN) {
+			return true;
+		}
+		return false;
 	}
 
 }

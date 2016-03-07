@@ -18,6 +18,13 @@ import com.se.working.invigilation.dao.TeacherInviDao;
 import com.se.working.invigilation.entity.InvigilationStatusType;
 import com.se.working.invigilation.entity.SpecialInvigilationType;
 import com.se.working.invigilation.entity.TeacherInvigilation;
+import com.se.working.task.dao.FileTaskStatusDao;
+import com.se.working.task.dao.FileTypeDao;
+import com.se.working.task.dao.TeacherTaskDao;
+import com.se.working.task.entity.FileTaskStatus;
+import com.se.working.task.entity.FileType;
+import com.se.working.task.entity.TeacherTask;
+import com.se.working.util.MD5;
 
 @Service
 @Transactional
@@ -35,6 +42,12 @@ public class SuperAdminService extends GenericService<User, Long>{
 	private TeacherInviDao teacherInvigilationDao;
 	@Autowired
 	private SpecialInviTypeDao specialInviTypeDao;
+	@Autowired
+	private TeacherTaskDao teacherTaskDao;
+	@Autowired
+	private FileTypeDao fileTypeDao;
+	@Autowired
+	private FileTaskStatusDao fileTaskStatusDao;
 	/**
 	 * 初始化职称
 	 * @return 
@@ -106,94 +119,245 @@ public class SuperAdminService extends GenericService<User, Long>{
 	 */
 	public void initUser() {
 		if (userDao.list().size() == 0) {
+			int point = 100;
+			int sqnum = 10;
 			User luo = new User();
 			luo.setName("罗嗣卿");
 			luo.setEmployeeNumber("1001");
+			luo.setPassword(MD5.generateMD5(luo.getEmployeeNumber()));
 			luo.setTitle(new TeacherTitle(TeacherTitleType.AP));
-			luo.setPhoneNumber("");
+			luo.setPhoneNumber("13304507766");
 			luo.setUserAuthority(new UserAuthority(UserAuthorityType.ADAMIN));
 			userDao.persist(luo);
 			TeacherInvigilation iluo = new TeacherInvigilation();
 			iluo.setUser(luo);
-			iluo.setSqecQuantity(10);
+			iluo.setSqecQuantity(sqnum);
 			teacherInvigilationDao.persist(iluo);
+			TeacherTask tluo = new TeacherTask();
+			tluo.setUser(luo);
+			tluo.setPoint(point);
+			teacherTaskDao.persist(tluo);
 			
 			User lili = new User();
 			lili.setName("李莉");
 			lili.setEmployeeNumber("1002");
+			lili.setPassword(MD5.generateMD5(lili.getEmployeeNumber()));
 			lili.setTitle(new TeacherTitle(TeacherTitleType.AP));
-			lili.setPhoneNumber("");
+			lili.setPhoneNumber("15046066917");
 			lili.setUserAuthority(new UserAuthority(UserAuthorityType.ADAMIN));
 			userDao.persist(lili);
 			TeacherInvigilation ilili = new TeacherInvigilation();
 			ilili.setUser(lili);
-			ilili.setSqecQuantity(12);
+			ilili.setSqecQuantity(sqnum);
 			teacherInvigilationDao.persist(ilili);
+			TeacherTask tlili = new TeacherTask();
+			tlili.setUser(lili);
+			tlili.setPoint(point);
+			teacherTaskDao.persist(tlili);
 			
-			User wu = new User();
-			wu.setName("吴頔");
-			wu.setEmployeeNumber("1003");
-			wu.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
-			wu.setPhoneNumber("");
-			wu.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
-			userDao.persist(wu);
-			TeacherInvigilation iwu = new TeacherInvigilation();
-			iwu.setUser(wu);
-			iwu.setSqecQuantity(13);
-			teacherInvigilationDao.persist(iwu);
+			User wangjian = new User();
+			wangjian.setName("王健");
+			wangjian.setEmployeeNumber("1003");
+			wangjian.setPassword(MD5.generateMD5(wangjian.getEmployeeNumber()));
+			wangjian.setTitle(new TeacherTitle(TeacherTitleType.AP));
+			wangjian.setPhoneNumber("13845082633");
+			wangjian.setUserAuthority(new UserAuthority(UserAuthorityType.ADAMIN));
+			userDao.persist(wangjian);
+			TeacherInvigilation iwangjian = new TeacherInvigilation();
+			iwangjian.setUser(wangjian);
+			iwangjian.setSqecQuantity(sqnum);
+			teacherInvigilationDao.persist(iwangjian);
+			TeacherTask twangjian = new TeacherTask();
+			twangjian.setUser(wangjian);
+			twangjian.setPoint(point);
+			teacherTaskDao.persist(twangjian);
 			
-			User bian = new User();
-			bian.setName("边继龙");
-			bian.setEmployeeNumber("1004");
-			bian.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
-			bian.setPhoneNumber("");
-			bian.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
-			userDao.persist(bian);
-			TeacherInvigilation ibian = new TeacherInvigilation();
-			ibian.setUser(bian);
-			ibian.setSqecQuantity(14);
-			teacherInvigilationDao.persist(ibian);
+			User sujianmin = new User();
+			sujianmin.setName("苏健民");
+			sujianmin.setEmployeeNumber("1004");
+			sujianmin.setPassword(MD5.generateMD5(sujianmin.getEmployeeNumber()));
+			sujianmin.setTitle(new TeacherTitle(TeacherTitleType.PROF));
+			sujianmin.setPhoneNumber("13394513177");
+			sujianmin.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			userDao.persist(sujianmin);
+			TeacherInvigilation isujianmin = new TeacherInvigilation();
+			isujianmin.setUser(sujianmin);
+			isujianmin.setSqecQuantity(sqnum);
+			teacherInvigilationDao.persist(isujianmin);
+			TeacherTask tsujianmin = new TeacherTask();
+			tsujianmin.setUser(sujianmin);
+			tsujianmin.setPoint(point);
+			teacherTaskDao.persist(tsujianmin);
+			
+			User zhangxiying = new User();
+			zhangxiying.setName("张锡英");
+			zhangxiying.setEmployeeNumber("1005");
+			zhangxiying.setPassword(MD5.generateMD5(zhangxiying.getEmployeeNumber()));
+			zhangxiying.setTitle(new TeacherTitle(TeacherTitleType.AP));
+			zhangxiying.setPhoneNumber("13100969429");
+			zhangxiying.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			userDao.persist(zhangxiying);
+			TeacherInvigilation izhangxiying = new TeacherInvigilation();
+			izhangxiying.setUser(zhangxiying);
+			izhangxiying.setSqecQuantity(sqnum);
+			teacherInvigilationDao.persist(izhangxiying);
+			TeacherTask tzhangxiying = new TeacherTask();
+			tzhangxiying.setUser(zhangxiying);
+			tzhangxiying.setPoint(point);
+			teacherTaskDao.persist(tzhangxiying);
+			
+			User qiuzhaowen = new User();
+			qiuzhaowen.setName("邱兆文");
+			qiuzhaowen.setEmployeeNumber("1006");
+			qiuzhaowen.setPassword(MD5.generateMD5(qiuzhaowen.getEmployeeNumber()));
+			qiuzhaowen.setTitle(new TeacherTitle(TeacherTitleType.AP));
+			qiuzhaowen.setPhoneNumber("13903601207");
+			qiuzhaowen.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			userDao.persist(qiuzhaowen);
+			TeacherInvigilation iqiuzhaowen = new TeacherInvigilation();
+			iqiuzhaowen.setUser(qiuzhaowen);
+			iqiuzhaowen.setSqecQuantity(sqnum);
+			teacherInvigilationDao.persist(iqiuzhaowen);
+			TeacherTask tqiuzhaowen = new TeacherTask();
+			tqiuzhaowen.setUser(qiuzhaowen);
+			tqiuzhaowen.setPoint(point);
+			teacherTaskDao.persist(tqiuzhaowen);
 			
 			User bo = new User();
 			bo.setName("王波");
-			bo.setEmployeeNumber("1020090008");
+			bo.setEmployeeNumber("1007");
+			bo.setPassword(MD5.generateMD5(bo.getEmployeeNumber()));
 			bo.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
 			bo.setPhoneNumber("15104548299");
 			bo.setUserAuthority(new UserAuthority(UserAuthorityType.SUPERADMIN));
 			userDao.persist(bo);
 			TeacherInvigilation ibo = new TeacherInvigilation();
 			ibo.setUser(bo);
-			ibo.setSqecQuantity(15);
+			ibo.setSqecQuantity(sqnum);
 			teacherInvigilationDao.persist(ibo);
+			TeacherTask tbo = new TeacherTask();
+			tbo.setUser(bo);
+			tbo.setPoint(point);
+			teacherTaskDao.persist(tbo);
 			
-			User sunzhe = new User();
-			sunzhe.setName("孙哲");
-			sunzhe.setEmployeeNumber("1020090007");
-			sunzhe.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
-			sunzhe.setPhoneNumber("18946000922");
-			sunzhe.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
-			userDao.persist(sunzhe);
-			TeacherInvigilation isun = new TeacherInvigilation();
-			isun.setUser(sunzhe);
-			isun.setSqecQuantity(15);
-			teacherInvigilationDao.persist(isun);
+			User liyan = new User();
+			liyan.setName("李琰");
+			liyan.setEmployeeNumber("1008");
+			liyan.setPassword(MD5.generateMD5(liyan.getEmployeeNumber()));
+			liyan.setPhoneNumber("13936130520");
+			liyan.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
+			liyan.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			userDao.persist(liyan);
+			TeacherInvigilation iliyan = new TeacherInvigilation();
+			iliyan.setUser(liyan);
+			iliyan.setSqecQuantity(sqnum);
+			teacherInvigilationDao.persist(iliyan);
+			TeacherTask tliyan = new TeacherTask();
+			tliyan.setUser(liyan);
+			tliyan.setPoint(point);
+			teacherTaskDao.persist(tliyan);
+			
+			User zhaoyuming = new User();
+			zhaoyuming.setName("赵玉茗");
+			zhaoyuming.setEmployeeNumber("1009");
+			zhaoyuming.setPassword(MD5.generateMD5(zhaoyuming.getEmployeeNumber()));
+			zhaoyuming.setPhoneNumber("");
+			zhaoyuming.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
+			zhaoyuming.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			userDao.persist(zhaoyuming);
+			TeacherInvigilation izhaoyuming = new TeacherInvigilation();
+			izhaoyuming.setUser(zhaoyuming);
+			izhaoyuming.setSqecQuantity(sqnum);
+			teacherInvigilationDao.persist(izhaoyuming);
+			TeacherTask tzhaoyuming = new TeacherTask();
+			tzhaoyuming.setUser(zhaoyuming);
+			tzhaoyuming.setPoint(point);
+			teacherTaskDao.persist(tzhaoyuming);
+			
+			User wu = new User();
+			wu.setName("吴頔");
+			wu.setEmployeeNumber("1010");
+			wu.setPassword(MD5.generateMD5(wu.getEmployeeNumber()));
+			wu.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
+			wu.setPhoneNumber("15124506720");
+			wu.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			userDao.persist(wu);
+			TeacherInvigilation iwu = new TeacherInvigilation();
+			iwu.setUser(wu);
+			iwu.setSqecQuantity(sqnum);
+			teacherInvigilationDao.persist(iwu);
+			TeacherTask twu = new TeacherTask();
+			twu.setUser(wu);
+			twu.setPoint(point);
+			teacherTaskDao.persist(twu);
+	
+			
+			User bian = new User();
+			bian.setName("边继龙");
+			bian.setEmployeeNumber("1011");
+			bian.setPassword(MD5.generateMD5(bian.getEmployeeNumber()));
+			bian.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
+			bian.setPhoneNumber("13274508193");
+			bian.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			userDao.persist(bian);
+			TeacherInvigilation ibian = new TeacherInvigilation();
+			ibian.setUser(bian);
+			ibian.setSqecQuantity(sqnum);
+			teacherInvigilationDao.persist(ibian);
+			TeacherTask tbian = new TeacherTask();
+			tbian.setUser(bian);
+			tbian.setPoint(point);
+			teacherTaskDao.persist(tbian);
 			
 		}
 	}
 	
 	public void initSpecInviType() {
-		SpecialInvigilationType en46 = new SpecialInvigilationType();
-		en46.setName("英语四六级");
-		specialInviTypeDao.persist(en46);
+		if (specialInviTypeDao.list().size()  == 0) {
+			SpecialInvigilationType en46 = new SpecialInvigilationType();
+			en46.setName("英语四六级");
+			specialInviTypeDao.persist(en46);
+			
+			SpecialInvigilationType servant = new SpecialInvigilationType();
+			servant.setName("公务员");
+			specialInviTypeDao.persist(servant);
+			
+			SpecialInvigilationType postgrad = new SpecialInvigilationType();
+			postgrad.setName("研究生");
+			specialInviTypeDao.persist(postgrad);
+		}
+	}
+	
+	public void initFileType() {
+		if (fileTypeDao.list().size() == 0) {
+			FileType fnone = new FileType();
+			fnone.setName("无格式要求");
+			fnone.setType("");
+			fileTypeDao.persist(fnone);
+			FileType doc = new FileType();
+			doc.setName("Word文档");
+			doc.setType(".doc,.docx");
+			fileTypeDao.persist(doc);
+			FileType xls = new FileType();
+			xls.setName("Excel表格");
+			xls.setType(".xls,.xlsx");
+			fileTypeDao.persist(xls);
+		}
 		
-		SpecialInvigilationType servant = new SpecialInvigilationType();
-		servant.setName("公务员");
-		specialInviTypeDao.persist(servant);
-		
-		SpecialInvigilationType postgrad = new SpecialInvigilationType();
-		postgrad.setName("研究生");
-		specialInviTypeDao.persist(postgrad);
-
+	}
+	
+	public void initFileTaskStatus() {
+		if (fileTaskStatusDao.list().size() == 0) {
+			FileTaskStatus started = new FileTaskStatus();
+			started.setName("已开启");
+			fileTaskStatusDao.persist(started);
+			FileTaskStatus expired = new FileTaskStatus();
+			expired.setName("已过期");
+			fileTaskStatusDao.persist(expired);
+			FileTaskStatus closed = new FileTaskStatus();
+			closed.setName("已关闭");
+			fileTaskStatusDao.persist(closed);
+		}
 	}
 	
 	public SuperAdminService() {

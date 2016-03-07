@@ -20,13 +20,13 @@ public class TeacherInviDao extends GenericDao<TeacherInvigilation, Long>{
 		return getSessionFactory().getCurrentSession().createQuery(HQL).list();
 	}
 	/**
-	 * 获取所有可监考教师，按监考次数倒序
+	 * 获取所有可监考教师，按监考次数最少的正序，ID倒序
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	public List<TeacherInvigilation> listRDCs() {
 		String HQL = "FROM TeacherInvigilation t WHERE t.enabledRecommend = true "
-				+ "AND t.user.enabledMessage = true ORDER BY size(t.invigilations) ASC";
+				+ "AND t.user.enabledMessage = true ORDER BY SIZE(t.invigilations) ASC, id DESC";
 		return getSessionFactory().getCurrentSession().createQuery(HQL).list();
 	}
 	

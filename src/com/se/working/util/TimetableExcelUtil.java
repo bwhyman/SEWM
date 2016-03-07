@@ -39,7 +39,7 @@ public class TimetableExcelUtil {
 	 * @throws Exception 
 	 * @throws Exception
 	 */
-	public static List<Course> getExcel(File excelFile) throws SEWMException, Exception {
+	public static List<Course> getExcel(File excelFile) {
 		Workbook workbook = null;
 		try {
 			workbook = WorkbookFactory.create(excelFile);
@@ -135,9 +135,9 @@ public class TimetableExcelUtil {
 								for (int week = startWeek; week <= endWeek; week++) {
 									CourseSection section = new CourseSection();
 									// 开始时间。第3行为12节(从0行算)，列数为星期
-									section.setStartTime(DateConversionUtil.courseTimeToDate(week, cellIndex, EnumSession.values()[rowIndex - 3].getStartTime()));
+									section.setStartTime(DateUtils.courseTimeToDate(week, cellIndex, EnumSession.values()[rowIndex - 3].getStartTime()));
 									// 结束时间
-									section.setEndTime(DateConversionUtil.courseTimeToDate(week, cellIndex, EnumSession.values()[rowIndex - 3].getEndTime()));
+									section.setEndTime(DateUtils.courseTimeToDate(week, cellIndex, EnumSession.values()[rowIndex - 3].getEndTime()));
 									cs.add(section);
 								}
 							}
@@ -148,8 +148,8 @@ public class TimetableExcelUtil {
 							while (mSingleWeek.find()) {
 								int singleWeek = Integer.valueOf(mSingleWeek.group(1));
 								CourseSection section = new CourseSection();
-								section.setStartTime(DateConversionUtil.courseTimeToDate(singleWeek, cellIndex, EnumSession.values()[rowIndex - 3].getStartTime()));
-								section.setEndTime(DateConversionUtil.courseTimeToDate(singleWeek, cellIndex, EnumSession.values()[rowIndex - 3].getEndTime()));
+								section.setStartTime(DateUtils.courseTimeToDate(singleWeek, cellIndex, EnumSession.values()[rowIndex - 3].getStartTime()));
+								section.setEndTime(DateUtils.courseTimeToDate(singleWeek, cellIndex, EnumSession.values()[rowIndex - 3].getEndTime()));
 								cs.add(section);
 							}
 							break;
@@ -188,7 +188,7 @@ public class TimetableExcelUtil {
 	 * @throws Exception
 	 * @throws SEWMException
 	 */
-	public static String getTimetableName(File excelFile) throws Exception, SEWMException {
+	public static String getTimetableName(File excelFile) {
 		Workbook workbook = null;
 		try {
 			workbook = WorkbookFactory.create(excelFile);

@@ -1,11 +1,17 @@
 package com.se.working.message;
 
 public class AlidayuInvi {
+	//时间
 	private String t;
+	// 地点
 	private String l;
+	// 本次监考所有教师姓名。以,分隔
 	private String ns;
+	// 当前教师监考分配次数
 	private String f;
+	// 备注
 	private String c = "";
+	// 当前教师姓名
 	private String n;
 	public String getT() {
 		return t;

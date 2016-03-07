@@ -58,6 +58,7 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
+	<!-- SpringMVC Interceptor -->
 	<mvc:interceptors>
 		<!-- 登录用户操作 -->
 		<mvc:interceptor>
@@ -65,6 +66,7 @@
 			<mvc:mapping path="/**" />
 			<!-- 排除login操作 -->
 			<mvc:exclude-mapping path="/login" />
+			<mvc:exclude-mapping path="/logout" />
 			<!-- 排除资源 -->
 			<mvc:exclude-mapping path="/resources/**" />
 			<bean class="com.se.working.interceptor.UserInterceptor"></bean>
@@ -85,8 +87,8 @@
 		<!-- one of the properties available; the maximum file size in bytes -->
 		<!-- 50MB -->
 		<property name="maxUploadSize" value="50000000" />
-		<!-- 2MB -->
-		<property name="maxInMemorySize" value="2000000"></property>
+		<!-- 5MB -->
+		<property name="maxInMemorySize" value="5000000"></property>
 		<property name="uploadTempDir" value="WEB-INF/jsp/upload/temp" />
 		<property name="defaultEncoding" value="UTF-8"></property>
 		<!-- 延迟文件解析，判断大小等 -->
@@ -94,7 +96,7 @@
 	</bean>
 
 	<!-- 根目录重定向，设置welcome为空，定向view-name对应的视图名称，不调用controller -->
-	<mvc:view-controller path="/" view-name="main" />
-	<!-- SpringMVC Interceptor -->
+	<mvc:view-controller path="/" view-name="/user/main" />
+	
 
 </beans>

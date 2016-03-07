@@ -11,7 +11,7 @@ import com.se.working.service.SuperAdminService;
 @Controller
 @RequestMapping("/superadmin")
 public class SuperAdminController {
-	private String superAdminBasePath = "/superadmin/";
+	private String basePath = "/superadmin/";
 	private String redirect = "redirect:";
 	
 	@Autowired
@@ -20,28 +20,40 @@ public class SuperAdminController {
 	@RequestMapping(path = "/initteachertitle", method = RequestMethod.POST)
 	public String initTeacherTitle() {
 		superAdminService.initTeacherTitle();
-		return redirect + superAdminBasePath + "/initsys";
+		return redirect + "initsys";
 	}
 	@RequestMapping(path = "/inituserauthority", method = RequestMethod.POST)
 	public String initUserAuthority() {
 		superAdminService.initUserAuthority();
-		return redirect + superAdminBasePath + "/initsys";
+		return redirect + "initsys";
 	}
 	@RequestMapping(path = "/initinvistatustype", method = RequestMethod.POST)
 	public String initInviStatusType() {
 		superAdminService.initInviStatusType();
-		return redirect + superAdminBasePath + "/initsys";
+		return redirect + "initsys";
 	}
 	@RequestMapping(path = "/inituser", method = RequestMethod.POST)
 	public String initUser() {
 		superAdminService.initUser();
-		return redirect + superAdminBasePath + "/initsys";
+		return redirect + "initsys";
 	}
 	@RequestMapping(path = "/initspecinvitype", method = RequestMethod.POST)
 	public String initSpecInvType() {
 		superAdminService.initSpecInviType();
-		return redirect + superAdminBasePath + "/initsys";
+		return redirect+ "initsys";
 	}
+	@RequestMapping(path = "/initfiletasktype", method = RequestMethod.POST)
+	public String initFileTaskType() {
+		superAdminService.initFileType();
+		return redirect+ "initsys";
+	}
+	@RequestMapping(path = "/initfilestatus", method = RequestMethod.POST)
+	public String initFileTaskStatus() {
+		superAdminService.initFileTaskStatus();
+		return redirect+ "initsys";
+	}
+	
+	
 	
 	/**
 	 * 直接加载页面时的通配方法
@@ -53,13 +65,13 @@ public class SuperAdminController {
 	@RequestMapping(path = "/{viewpath}", method = RequestMethod.GET)
 	public String getView(@PathVariable String viewpath) {
 		
-		return superAdminBasePath + viewpath;
+		return basePath + viewpath;
 	}
 	
 	@RequestMapping(path = "/{root}/{viewpath}", method = RequestMethod.GET)
 	public String getView(@PathVariable String root, @PathVariable String viewpath) {
 		
-		return superAdminBasePath + root + "/" + viewpath;
+		return basePath + root + "/" + viewpath;
 	}
 	
 }

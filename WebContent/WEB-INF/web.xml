@@ -7,6 +7,10 @@
 	<welcome-file-list>
 		<welcome-file></welcome-file>
 	</welcome-file-list>
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>webapp.root</param-value>
+	</context-param>
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -59,5 +63,8 @@
 	</error-page>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
 	</listener>
 </web-app>
