@@ -31,4 +31,13 @@ public class StringUtils {
 	public static String getFilenameExtension(String path) {
 		return path.substring(path.lastIndexOf(".")+1);
 	}
+	
+	/**
+	 * 获取文件名称
+	 * @param fileName
+	 * @return
+	 */
+	public static String getFileName(String fileName){
+		return fileName.substring(0, fileName.lastIndexOf("."));
+	}
 }

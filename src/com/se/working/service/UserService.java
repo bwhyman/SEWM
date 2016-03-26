@@ -33,9 +33,9 @@ public class UserService extends GenericService<User, Long>{
 	 * @param password
 	 * @return
 	 */
-	public User findByPassword(String userName, String password) {
+	public User findByPassword(String employeeNumber, String password) {
 		
-		return userDao.getBypassword(userName, password);
+		return userDao.getBypassword(employeeNumber, MD5.generateMD5(password));
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class UserService extends GenericService<User, Long>{
 	
 	public void updatePassword(long userId, String newPwd) {
 		User user = userDao.get(userId);
-		// user.setPassword(MD5.generateMD5(newPwd));
+		user.setPassword(MD5.generateMD5(newPwd));
 	}
 	
 	/**
@@ -76,6 +76,14 @@ public class UserService extends GenericService<User, Long>{
 			 courseDao.delete(c);
 		}
 		return count;
+	}
+	
+	/**
+	 * 所有通知开启用户
+	 * @return
+	 */
+	public List<User> findAbledUsers() {
+		return userDao.listAbleds();
 	}
 	
 	public UserService() {

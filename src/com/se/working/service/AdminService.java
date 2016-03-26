@@ -15,6 +15,7 @@ import com.se.working.entity.UserAuthority.UserAuthorityLevel;
 import com.se.working.entity.UserAuthority.UserAuthorityType;
 import com.se.working.invigilation.dao.TeacherInviDao;
 import com.se.working.invigilation.entity.TeacherInvigilation;
+import com.se.working.util.MD5;
 
 
 
@@ -56,7 +57,7 @@ public class AdminService extends GenericService<User, Long> {
 	 */
 	public void updateDefaultPassword(long userId) {
 		User user = userDao.get(userId);
-		// user.setPassword(MD5.generateMD5(user.getEmployeeNumber()));
+		user.setPassword(MD5.generateMD5(user.getEmployeeNumber()));
 	}
 
 	/**

@@ -3,7 +3,7 @@
                                          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
  <session-factory>
-  <property name="hibernate.show_sql">true</property>
+  <property name="hibernate.show_sql">false</property>
   <property name="hibernate.default_batch_fetch_size">20</property>
   <property name="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</property>
   <property name="hibernate.hbm2ddl.auto">update</property>
@@ -22,5 +22,20 @@
   <mapping class="com.se.working.invigilation.entity.SpecialInvigilationInfo"/>
   <mapping class="com.se.working.invigilation.entity.SpecialInvigilationType"/>
   <mapping class="com.se.working.invigilation.entity.TeacherInvigilation"/>
+  <!--  -->
+  <mapping class="com.se.working.task.entity.FileTask"/>
+  <mapping class="com.se.working.task.entity.FileTaskDetail"/>
+  <mapping class="com.se.working.task.entity.FileType"/>
+  <mapping class="com.se.working.task.entity.TeacherTask"/>
+  <mapping class="com.se.working.task.entity.FileTaskStatus"/>
+  <mapping class="com.se.working.task.entity.Notification"/>
+  <!--  -->
+  <mapping class="com.se.working.project.entity.ProjectTitle"/>
+  <mapping class="com.se.working.project.entity.ProjectFileType"/>
+  <mapping class="com.se.working.project.entity.StudentProject"/>
+  <mapping class="com.se.working.project.entity.TeacherProject"/>
+  <mapping class="com.se.working.project.entity.SelectedTitleDetail"/>
+  <mapping class="com.se.working.project.entity.ProjectFileDetail"/>
+  <mapping class="com.se.working.project.entity.GuideRecord"/>
  </session-factory>
 </hibernate-configuration>

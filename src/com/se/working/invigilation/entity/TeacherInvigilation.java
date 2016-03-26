@@ -67,7 +67,6 @@ public class TeacherInvigilation {
 	public void setEnabledRecommend(boolean enabledRecommend) {
 		this.enabledRecommend = enabledRecommend;
 	}
-
 	public int getSqecQuantity() {
 		return sqecQuantity;
 	}

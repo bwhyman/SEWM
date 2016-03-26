@@ -13,6 +13,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.se.working.exception.SEWMException;
 import com.se.working.invigilation.dao.CourseDao;
@@ -30,6 +31,10 @@ import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
 import com.se.working.message.AlidayuMessage;
 import com.se.working.service.GenericService;
+import com.se.working.task.entity.FileTask;
+import com.se.working.task.entity.FileTaskDetail;
+import com.se.working.task.service.TaskService;
+import com.se.working.util.FileTaskUtils;
 import com.se.working.util.InviExcelUtil;
 import com.se.working.util.TimetableExcelUtil;
 
@@ -56,6 +61,8 @@ public class InviService extends GenericService<Invigilation, Long> {
 	private InviDao inviDao;
 	@Autowired
 	private AlidayuMessage alidayuMessage;
+	@Autowired
+	private TaskService taskService;
 
 	/**
 	 * 
@@ -64,23 +71,34 @@ public class InviService extends GenericService<Invigilation, Long> {
 	public List<TeacherInvigilation> findTeacherInvigilations() {
 		return teacherInviDao.list();
 	}
-
 	/**
-	 * 导入课表，如果数据库中已有则清空原课表。返回课表中的授课次数
-	 * 
+	 * 单独导入课表文件，如果数据库中已有则清空原课表。返回课表集合
+	 * @param uploadFile
+	 * @return
+	 * @throws SEWMException
+	 */
+	public List<Course> importTimetable(MultipartFile uploadFile) {
+		if (uploadFile.isEmpty()) {
+			return null;
+		}
+		File excelFile = FileTaskUtils.getTimetableFile(uploadFile.getOriginalFilename());
+		FileTaskUtils.transferTo(uploadFile, excelFile);
+		return readTimetable(excelFile);
+	} 
+	
+	/**
+	 * 通用读取课表文件
 	 * @param excelFile
 	 * @return
 	 * @throws SEWMException
-	 * @throws Exception
 	 */
-	public List<Course> importTimetable(File excelFile) throws SEWMException, Exception {
-
+	private List<Course> readTimetable(File excelFile) {
 		String name = TimetableExcelUtil.getTimetableName(excelFile);
 		if (name == null) {
 			if (excelFile.exists()) {
 				excelFile.delete();
 			}
-			throw new SEWMException("不是课表文件");
+			throw new SEWMException("不是课表文件，" + excelFile.getName());
 		}
 		TeacherInvigilation teacher = null;
 		for (TeacherInvigilation t : teacherInviDao.list()) {
@@ -92,7 +110,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 			if (excelFile.exists()) {
 				excelFile.delete();
 			}
-			throw new SEWMException("非本专业教师课表");
+			throw new SEWMException("非本专业教师课表，" + excelFile.getName());
 		}
 		// 如果已经导入过课表，则首先清空
 		if (teacher.getCourses().size() > 0) {
@@ -112,6 +130,34 @@ public class InviService extends GenericService<Invigilation, Long> {
 		}
 		return courses;
 	}
+	
+	/**
+	 * 查询所有课程
+	 * @return
+	 */
+	public List<Course> findCourses() {
+		return courseDao.list();
+	}
+	
+	/**
+	 * 导入课表文件任务
+	 * @param filetaskId
+	 * @return
+	 * @throws SEWMException
+	 */
+	public List<Course> importTimetableTask(long filetaskId) {
+		List<Course> courses = new ArrayList<>();
+		FileTask task = taskService.findById(filetaskId);
+		
+		for (FileTaskDetail d : task.getFileTaskDetails()) {
+			if (d.getFile() != null) {
+				File file = FileTaskUtils.getOrCreateFileTaskFile(task.getDirectory(), d.getFile());
+				courses.addAll(readTimetable(file));
+			}		
+		}
+		return courses;
+	}
+	
 
 	/**
 	 * 导入监考信息
@@ -121,7 +167,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 	 * @throws SEWMException
 	 * @throws Exception
 	 */
-	public List<InvigilationInfo> importInvi(File excelFile) throws SEWMException, Exception {
+	public List<InvigilationInfo> importInvi(File excelFile) {
 		List<InvigilationInfo> newInfos = new ArrayList<>();
 		// 封装监考人数，地点，起止时间
 		List<InvigilationInfo> infos = InviExcelUtil.getExcel(excelFile);
@@ -174,8 +220,33 @@ public class InviService extends GenericService<Invigilation, Long> {
 	}
 
 	/**
+	 * 返回指定教师的全部监考信息
+	 * @param userId
+	 * @return
+	 */
+	public List<InvigilationInfo> findInviInfosByUserId(long userId) {
+		List<InvigilationInfo> infos = new ArrayList<>();
+		for (Invigilation i : teacherInviDao.get(userId).getInvigilations()) {
+			infos.add(i.getInvInfo());
+		}
+		return infos;
+	}
+	/**
+	 * 返回指定教师、指定监考状态的所有监考信息
+	 * @param userId
+	 * @param typeId
+	 * @return
+	 */
+	public List<InvigilationInfo> findInvisByUserIdAndTypeId(long userId, long typeId) {
+		List<InvigilationInfo> infos = new ArrayList<>();
+		for (Invigilation i : inviDao.listInvisByUserIdAndTypeId(userId, typeId)) {
+			infos.add(i.getInvInfo());
+		}
+		return infos;
+	}
+	
+	/**
 	 * 查找相应状态全部监考信息
-	 * 
 	 * @return
 	 */
 	public List<InvigilationInfo> findInviInfosByTypeId(long inviTypeId) {
@@ -190,7 +261,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 	}
 
 	/**
-	 * 返回监考信息
+	 * 返回指定监考信息
 	 * @param inviId
 	 * @return
 	 */
@@ -283,7 +354,6 @@ public class InviService extends GenericService<Invigilation, Long> {
 	public Map<Long, String> findRCDs(long inviId) {
 		Map<Long, String> map = new LinkedHashMap<>();
 		List<TeacherInvigilation> rcds = teacherInviDao.listRDCs();
-		
 		for (TeacherInvigilation t : rcds) {
 			map.put(t.getId(), t.getUser().getName() + "; ");
 		}
@@ -347,7 +417,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 	 * @param inviInfoId
 	 * @param tIds
 	 */
-	public void addinvi(long inviInfoId, long[] tIds) {
+	public InvigilationInfo addinvi(long inviInfoId, long[] tIds) {
 		InvigilationInfo info = inviInfoDao.get(inviInfoId);
 		// 删除原记录
 		for (Invigilation i : info.getInvigilations()) {
@@ -359,13 +429,18 @@ public class InviService extends GenericService<Invigilation, Long> {
 			invigilation.setInvInfo(info);
 			invigilation.setTeacher(teacherInviDao.get(tIds[i]));
 			inviDao.persist(invigilation);
-		
 			info.setCurrentStatusType(new InvigilationStatusType(InviStatusType.ASSIGNED));
 		}
 		inviInfoDao.flush();
 		inviInfoDao.refresh(info);
-		
-		// 发送短信通知
+		return info;
+	}
+	
+	/**
+	 * 发送监考分配短信
+	 * @param info
+	 */
+	public void sendInviNoticMessage(InvigilationInfo info) {
 		alidayuMessage.sendInviNotice(info);
 	}
 	
@@ -378,6 +453,11 @@ public class InviService extends GenericService<Invigilation, Long> {
 		info.setCourse(newInfo.getCourse());
 		info.setStartTime(newInfo.getStartTime());
 		info.setEndTime(newInfo.getEndTime());
+		// 如果人数发生变化，将监考状态变为未分配
+		if (newInfo.getRequiredNumber() != info.getRequiredNumber()) {
+			info.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
+		}
+		
 		info.setRequiredNumber(newInfo.getRequiredNumber());
 		info.setLocation(newInfo.getLocation());
 		info.setComment(newInfo.getComment());	
