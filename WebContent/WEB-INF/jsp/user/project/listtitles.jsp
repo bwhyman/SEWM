@@ -14,6 +14,15 @@
 	<script>
 		$(function() {
 			$('#'+'${type}').attr('class','btn btn-danger');
+			$('.deltitle').click(function(){
+				var current = $(this);
+				$.post('project/deltitle',{
+					'id':current.attr('href')
+				},function(){
+					location.href = 'project/listtitles/'+ '${user.id}';
+				})
+				return false;
+			})
 		})
 	</script>
 </jsp:attribute>
@@ -23,8 +32,10 @@
   <li><a href="project/projectmanagement">毕设管理</a></li>
   <li class="active">题目信息</li>
 </ol>
-	<a id="mytitles" class="btn btn-primary" href="project/listtitles/mytitles" role="button">我的题目</a>
-	<a id="all" class="btn btn-primary" href="project/listtitles/all" role="button">全部题目</a>
+	<c:forEach items="${teachers }" var="t">
+		<a id="${t.id }" class="btn btn-primary" href="project/listtitles/${t.id }" role="button" style="margin-bottom: 2px;">${t.user.name }(${t.leadNum })</a>
+	</c:forEach>
+	<a id="-1" class="btn btn-primary" href="project/listtitles/-1" role="button">全部题目</a>
 	<div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
@@ -34,22 +45,27 @@
                   <th>题目性质</th>
                   <th>指导教师</th>
                   <th>论证报告</th>
-                  <th>操作</th>
+                  <c:if test="${user.id==type }">
+                  	<th>操作</th>
+                  </c:if>
 			</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${projectFileDetails }" var="p" varStatus="s">
+				<c:forEach items="${fileDetails }" var="p" varStatus="s">
 						<tr>
 							<td>${s.count }</td>
-							<td>${p.title.name }</td>
+							<td><a href="project/title/${p.id }">${p.title.name }</a></td>
 							<td>${p.title.property }</td>
 							<td>${p.title.teacher.user.name }</td>
 							<td>
 								<a href="download/${p.directory }/${p.fileName}/">论证报告</a>
 							</td>
-							<td>
-								<a href="project/projecttitle/${p.id }">详细</a>
-							</td>
+							<c:if test="${user.id==type }">
+								<td>
+									<a href="project/updatetitle/${p.id}">修改</a>
+									<a href="${p.id }" class="deltitle">删除</a>
+								</td>
+							</c:if>
 						</tr>
 			</c:forEach>
 			</tbody>

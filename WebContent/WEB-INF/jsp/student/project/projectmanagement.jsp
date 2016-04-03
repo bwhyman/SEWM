@@ -20,13 +20,13 @@
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-md-2">
-						<a class="btn btn-info btn-block" role="button" href="student/project/listtitles">题目信息</a>
+						<a class="btn btn-info btn-block" role="button" href="student/project/listtitles/-1">题目信息</a>
 					</div>
 				</div>
 			</div>
 			<div class="panel-body">
 				<ul>
-					<li>查看题目信息，选择适合自己的毕设题目</li>
+					<li>查看题目信息，教师后面的数字是教师最多能带学生人数，选择适合自己的毕设题目</li>
 					<li>如果多人选择同一题目，导师将根据学生实际情况进行确认哪位学生选题成功</li>
 					<li>重新选择题目后，之前选择的自动无效</li>
 					<li><span class="label label-danger">第二次开题的同学</span>，确认选题成功后，不能上传任何文档，如果上传将自动视为第一次开题，不能更改</li>
@@ -43,11 +43,13 @@
 					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
 						<li><a href="download/${openReport.directory }/${openReport.templeteFile}/">下载开题报告模板</a></li>
 						<li><a href="download/${openRecord.directory }/${openRecord.templeteFile}/">下载答辩记录模板</a></li>
-						<c:if test="${openedProject == true && openReport.opened == true }">
+						<c:if test="${openedProject == false }">
 							<li><a href="student/project/uploadfile/openreport">上传开题报告</a></li>
 							<li><a href="student/project/uploadfile/openrecord">上传开题答辩记录</a></li>
 						</c:if>
-						<li><a href="student/project/listguiderecord/${openReport.id }">指导记录</a></li>
+						<c:if test="${openedProject == true }">
+							<li><a href="student/project/listguiderecord/${openReport.id }">指导记录</a></li>
+						</c:if>
 					</ul>
 					
 				</div>
@@ -75,10 +77,12 @@
 						<c:if test="${openedProject == true && interimReport.opened == true }">
 							<li><a href="student/project/uploadfile/interimreport">上传中期检查报告</a></li>
 							<li><a href="student/project/uploadfile/interimrecord">上传中期答辩记录</a></li>
+							
 						</c:if>
-						<li><a href="student/project/listguiderecord/${interimReport.id }">指导记录</a></li>
+						<c:if test="${openedProject == true }">
+							<li><a href="student/project/listguiderecord/${interimReport.id }">指导记录</a></li>
+						</c:if>
 					</ul>
-					
 				</div>
 			</div>
 		</div>
@@ -101,9 +105,10 @@
 							<li><a href="student/project/uploadfile/paperreport">上传论文</a></li>
 							<li><a href="student/project/uploadfile/paperrecord">上传论文答辩记录</a></li>
 						</c:if>
-						<li><a href="student/project/listguiderecord/${paperReport.id }">指导记录</a></li>
+						<c:if test="${openedProject == true }">
+							<li><a href="student/project/listguiderecord/${paperReport.id }">指导记录</a></li>
+						</c:if>
 					</ul>
-					
 				</div>
 			</div>
 		</div>

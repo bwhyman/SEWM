@@ -18,12 +18,6 @@ public class GuideRecord {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@ManyToOne
-	private ProjectTitle title;
-	@ManyToOne
-	private StudentProject student;
-	@ManyToOne
-	private ProjectFileType projectFileType;
-	@ManyToOne
 	private ProjectFileDetail projectFileDetail;
 	@Column(length = 500)
 	private String comment;
@@ -47,27 +41,6 @@ public class GuideRecord {
 	public void setId(long id) {
 		this.id = id;
 	}
-
-
-	public ProjectTitle getTitle() {
-		return title;
-	}
-
-
-	public void setTitle(ProjectTitle title) {
-		this.title = title;
-	}
-
-
-	public StudentProject getStudent() {
-		return student;
-	}
-
-
-	public void setStudent(StudentProject student) {
-		this.student = student;
-	}
-
 
 	public String getComment() {
 		return comment;
@@ -105,16 +78,6 @@ public class GuideRecord {
 
 	public void setDirectory(String directory) {
 		this.directory = directory;
-	}
-
-
-	public ProjectFileType getProjectFileType() {
-		return projectFileType;
-	}
-
-
-	public void setProjectFileType(ProjectFileType projectFileType) {
-		this.projectFileType = projectFileType;
 	}
 
 

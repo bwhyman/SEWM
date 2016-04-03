@@ -7,5 +7,13 @@ import com.se.working.project.entity.StudentProject;
 
 @Repository
 public class StudentProjectDao extends GenericDao<StudentProject, Long> {
-
+	
+	/**
+	 * 清空StudentProject表数据
+	 * @return
+	 */
+	public int deleteAll(){
+		String HQL = "DELETE FROM StudentProject WHERE 1=1";
+		return getSessionFactory().getCurrentSession().createQuery(HQL).executeUpdate();
+	}
 }

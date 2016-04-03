@@ -4,6 +4,7 @@ package com.se.working.controller.admin;
 import java.util.List;
 import java.util.Map;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,6 @@ public class AdminSettingController {
 	private UserService userService;
 	@Autowired
 	private InviService inviService;
-	
 	
 	/**
 	 * 加载职称，默认选择值为讲师
@@ -159,7 +159,7 @@ public class AdminSettingController {
 	
 	@RequestMapping("/usernotifsetting")
 	public  void getUserNotif(Map<String, Object> vMap) {
-		vMap.put("notifusers", adminService.findAll());
+		vMap.put("notifusers", adminService.findNotifusers());
 	}
 	/**
 	 * 所有接收通知用户

@@ -1,8 +1,11 @@
 package com.se.working.controller.admin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +14,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.se.working.entity.User;
 import com.se.working.exception.SEWMException;
 import com.se.working.project.entity.ProjectFileType;
-import com.se.working.project.entity.ProjectFileType.ProjectFileTypes;
+import com.se.working.project.entity.ProjectFileType.FileTypes;
+import com.se.working.project.entity.TeacherProject;
 import com.se.working.project.service.ProjectService;
+import com.se.working.service.AdminService;
 import com.se.working.util.FileTaskUtils;
 import com.se.working.util.StringUtils;
 
@@ -35,6 +42,92 @@ public class AdminProjectController {
 	
 	@Autowired
 	private ProjectService projectService;
+	@Autowired
+	private AdminService adminService;
+	
+	/**
+	 * 清除所有学生信息（仅限于导入信息有误）
+	 * @return
+	 */
+	@RequestMapping(path = "/clearStudents")
+	public String clearStudents(){
+		adminService.clearStudents();
+		return redirect + "studentmanagement";
+	}
+	
+	@RequestMapping(path = "/delstudent", method = RequestMethod.POST)
+	public String delStudent(long userId){
+		adminService.delStudent(userId);
+		return redirect + "studentmanagement";
+	}
+	
+	@RequestMapping(path = "/resetpassword", method = RequestMethod.POST)
+	public @ResponseBody String resetPassword(long userId){
+		adminService.updateDefaultPassword(userId);
+		return "success";
+	}
+	
+	@RequestMapping(path = "/studentmanagement")
+	public String resetPassword(Map<String, Object> vMap){
+		vMap.put("users", adminService.findStudents());
+		return basePath + "studentmanagement";
+	}
+	
+	/**
+	 * 导入学生信息
+	 * @param uploadFile
+	 * @param request
+	 * @param vMap
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	@RequestMapping(path = "/importstu", method = RequestMethod.POST)
+	public String importStudentInfo(MultipartFile uploadFile,HttpServletRequest request, RedirectAttributes vMap)throws IllegalStateException, IOException{
+		if (uploadFile.isEmpty()) {
+			throw new SEWMException("文件错误");
+		}
+		String fileName = uploadFile.getOriginalFilename();
+
+		if (!(StringUtils.getFilenameExtension(fileName).equals("xls")
+				|| StringUtils.getFilenameExtension(fileName).equals("xlsx"))) {
+			throw new SEWMException("不是Excel表格文件");
+		}
+		String path = request.getServletContext().getRealPath("/");
+		path = path + "\\WEB-INF\\JSP\\upload\\invi\\";
+		File directory = new File(path);
+		if (!directory.exists() && !directory.isDirectory()) {
+			directory.mkdirs();
+		}
+		try {
+			File file = new File(path + fileName);
+			uploadFile.transferTo(file);
+			List<User> users = adminService.importStudent(file);
+			vMap.addFlashAttribute("users", users);
+		} finally {
+			uploadFile = null;
+		}
+
+		return redirect + "importstuinfo";
+	}
+	
+	/**
+	 * 教师毕业设计所带人数设置
+	 * @param leadNum
+	 * @return
+	 */
+	@RequestMapping(path = "/divide", method = RequestMethod.POST)
+	public String divide(int[] leadNum){
+		projectService.divideLeadNum(leadNum);
+		return redirect + "divide";
+	}
+	
+	@RequestMapping(path = "/divide")
+	public String divide(Map<String, Object> vMap){
+		List<TeacherProject> teachers = projectService.findAllTeacherProjects();
+		vMap.put("teachers", teachers);
+		return basePath + "divide";
+	}
 	
 	@RequestMapping(path = "/downloadzip/{directory}/")
 	public ResponseEntity<byte[]> getFileZip(@PathVariable String directory) {
@@ -49,15 +142,15 @@ public class AdminProjectController {
 	
 	@RequestMapping(path = "/downloadzip")
 	public String downloadZip(Map<String, Object> vMap){
-		List<ProjectFileType> fileTypes = projectService.findAllProjectFileType();
+		List<ProjectFileType> fileTypes = projectService.findAllFileType();
 		vMap.put("fileTypes", fileTypes);
 		return basePath + "downloadzip";
 	}
 	
 	@RequestMapping(path = "/uploadfile/{type}", method = RequestMethod.POST)
-	public String openProjected(@PathVariable String type, long reportid, long recordid, boolean opened,@RequestParam MultipartFile[] uploadFiles, RedirectAttributes vMap){
-		projectService.updateProjectFileTypeOpened(reportid, opened);
-		projectService.updateProjectFileTypeOpened(recordid, opened);
+	public String openProjected(@PathVariable String type, long reportid, long recordid, boolean opened,@RequestParam MultipartFile[] uploadFiles){
+		projectService.updateFileTypeOpened(reportid, opened);
+		projectService.updateFileTypeOpened(recordid, opened);
 		
 		if (opened) {
 			for (MultipartFile multipartFile : uploadFiles) {
@@ -94,22 +187,22 @@ public class AdminProjectController {
 			vMap.put("typeReportCH", "开题报告模板");
 			vMap.put("typeRecodeCH", "开题答辩记录模板");
 			vMap.put("typeCH", "开题管理");
-			reportType = projectService.findProjectFileTypeById(ProjectFileTypes.OPENINGREPORT);
-			recordType = projectService.findProjectFileTypeById(ProjectFileTypes.OPENDEFENSERECORD);
+			reportType = projectService.findFileTypeById(FileTypes.OPENINGREPORT);
+			recordType = projectService.findFileTypeById(FileTypes.OPENDEFENSERECORD);
 			break;
 		case "interimreport":
 			vMap.put("typeReportCH", "中期报告模板");
 			vMap.put("typeRecodeCH", "中期答辩记录模板");
 			vMap.put("typeCH", "中期管理");
-			reportType = projectService.findProjectFileTypeById(ProjectFileTypes.INTERIMREPORT);
-			recordType = projectService.findProjectFileTypeById(ProjectFileTypes.INTERIMDEFENSERECORD);
+			reportType = projectService.findFileTypeById(FileTypes.INTERIMREPORT);
+			recordType = projectService.findFileTypeById(FileTypes.INTERIMDEFENSERECORD);
 			break;
 		case "paperreport":
 			vMap.put("typeReportCH", "论文模板");
 			vMap.put("typeRecodeCH", "论文答辩记录模板");
 			vMap.put("typeCH", "终期管理");
-			reportType = projectService.findProjectFileTypeById(ProjectFileTypes.PAPER);
-			recordType = projectService.findProjectFileTypeById(ProjectFileTypes.PAPERDEFENSERECORD);
+			reportType = projectService.findFileTypeById(FileTypes.PAPER);
+			recordType = projectService.findFileTypeById(FileTypes.PAPERDEFENSERECORD);
 			break;
 		default:
 			break;
@@ -132,7 +225,7 @@ public class AdminProjectController {
 	 */
 	@RequestMapping(path = "/startproject", method = RequestMethod.POST)
 	public String startProjected(long id, boolean opened, MultipartFile uploadFile, RedirectAttributes vMap){
-		projectService.updateProjectFileTypeOpened(id, opened);
+		projectService.updateFileTypeOpened(id, opened);
 		if (opened) {
 			if (uploadFile.isEmpty()) {
 				throw new SEWMException("文件错误");
@@ -156,7 +249,7 @@ public class AdminProjectController {
 	 */
 	@RequestMapping(path = "/startproject")
 	public String startProject(Map<String, Object> vMap){
-		ProjectFileType startProject = projectService.findProjectFileTypeById(ProjectFileTypes.DEMONSTRATIONREPORT);
+		ProjectFileType startProject = projectService.findFileTypeById(FileTypes.DEMONSTRATIONREPORT);
 		vMap.put("startProject", startProject);
 		return basePath + "startproject";
 	}

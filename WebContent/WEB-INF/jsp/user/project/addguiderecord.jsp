@@ -53,7 +53,7 @@
 	
  	<form class="form-horizontal" enctype="multipart/form-data" action="project/addguiderecord" method="post">
 	 	<div class="form-group">
-			<label for="comment" class="col-sm-2 col-md-1 control-label">指导内容</label>
+			<label for="comment" class="col-sm-2 col-md-2 control-label">指导内容</label>
 				<div class="col-sm-10 col-md-3">
 					<textarea class="form-control" rows="10" placeholder="指导内容" name="comment" id="editor_id"></textarea>
 				</div>
@@ -62,7 +62,7 @@
 		<input type="hidden" name="titleId" value="${titleId }">
 		
 		<div class="form-group">
-			<label for="opened" class="col-sm-2 col-md-1 control-label">上传文件</label>
+			<label for="opened" class="col-sm-2 col-md-2 control-label">上传文件</label>
 			<div class="col-md-1">
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
 				 name="opened"  value="1" id="opened"/>
@@ -70,13 +70,13 @@
 		</div>
 		
 		<div class="form-group" id="myfileinput" hidden>
-			<label for="uploadfile" class="col-sm-2 col-md-1 control-label">修改文件</label>
+			<label for="uploadfile" class="col-sm-2 col-md-2 control-label">修改文件</label>
 			<div class="col-sm-10 col-md-8">
 				<input id="file-1" type="file" name="uploadfile" multiple data-min-file-count="0" accept=".doc,.docx">
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-1 control-label"></div>
+			<div class="col-sm-2 col-md-2 control-label"></div>
 				<div class="col-sm-10 col-md-3">
 					<button type="submit" class="btn btn-primary btn-wide">提交</button>
 				</div>
@@ -93,7 +93,9 @@
 				resizeType : 1,
 				allowPreviewEmoticons : false,
 				allowImageUpload : false,
-				items : []
+				items : [ 'justifyleft', 'justifycenter', 'justifyright','justifyfull', 'insertorderedlist','|', 
+				          'formatblock', 'fontname', 'fontsize', '|',
+				          'forecolor', 'hilitecolor', 'bold','italic', 'underline']
 			});
 		});
 	</script>  

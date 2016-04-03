@@ -1,12 +1,14 @@
 package com.se.working.project.entity;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -20,6 +22,8 @@ public class ProjectFileType {
 	private String templeteFile;
 	private String directory;
 	private boolean opened = false;
+	@OneToMany(mappedBy = "projectFileType")
+	private Set<ProjectFileDetail> projectFileDetails;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
@@ -33,7 +37,7 @@ public class ProjectFileType {
 		this.id = id;
 	}
 
-	public interface ProjectFileTypes{
+	public interface FileTypes{
 		/**
 		 * 论证报告
 		 */
@@ -110,6 +114,14 @@ public class ProjectFileType {
 
 	public void setDirectory(String directory) {
 		this.directory = directory;
+	}
+
+	public Set<ProjectFileDetail> getProjectFileDetails() {
+		return projectFileDetails;
+	}
+
+	public void setProjectFileDetails(Set<ProjectFileDetail> projectFileDetails) {
+		this.projectFileDetails = projectFileDetails;
 	}
 
 }

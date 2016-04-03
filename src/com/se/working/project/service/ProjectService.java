@@ -2,9 +2,11 @@ package com.se.working.project.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,13 +21,15 @@ import com.se.working.project.dao.TeacherProjectDao;
 import com.se.working.project.entity.GuideRecord;
 import com.se.working.project.entity.ProjectFileDetail;
 import com.se.working.project.entity.ProjectFileType;
-import com.se.working.project.entity.ProjectFileType.ProjectFileTypes;
+import com.se.working.project.entity.ProjectFileType.FileTypes;
 import com.se.working.project.entity.ProjectTitle;
 import com.se.working.project.entity.SelectedTitleDetail;
 import com.se.working.project.entity.StudentProject;
 import com.se.working.project.entity.TeacherProject;
 import com.se.working.service.GenericService;
+import com.se.working.util.FileTaskUtils;
 import com.se.working.util.ProjectFileUtil;
+import com.se.working.util.SelectedToExcelUtil;
 import com.se.working.util.StringUtils;
 
 @Service
@@ -48,10 +52,144 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	private GuideRecordDao guideRecordDao;
 	
 	/**
+	 * 导出选题信息
+	 * @return
+	 */
+	public ResponseEntity<byte[]> exportSelectSuccess(){
+		return SelectedToExcelUtil.export(findSelectSuccess());
+	}
+	
+	/**
+	 * 未选题学生和选题失败学生
+	 * @return
+	 */
+	public List<StudentProject> findSelectfail(){
+		List<StudentProject> studentsAll = studentProjectDao.list();
+		studentsAll.removeAll(findSelectSuccess());
+		return studentsAll;
+	}
+	
+	/**
+	 * 选题成功学生
+	 * @return
+	 */
+	public List<StudentProject> findSelectSuccess(){
+		List<StudentProject> students = new ArrayList<>();
+		List<SelectedTitleDetail> selectedTitleDetails = selectedTitleDetailDao.listSuccess();
+		for (SelectedTitleDetail selectedTitleDetail : selectedTitleDetails) {
+			students.add(selectedTitleDetail.getStudent());
+		}
+		return students;
+	}
+	
+	/**
+	 * 查询指定教师未确认学生选题的题目
+	 * @param teacherId
+	 * @return
+	 */
+	public List<ProjectTitle> findUncomfirmedByTeacherId(long teacherId){
+		List<ProjectTitle> titles = new ArrayList<>();
+		for (SelectedTitleDetail selectedTitleDetail : selectedTitleDetailDao.listUnconfirmedByTeacherId(teacherId)) {
+			ProjectTitle title = selectedTitleDetail.getTitle();
+			if (!titles.contains(title)) {
+				titles.add(title);
+			}
+		}
+		return titles;
+	}
+	
+	/**
+	 * 指定教师所带毕设人数
+	 * @param leadNum
+	 */
+	public void divideLeadNum(int[] leadNum){
+		List<TeacherProject> teachers = teacherProjectDao.list();
+		for (int i = 0; i < leadNum.length; i++) {
+			TeacherProject teacherProject = teachers.get(i);
+			teacherProject.setLeadNum(leadNum[i]);
+			teacherProjectDao.update(teacherProject);
+		}
+	}
+	
+	/**
+	 * 修改题目
+	 * @param title
+	 * @param projectFileDetailId
+	 * @param uploadfile
+	 */
+	public void updateProject(ProjectTitle title, MultipartFile uploadfile){
+		ProjectTitle title2 = projectTitleDao.get(title.getId());
+		ProjectFileDetail projectFileDetail = projectFileDetailDao.getByTitleIdAndTypeId(title.getId(), FileTypes.DEMONSTRATIONREPORT);
+		
+		String fileName = null;
+		if (!title.getName().equals(title2.getName())) {
+			String ext = StringUtils.getFilenameExtension(projectFileDetail.getFileName());
+			fileName = ProjectFileUtil.getFileName(projectFileDetail.getProjectFileType().getName(), title.getName(), ext);
+			FileTaskUtils.renameFileTaskFile(projectFileDetail.getDirectory(), projectFileDetail.getFileName(), fileName);
+			projectFileDetail.setFileName(fileName);
+			projectFileDetailDao.update(projectFileDetail);
+		}
+		
+		if (!uploadfile.isEmpty()) {
+			FileTaskUtils.deleteFileTaskFile(projectFileDetail.getDirectory(), fileName);
+			File file = ProjectFileUtil.getOrCreateProjectFile(projectFileDetail.getDirectory(), fileName);
+			ProjectFileUtil.transferTo(uploadfile, file);
+		}
+		
+		title2.setName(title.getName());
+		title2.setObjective(title.getObjective());
+		title2.setProperty(title.getProperty());
+		projectTitleDao.update(title2);
+		projectTitleDao.flush();
+		projectTitleDao.refresh(title2);
+	}
+	
+	/**
+	 * 删除title
+	 * @param titleId
+	 */
+	public void delTitle(long titleId){
+		ProjectFileDetail fileDetail = projectFileDetailDao.getByTitleIdAndTypeId(titleId, FileTypes.DEMONSTRATIONREPORT);
+		FileTaskUtils.deleteFileTaskFile(fileDetail.getDirectory(), fileDetail.getFileName());
+		projectFileDetailDao.delete(fileDetail);
+		projectTitleDao.delete(fileDetail.getTitle());
+	}
+	
+	/**
+	 * 查询所有的teacher
+	 * @return
+	 */
+	public List<TeacherProject> findAllTeacherProjects(){
+		List<TeacherProject> teacherProjects = new ArrayList<>();
+		for (TeacherProject teacherProject : teacherProjectDao.list()) {
+			teacherProjects.add(teacherProject);
+		}
+		return teacherProjects;
+	}
+	
+	/**
+	 * 更新论证报告
+	 * @param fileTypeId
+	 * @param uploadfile
+	 */
+	public void updateDemonFile(long fileDetailId, MultipartFile uploadfile){
+		if (!uploadfile.isEmpty()) {
+			ProjectFileDetail projectFileDetail = projectFileDetailDao.get(fileDetailId);
+			String directory = projectFileDetail.getProjectFileType().getName();
+			ProjectFileUtil.getOrCreateProjectDirectory(directory);
+			File file = ProjectFileUtil.getOrCreateProjectFile(directory, projectFileDetail.getFileName());
+			ProjectFileUtil.transferTo(uploadfile, file);
+			projectFileDetail.setInsertTime(new Date());
+			projectFileDetailDao.update(projectFileDetail);
+		}
+	}
+	
+	
+	/**
 	 * 查询所有文件类型
 	 * @return
 	 */
-	public List<ProjectFileType> findAllProjectFileType(){
+	public List<ProjectFileType> findAllFileType(){
 		return projectFileTypeDao.list();
 	}
 	
@@ -64,30 +202,12 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 		return studentProjectDao.get(userId).isOpened();
 	}
 	
-	/**
-	 * 根据userid和filetypeid获取指导记录
-	 * @param userId
-	 * @param fileTypeId
-	 * @return
-	 */
-	public List<GuideRecord> findByUserIdAndFileTypeId(long userId, long fileTypeId){
-		ProjectTitle projectTitle = studentProjectDao.get(userId).getTitle();
-		return findByFileTypeIdAndTitleId(fileTypeId, projectTitle.getId());
-	}
-	
 	public void addGuideRecord(long fileTypeId, long titleId, String comment, boolean opened, MultipartFile uploadfile){
-		
 		//初始化guiderecord的基本信息
 		GuideRecord guideRecord = new GuideRecord();
-		ProjectTitle projectTitle = projectTitleDao.get(titleId);
-		ProjectFileType projectFileType = projectFileTypeDao.get(fileTypeId);
-		StudentProject studentProject = projectTitle.getStudent();
-		ProjectFileDetail projectFileDetail = projectFileDetailDao.getByStudentIdAndFileTypeId(studentProject.getId(), fileTypeId);
 		guideRecord.setComment(comment);
-		guideRecord.setTitle(projectTitle);
-		guideRecord.setStudent(studentProject);
-		guideRecord.setProjectFileType(projectFileType);
-		guideRecord.setProjectFileDetail(projectFileDetail);
+		ProjectFileDetail fileDetail = projectFileDetailDao.getByTitleIdAndTypeId(titleId, fileTypeId);
+		guideRecord.setProjectFileDetail(fileDetail);
 		
 		//判断是否有修改文件上传
 		if (opened) {
@@ -97,7 +217,7 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 				
 				String ext = StringUtils.getFilenameExtension(uploadfile.getOriginalFilename());
 				String fileName = null;
-				fileName = ProjectFileUtil.getGuideRecordName(projectFileType.getName(), studentProject.getUser().getName(), ext);
+				fileName = ProjectFileUtil.getGuideRecordName(fileDetail.getProjectFileType().getName(), selectedTitleDetailDao.getByTitleId(fileDetail.getTitle().getId()).getStudent().getUser().getName(), ext);
 				guideRecord.setFileName(fileName);		
 				File file = ProjectFileUtil.getOrCreateProjectFile("指导记录", fileName);
 				ProjectFileUtil.transferTo(uploadfile, file);
@@ -108,20 +228,27 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	}
 	
 	/**
-	 * 指定毕业设计阶段和题目查找指导记录
-	 * @param fileTypeId
-	 * @param titleId
+	 * 根据studentId指定毕业设计阶段查找指导记录
+	 * @param studentId
+	 * @param typeId
 	 * @return
 	 */
-	public List<GuideRecord> findByFileTypeIdAndTitleId(long fileTypeId, long titleId){
+	public List<GuideRecord> findByStudentIdAndTypeId(long studentId, long typeId){
+		return findByTypeIdAndTitleId(studentProjectDao.get(studentId).getSelectedTitleDetail().getTitle().getId(), typeId);
+	}
+	
+	/**
+	 * 指定毕业设计阶段和题目查找指导记录
+	 * @param titleId
+	 * @param typeId
+	 * @return
+	 */
+	public List<GuideRecord> findByTypeIdAndTitleId(long titleId, long typeId){
 		List<GuideRecord> guideRecords = new ArrayList<>();
-		ProjectFileDetail projectFileDetail = projectFileDetailDao.getByStudentIdAndFileTypeId(projectTitleDao.get(titleId).getStudent().getUser().getId(), fileTypeId);
-		if (projectFileDetail!=null) {
-			for (GuideRecord guideRecord : projectFileDetail.getGuideRecords()) {
-				guideRecords.add(guideRecord);
-			}
+		ProjectFileDetail fileDetail = projectFileDetailDao.getByTitleIdAndTypeId(titleId, typeId);
+		for (GuideRecord guideRecord : fileDetail.getGuideRecords()) {
+			guideRecords.add(guideRecord);
 		}
-		
 		return guideRecords;
 	}
 	
@@ -131,8 +258,8 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param fileTypeId
 	 * @return
 	 */
-	public List<ProjectFileDetail> findByTeacherIdAndFileTypeId(long teacherId, long fileTypeId){
-		return projectFileDetailDao.listByTeacherIdAndFileTypeId(teacherId, fileTypeId);
+	public List<ProjectFileDetail> findByTeacherIdAndTypeId(long teacherId, long fileTypeId){
+		return projectFileDetailDao.listByTeacherIdAndTypeId(teacherId, fileTypeId);
 	}
 	
 	/**
@@ -141,52 +268,57 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param fileTypeId
 	 * @param uploadFile
 	 */
-	public void uploadProjectFile(long userId, long fileTypeId, MultipartFile uploadFile){
+	public void uploadProjectFile(long userId, long typeId, MultipartFile uploadFile){
 		StudentProject studentProject = studentProjectDao.get(userId);
 		studentProject.setOpened(true);
-		ProjectFileType projectFileType = projectFileTypeDao.get(fileTypeId);
-		ProjectTitle projectTitle = studentProject.getTitle();
-		ProjectFileDetail projectFileDetail = projectFileDetailDao.getByStudentIdAndFileTypeId(userId, fileTypeId);
+		ProjectFileType fileType = projectFileTypeDao.get(typeId);
+		ProjectTitle title = studentProject.getSelectedTitleDetail().getTitle();
+		ProjectFileDetail fileDetail = projectFileDetailDao.getByTitleIdAndTypeId(title.getId(), typeId);
 		
 		boolean isExist = true;
 		//判断是否已上传过该文档，存在则创建新的对象
-		if (projectFileDetail== null) {
+		if (fileDetail== null) {
 			isExist = false;
-			projectFileDetail = new ProjectFileDetail();
+			fileDetail = new ProjectFileDetail();
 		}
 		
-		projectFileDetail.setStudent(studentProject);
-		projectFileDetail.setTitle(projectTitle);
-		projectFileDetail.setProjectFileType(projectFileType);
+		fileDetail.setTitle(title);
+		fileDetail.setProjectFileType(fileType);
 		
 		if (!uploadFile.isEmpty()) {
 			// 创建文件文件夹，同时返回文件夹名称
-			String directory = ProjectFileUtil.getOrCreateProjectDirectory(projectFileType.getName());
-			projectFileDetail.setDirectory(directory);
+			String directory = ProjectFileUtil.getOrCreateProjectDirectory(fileType.getName());
+			fileDetail.setDirectory(directory);
 			String ext = StringUtils.getFilenameExtension(uploadFile.getOriginalFilename());
 			String fileName = null;
-			fileName = ProjectFileUtil.getFileName(studentProject.getUser().getEmployeeNumber() + "_" + studentProject.getUser().getName(), projectFileType.getName(), ext);
-			projectFileDetail.setFileName(fileName);
+			fileName = ProjectFileUtil.getFileName(studentProject.getUser().getEmployeeNumber() + "_" + studentProject.getUser().getName(), fileType.getName(), ext);
+			fileDetail.setFileName(fileName);
 					
 			File file = ProjectFileUtil.getOrCreateProjectFile(directory, fileName);
 			ProjectFileUtil.transferTo(uploadFile, file);
 			
 			if (isExist) {
-				projectFileDetailDao.update(projectFileDetail);
+				projectFileDetailDao.update(fileDetail);
 			} else {
-				projectFileDetailDao.persist(projectFileDetail);
+				projectFileDetailDao.persist(fileDetail);
 			}
 			
 		}
 	}
 	
+	
+	
 	/**
-	 * 用于已被导师确认选题后根据studentid查看题目信息
-	 * @param studentId
+	 * 根据教师id获取对应题目
+	 * @param teacherId
 	 * @return
 	 */
-	public ProjectFileDetail findProjectFileDetailByStudentIdAndFileTypeId(long studentId, long fileTypeId){
-		return null;//studentProjectDao.get(studentId).getTitle();
+	public List<ProjectTitle> findByTeacher(long teacherId){
+		List<ProjectTitle> titles = new ArrayList<>();
+		for (ProjectTitle projectTitle : teacherProjectDao.get(teacherId).getTitles()) {
+			titles.add(projectTitle);
+		}
+		return titles;
 	}
 	
 	/**
@@ -194,15 +326,9 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param detailid
 	 * @param studentId
 	 */
-	public void updateSelectTitle(long detailid, long studentId){
-		ProjectFileDetail projectFileDetail = projectFileDetailDao.get(detailid);
-		StudentProject studentProject = studentProjectDao.get(studentId);
-		projectFileDetail.setStudent(studentProject);
-		projectFileDetailDao.update(projectFileDetail);
-		
-		//删除已确认选题的选题信息
-		for (SelectedTitleDetail selectedTitleDetail : projectFileDetail.getTitle().getSelectedTitleDetails()) {
-			selectedTitleDetailDao.delete(selectedTitleDetail);
+	public void updateSelectTitle(long[] stIds){
+		for (long studentId : stIds) {
+			studentProjectDao.get(studentId).getSelectedTitleDetail().setConfirmed(true);
 		}
 	}
 	
@@ -214,13 +340,7 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 */
 	public SelectedTitleDetail addSelectedTitleDetail(long studentId, long titleId){
 		
-		//设置题目所对应学生
 		StudentProject studentProject = studentProjectDao.get(studentId);
-		ProjectTitle projectTitle = projectTitleDao.get(titleId);
-		projectTitle.setStudent(studentProject);
-		projectTitleDao.update(projectTitle);
-		projectTitleDao.flush();
-		projectTitleDao.refresh(projectTitle);
 		
 		//如果已有选择题目，则删除已选择的题目记录
 		SelectedTitleDetail exist = studentProject.getSelectedTitleDetail();
@@ -229,7 +349,7 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 		}
 		SelectedTitleDetail selectedTitleDetail = new SelectedTitleDetail();
 		selectedTitleDetail.setStudent(studentProject);
-		selectedTitleDetail.setTitle(projectTitle);
+		selectedTitleDetail.setTitle(projectTitleDao.get(titleId));
 		selectedTitleDetailDao.persist(selectedTitleDetail);
 		selectedTitleDetailDao.flush();
 		selectedTitleDetailDao.refresh(selectedTitleDetail);
@@ -247,32 +367,11 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	
 	/**
 	 * 根据文件类型id查找毕设题目详细信息
-	 * @param teacherId
-	 * @param projectFileTypeId
+	 * @param typeId
 	 * @return
 	 */
-	public List<ProjectFileDetail> findProjectFileDetailsByFileTypeId(long projectFileTypeId){
-		return projectFileDetailDao.listByFileTypeId(projectFileTypeId);
-	}
-	
-	/**
-	 * 根据teacherid和文件类型id查找毕设题目详细信息
-	 * @param teacherId
-	 * @param projectFileTypeId
-	 * @return
-	 */
-	public List<ProjectFileDetail> findProjectFileDetailsByTeacherIdAndFileTypeId(long teacherId, long projectFileTypeId){
-		return projectFileDetailDao.listByTeacherIdAndFileTypeId(teacherId, projectFileTypeId);
-	}
-	
-	/**
-	 * 根据文件夹和文件名称查找文件详细信息
-	 * @param directory
-	 * @param fileName
-	 * @return
-	 */
-	public ProjectFileDetail findProjectFileDetailByDirectoryAndName(String directory, String fileName){
-		return projectFileDetailDao.getProjectFileDetailByDirectoryAndName(directory, fileName);
+	public List<ProjectFileDetail> findFileDetailsByTypeId(long typeId){
+		return projectFileDetailDao.listByTypeId(typeId);
 	}
 	
 	/**
@@ -280,7 +379,6 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param typeId
 	 * @param opened
 	 * @param uploadFile
-	 * @param directoryName
 	 */
 	public void openProjectType(long typeId,boolean opened, MultipartFile uploadFile){
 		ProjectFileType projectFileType = projectFileTypeDao.get(typeId);
@@ -297,7 +395,6 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 			ProjectFileUtil.transferTo(uploadFile, file);
 			projectFileTypeDao.update(projectFileType);
 		}
-		updateProjectFileTypeOpened(typeId, opened);
 	}
 	
 	/**
@@ -305,13 +402,13 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param checkeds
 	 * @param opened
 	 */
-	public void updateProjectFileTypeOpened(long id, boolean opened){
-		ProjectFileType projectFileType = projectFileTypeDao.get(id);
-		projectFileType.setOpened(opened);
-		projectFileTypeDao.update(projectFileType);
+	public void updateFileTypeOpened(long id, boolean opened){
+		ProjectFileType fileType = projectFileTypeDao.get(id);
+		fileType.setOpened(opened);
+		projectFileTypeDao.update(fileType);
 	}
 	
-	public ProjectFileType findProjectFileTypeById(long id){
+	public ProjectFileType findFileTypeById(long id){
 		return projectFileTypeDao.get(id);
 	}
 	
@@ -345,17 +442,18 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param teacherId
 	 * @param title
 	 * @param uploadFile
-	 * @return
 	 */
-	public long addProjectTitle(long teacherId, ProjectTitle title, MultipartFile uploadFile){
+	public void addTitle(long teacherId, ProjectTitle title, MultipartFile uploadFile){
+		//添加title信息
 		title.setTeacher(new TeacherProject(teacherId));
 		projectTitleDao.persist(title);
 		projectTitleDao.flush();
 		projectTitleDao.refresh(title);
 		
+		//添加论证报告信息
 		ProjectFileDetail projectFileDetail = new ProjectFileDetail();
 		projectFileDetail.setTitle(title);
-		ProjectFileType projectFileType = projectFileTypeDao.get(ProjectFileTypes.DEMONSTRATIONREPORT);
+		ProjectFileType projectFileType = projectFileTypeDao.get(FileTypes.DEMONSTRATIONREPORT);
 		projectFileDetail.setProjectFileType(projectFileType);
 		// 创建论证报告文件夹，同时返回文件夹名称
 		projectFileDetail.setDirectory(ProjectFileUtil.getOrCreateProjectDirectory(projectFileType.getName()));
@@ -369,17 +467,29 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 			ProjectFileUtil.transferTo(uploadFile, file);
 			projectFileDetailDao.persist(projectFileDetail);
 		}
-		
-		return title.getId();
 	}
 	
 	/**
-	 * 根据studentid和文件类型id查询毕设文档详细信息
-	 * @param titleId
-	 * @param projectFileTypeId
+	 * 根据teacherId和typeId查询文件信息
+	 * @param teacherId
+	 * @param typeId
 	 * @return
 	 */
-	public ProjectFileDetail findProjectFileDetail(long studentId, long projectFileTypeId){
-		return projectFileDetailDao.getByStudentIdAndFileTypeId(studentId, projectFileTypeId);
+	public List<ProjectFileDetail> findFileDetailsByTeacherIdAndTypeId(long teacherId,long typeId){
+		return projectFileDetailDao.listByTeacherIdAndTypeId(teacherId, typeId);
+	}
+	
+	/**
+	 * 根据studentid和typeId选题信息
+	 * @param studentId
+	 * @param typeId
+	 * @return
+	 */
+	public ProjectFileDetail findFileDetailByStudentId(long studentId, long typeId){
+		SelectedTitleDetail selectedTitleDetail = studentProjectDao.get(studentId).getSelectedTitleDetail();
+		if (selectedTitleDetail!= null && selectedTitleDetail.isConfirmed()) {
+			return projectFileDetailDao.getByTitleIdAndTypeId(selectedTitleDetail.getTitle().getId(), typeId);
+		}
+		return null;
 	}
 }

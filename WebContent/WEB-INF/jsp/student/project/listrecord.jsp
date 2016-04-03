@@ -15,7 +15,7 @@
 	<jsp:body>
 	<ol class="breadcrumb">
 	  <li><a href="">主页</a></li>
-	  <li><a href="project/projectmanagement">毕设管理</a></li>
+	  <li><a href="student/project/projectmanagement">毕设管理</a></li>
 	  <li class="active">${typeCH }</li>
 	  <li class="active">指导记录</li>
 	</ol>
@@ -33,7 +33,7 @@
 										<tbody>
 											<tr>
 												<td style="width: 6em;">题目</td>
-												<td>${g.title.name }</td>
+												<td>${g.projectFileDetail.title.name }</td>
 											</tr>
 											<tr>
 												<td style="width: 6em;">指导时间</td>

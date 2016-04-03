@@ -9,6 +9,27 @@ import com.se.working.entity.User;
 @Repository
 public class UserDao extends GenericDao<User, Long>{
 
+	/**
+	 * 删除学生信息
+	 * @return
+	 */
+	public int delStudents(){
+		String HQL = "DELETE FROM User u WHERE u.userAuthority.level = 5";
+		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+		return query.executeUpdate();
+	}
+	
+	/**
+	 * 查询所有学生信息
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<User> listStudent(){
+		String HQL = "FROM User u WHERE u.userAuthority.level = 5";
+		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+		return query.list();
+	}
+	
 	public User getBypassword(String employeeNumber, String password) {
 		String HQL = "FROM User u WHERE u.employeeNumber=:employeeNumber AND u.password=:password";
 		Query query = getSessionFactory().getCurrentSession().createQuery(HQL)
@@ -28,7 +49,7 @@ public class UserDao extends GenericDao<User, Long>{
 	
 	@SuppressWarnings("unchecked")
 	public List<User> listAbleds() {
-		String HQL = "FROM User u WHERE u.enabledMessage = true";
+		String HQL = "FROM User u WHERE u.enabledMessage = true AND u.userAuthority.level > 5";
 		return getSessionFactory().getCurrentSession().createQuery(HQL).list();
 	}
 	

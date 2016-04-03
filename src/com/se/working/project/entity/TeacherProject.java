@@ -22,6 +22,7 @@ public class TeacherProject {
 	@MapsId
 	@OneToOne
 	private User user;
+	private int leadNum = 0;
 	@OneToMany(mappedBy = "teacher")
 	@OrderBy("id ASC")
 	private Set<ProjectTitle> titles;
@@ -51,6 +52,14 @@ public class TeacherProject {
 	}
 	public void setTitles(Set<ProjectTitle> titles) {
 		this.titles = titles;
+	}
+
+	public int getLeadNum() {
+		return leadNum;
+	}
+
+	public void setLeadNum(int leadNum) {
+		this.leadNum = leadNum;
 	}
 
 }

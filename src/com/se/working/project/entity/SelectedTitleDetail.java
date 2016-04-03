@@ -18,12 +18,11 @@ public class SelectedTitleDetail {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	boolean confirmed = false;
 	@ManyToOne
 	private ProjectTitle title;
 	@OneToOne
 	private StudentProject student;
-	//教师是否接收该生做本选题
-	private boolean confirmed = false;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
@@ -48,17 +47,17 @@ public class SelectedTitleDetail {
 	public void setStudent(StudentProject student) {
 		this.student = student;
 	}
-	public boolean isConfirmed() {
-		return confirmed;
-	}
-	public void setConfirmed(boolean confirmed) {
-		this.confirmed = confirmed;
-	}
 	public Date getInsertTime() {
 		return insertTime;
 	}
 	public void setInsertTime(Date insertTime) {
 		this.insertTime = insertTime;
+	}
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
 	}
 
 }

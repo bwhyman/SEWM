@@ -62,7 +62,7 @@
 </ol>
 	<form class="form-horizontal" action="admin/invi/addinviinfo" method="POST">
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">监考日期</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">监考日期</label>
 						<div class="col-sm-10 col-md-3">
 							<div class='input-group date' id="date">
 						<input type='text' class="form-control" name="date" required />
@@ -74,7 +74,7 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">开始时间</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">开始时间</label>
 						<div class="col-sm-10 col-md-3">
 							<div class='input-group date' id="stime">
 						<input type='text' class="form-control" name="stime" required />
@@ -85,7 +85,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">结束时间</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">结束时间</label>
 						<div class="col-sm-10 col-md-3">
 							<div class='input-group date' id="etime">
 						<input type='text' class="form-control"  name="etime" required />
@@ -97,33 +97,33 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">地点</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">地点</label>
 						<div class="col-sm-10 col-md-3">
 							<input type="text" class="form-control" placeholder="地点" required name="location">
 						</div>
 					</div>
 					
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">人数</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">人数</label>
 						<div class="col-sm-10 col-md-3">
 							<input type="text" class="form-control" placeholder="人数" required name="requiredNumber">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">监考课程</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">监考课程</label>
 						<div class="col-sm-10 col-md-3">
 							<input type="text" class="form-control" placeholder="监考课程" name="course">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">备注</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">备注</label>
 						<div class="col-sm-10 col-md-3">
 							<textarea class="form-control" rows="5" placeholder="备注" name="comment"></textarea>
 						</div>
 					</div>
 						
 					<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label"></div>
+						<div class="col-sm-2 col-md-2 control-label"></div>
 						<div class="col-sm-10 col-md-3">
 							<button type="submit" class="btn btn-primary btn-wide">提交</button>
 							<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>	

@@ -13,6 +13,7 @@
 	<jsp:body>
 		<ol class="breadcrumb">
 		  <li><a href="">主页</a></li>
+		  <li><a href="admin/project/projectmanagement">毕设管理</a></li>
 		  <li class="active">Zip下载</li>
 		</ol>
 		<c:if test="${exception != null}">
@@ -26,7 +27,7 @@
 			</div>
 		</c:if>
 		<c:forEach items="${fileTypes }" var="f">
-			<p><a href="admin/project/downloadzip/${f.directory }/" class="btn btn-primary btn-wide">${f.directory }</a></p>
+			<p><a href="admin/project/downloadzip/${f.directory }/" class="btn btn-primary btn-wide">${f.name }</a></p>
 		</c:forEach>
     </jsp:body>
 </myTemplate:template>

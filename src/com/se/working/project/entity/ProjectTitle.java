@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,10 +31,7 @@ public class ProjectTitle {
 	@OrderBy("id ASC")
 	private Set<SelectedTitleDetail> selectedTitleDetails;
 	@OneToMany(mappedBy = "title")
-	@OrderBy("id DESC")
-	private Set<GuideRecord> guideRecords;
-	@OneToOne
-	private StudentProject student;
+	private Set<ProjectFileDetail> projectFileDetails;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
@@ -99,20 +95,14 @@ public class ProjectTitle {
 	public void setSelectedTitleDetails(Set<SelectedTitleDetail> selectedTitleDetails) {
 		this.selectedTitleDetails = selectedTitleDetails;
 	}
-	public Set<GuideRecord> getGuideRecords() {
-		return guideRecords;
-	}
-	public void setGuideRecords(Set<GuideRecord> guideRecords) {
-		this.guideRecords = guideRecords;
+
+	public Set<ProjectFileDetail> getProjectFileDetails() {
+		return projectFileDetails;
 	}
 
-	public StudentProject getStudent() {
-		return student;
+	public void setProjectFileDetails(Set<ProjectFileDetail> projectFileDetails) {
+		this.projectFileDetails = projectFileDetails;
 	}
 
-	public void setStudent(StudentProject student) {
-		this.student = student;
-	}
-	
 	
 }

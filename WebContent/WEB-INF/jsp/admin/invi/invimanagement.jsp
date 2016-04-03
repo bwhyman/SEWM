@@ -60,7 +60,7 @@
 		<div class="panel-heading">
 			<div class="row">
 				<div class="col-md-2">
-					<a class="btn btn-info btn-block" role="button" href="invi/list/unassinvi">监考编辑/分配</a>
+					<a class="btn btn-info btn-block" role="button" href="invi/listinviinfo/unassinvi">监考编辑/分配</a>
 				</div>
 			</div>
 		</div>

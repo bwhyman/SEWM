@@ -34,26 +34,30 @@
 	
 	<div class="form-horizontal">
 		<div class="form-group">
-			<div class="col-sm-2 col-md-1 control-label">题目</div>
-			<div class="col-sm-2 col-md-4">${projectFileDetail.title.name }</div>
+			<div class="col-sm-2 col-md-2 control-label">题目</div>
+			<div class="col-sm-2 col-md-6">${title.name }</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-1 control-label">题目性质</div>
-			<div class="col-sm-2 col-md-4">${projectFileDetail.title.property }</div>
+			<div class="col-sm-2 col-md-2 control-label">题目性质</div>
+			<div class="col-sm-2 col-md-4">${title.property }</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-1 control-label">指导教师</div>
-			<div class="col-sm-2 col-md-4">${projectFileDetail.title.teacher.user.name }</div>
+			<div class="col-sm-2 col-md-2 control-label">指导教师</div>
+			<div class="col-sm-2 col-md-4">${title.teacher.user.name }</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-1 control-label">论证报告</div>
+			<div class="col-sm-2 col-md-2 control-label">论证报告</div>
 			<div class="col-sm-10 col-md-10">
-				<a href="download/${projectFileDetail.directory }/${projectFileDetail.fileName }/">${projectFileDetail.fileName }</a>
+				<c:forEach items="${title.projectFileDetails }" var="p">
+					<c:if test="${p.projectFileType.id == 1 }">
+						<a href="download/${p.directory }/${p.fileName}/">${p.fileName }</a>
+					</c:if>
+				</c:forEach>
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-1 control-label">题目内容</div>
-			<div class="col-sm-10 col-md-10">${projectFileDetail.title.objective }</div>
+			<div class="col-sm-2 col-md-2 control-label">题目内容</div>
+			<div class="col-sm-10 col-md-10">${title.objective }</div>
 		</div>
 	</div>	
     </jsp:body>

@@ -33,7 +33,7 @@
 										<tbody>
 											<tr>
 												<td style="width: 6em;">题目</td>
-												<td>${g.title.name }</td>
+												<td>${g.projectFileDetail.title.name }</td>
 											</tr>
 											<tr>
 												<td style="width: 6em;">指导时间</td>

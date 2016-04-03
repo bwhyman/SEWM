@@ -13,7 +13,7 @@
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>
-  <li class="active">毕设管理</li>
+  <li class="active">毕设信息</li>
 </ol>
 	
 		<div class="panel panel-primary">
@@ -23,10 +23,11 @@
 					<a class="btn btn-info btn-block" role="button" data-toggle="dropdown" >添加毕设题目
 					<span class="caret"></span></a>
 					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
-						<li><a href="download/${demonstration.directory }/${demonstration.templeteFile}/">下载论证报告模板</a></li>
 						<c:if test="${demonstration.opened == true }">
-							<li><a href="project/addproject">添加毕设题目</a></li>
+							<li><a href="project/addtitle">添加毕设题目</a></li>
 						</c:if>
+						<li><a href="download/${demonstration.directory }/${demonstration.templeteFile}/">下载论证报告模板</a></li>
+						<li><a href="project/uploadfiles">上传论证报告</a></li>
 					</ul>
 					
 				</div>
@@ -43,14 +44,13 @@
 		<div class="panel-heading">
 			<div class="row">
 				<div class="col-md-2">
-					<a class="btn btn-info btn-block" role="button" href="project/listtitles/mytitles">毕设题目</a>
+					<a class="btn btn-info btn-block" role="button" href="project/listtitles/${user.id }">毕设题目</a>
 				</div>
 			</div>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li>个人题目</li>
-				<li>全部题目</li>
+				<li>个人题目、全部题目</li>
 			</ul>
 		</div>
 	</div>
@@ -58,13 +58,23 @@
 		<div class="panel-heading">
 			<div class="row">
 				<div class="col-md-2">
-					<a class="btn btn-info btn-block" role="button" href="project/selecttitles">选题信息</a>
+					<a class="btn btn-info btn-block" role="button" data-toggle="dropdown" >选题信息
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
+						<c:if test="${demonstration.opened == true }">
+							<li><a href="project/myselecttitles">确认选题</a></li>
+						</c:if>
+						<li><a href="project/selecttitles/${user.id }">选题信息</a></li>
+						<li><a href="project/selectresult/selected">结果信息</a></li>
+					</ul>
+					
 				</div>
 			</div>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li>确认学生选题</li>
+				<li>确认学生选题、查看选题信息</li>
+				<li>结果信息是教师确认学生后的选题信息，已选题表示已被老师确认选题，未选题包括退选、未选题学生</li>
 			</ul>
 		</div>
 	</div>

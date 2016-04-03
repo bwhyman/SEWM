@@ -21,42 +21,30 @@
 	<ol class="breadcrumb">
 	  <li><a href="">主页</a></li>
 	  <li><a href="project/projectmanagement">毕设管理</a></li>
-	  <li class="active">选题信息</li>
+	  <li class="active">结果信息</li>
 	</ol>
-	<c:forEach items="${teachers }" var="t">
-		<a id="${t.id }" class="btn btn-primary" href="project/selecttitles/${t.id }" role="button" style="margin-bottom: 2px;">${t.user.name }(${t.leadNum })</a>
-	</c:forEach>
-	<a id="-1" class="btn btn-primary" href="project/selecttitles/-1" role="button">全部题目</a>
+	<a id="selected" class="btn btn-primary" href="project/selectresult/selected" role="button">已选题</a>
+	<a id="unselect" class="btn btn-primary" href="project/selectresult/unselect" role="button">未选题</a>
+	<a class="btn btn-primary" href="project/exportSelectResult" role="button">导出选题信息</a>
 	<div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
 			<tr>
 				 <th>#</th>
+                  <th>学号</th>
+                  <th>学生</th>
                   <th>题目</th>
-                  <th>题目性质</th>
-                  <th>论证报告</th>
-                  <th>已选人数</th>
-                  <th>已确认学生</th>
+                  <th>指导老师</th>
 			</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${fileDetails }" var="p" varStatus="s">
+				<c:forEach items="${students }" var="st" varStatus="s">
 				<tr>
 				<td>${s.count }</td>
-				<td><a href="project/projecttitle/${p.id }">${p.title.name }</a></td>
-				<td>${p.title.property }</td>
-				
-				<td>
-					<a href="download/${p.directory }/${p.fileName}/">论证报告</a>
-				</td>
-				<td>${p.title.selectedTitleDetails.size() }</td>
-				<td>
-					<c:forEach items="${p.title.selectedTitleDetails }" var="st">
-						<c:if test="${st.confirmed == true }">
-							<span class="label label-success">${st.student.user.name }</span>
-						</c:if>
-					</c:forEach>
-				</td>
+				<td>${st.user.employeeNumber }</td>
+				<td>${st.user.name }</td>
+				<td>${st.selectedTitleDetail.title.name }</td>
+				<td>${st.selectedTitleDetail.title.teacher.user.name }</td>
 			</tr>
 			</c:forEach>
 			</tbody>

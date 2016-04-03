@@ -146,6 +146,20 @@ public class FileTaskUtils {
 	}
 	
 	/**
+	 * 基于文件目录，文件名称，重命名文件
+	 * @param directory
+	 * @param FileName
+	 */
+	public static void renameFileTaskFile(String directory, String FileName, String newName) {
+		File file = new File(getUploadDirectory() +directory + "\\" + FileName);
+		if (file.exists() && file.isFile()) {
+			file.renameTo(new File(getUploadDirectory() +directory + "\\" + newName));
+		}else {
+			throw new SEWMException("文件已不存在");
+		}
+	}
+	
+	/**
 	 * 基于文件目录，文件名称，删除文件
 	 * @param directory
 	 * @param FileName

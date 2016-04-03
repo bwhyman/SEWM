@@ -22,7 +22,6 @@ import com.se.working.project.dao.ProjectFileTypeDao;
 import com.se.working.project.dao.StudentProjectDao;
 import com.se.working.project.dao.TeacherProjectDao;
 import com.se.working.project.entity.ProjectFileType;
-import com.se.working.project.entity.StudentProject;
 import com.se.working.project.entity.TeacherProject;
 import com.se.working.task.dao.FileTaskStatusDao;
 import com.se.working.task.dao.FileTypeDao;
@@ -58,8 +57,6 @@ public class SuperAdminService extends GenericService<User, Long>{
 	private ProjectFileTypeDao projectFileTypeDao;
 	@Autowired
 	private TeacherProjectDao teacherProjectDao;
-	@Autowired
-	private StudentProjectDao studentProjectDao;
 	
 	/**
 	 * 初始化职称
@@ -358,7 +355,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			
 		}
 		
-		if (userAuthorityDao.get(UserAuthorityType.STUDENT).getUsers().size() == 0) {
+		/*if (userAuthorityDao.get(UserAuthorityType.STUDENT).getUsers().size() == 0) {
 			User xuqingqing = new User();
 			xuqingqing.setName("胥清清");
 			xuqingqing.setEmployeeNumber("20124628");
@@ -378,7 +375,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			StudentProject spdengqianwen = new StudentProject();
 			spdengqianwen.setUser(dengqianwen);
 			studentProjectDao.persist(spdengqianwen);
-		}
+		}*/
 	}
 	
 	public void initSpecInviType() {
@@ -436,30 +433,37 @@ public class SuperAdminService extends GenericService<User, Long>{
 		if (projectFileTypeDao.list().size() == 0) {
 			ProjectFileType demonstrationReport = new ProjectFileType();
 			demonstrationReport.setName("论证报告");
+			demonstrationReport.setDirectory("论证报告");
 			projectFileTypeDao.persist(demonstrationReport);
 			
 			ProjectFileType openningReport = new ProjectFileType();
 			openningReport.setName("开题报告");
+			openningReport.setDirectory("开题报告");
 			projectFileTypeDao.persist(openningReport);
 			
 			ProjectFileType openDefenseRecord = new ProjectFileType();
 			openDefenseRecord.setName("开题答辩记录");
+			openDefenseRecord.setDirectory("开题答辩记录");
 			projectFileTypeDao.persist(openDefenseRecord);
 			
 			ProjectFileType interimDefenseRecord = new ProjectFileType();
 			interimDefenseRecord.setName("中期答辩记录");
+			interimDefenseRecord.setDirectory("中期答辩记录");
 			projectFileTypeDao.persist(interimDefenseRecord);
 			
 			ProjectFileType paperDefenseRecord = new ProjectFileType();
 			paperDefenseRecord.setName("论文答辩记录");
+			paperDefenseRecord.setDirectory("论文答辩记录");
 			projectFileTypeDao.persist(paperDefenseRecord);
 			
 			ProjectFileType interimReport = new ProjectFileType();
 			interimReport.setName("中期报告");
+			interimReport.setDirectory("中期报告");
 			projectFileTypeDao.persist(interimReport);
 			
 			ProjectFileType paper = new ProjectFileType();
 			paper.setName("论文");
+			paper.setDirectory("论文");
 			projectFileTypeDao.persist(paper);
 		}
 	}

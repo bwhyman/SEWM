@@ -111,8 +111,8 @@
 							</a></li>
 						<li><a href="admin/invi/invimanagement">监考管理</a></li>
 						<li><a href="admin/task/taskmanagement">任务管理</a></li>
-						<li><a href="admin/setting/usersetting">用户管理</a></li>
 						<li><a href="admin/project/projectmanagement">毕设管理</a></li>
+						<li><a href="admin/setting/usersetting">用户管理</a></li>
 					</ul>
 					</c:if>
 					<c:if test="${user.userAuthority.level >=20 }">
@@ -149,7 +149,12 @@
 
 	<footer class="footer">
 		<div class="container">
-			<p class="text-muted">东北林业大学 软件工程专业. &copy; 2016</p>
+			<div class="row">
+				<div class="col-sm-6 col-md-6 col-sm-offset-4 col-md-offset-4">
+					<p class="text-muted">东北林业大学 软件工程专业. &copy; 2016</p>
+				</div>
+			</div>
+			
 		</div>
 	</footer>
 

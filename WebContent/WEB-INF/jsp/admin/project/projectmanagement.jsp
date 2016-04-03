@@ -12,25 +12,60 @@
 <myTemplate:template>
 	<jsp:body>
 	<ol class="breadcrumb">
-  <li><a href="">主页</a></li>
-  <li class="active">毕设管理</li>
-</ol>
-	
-		<div class="panel panel-primary">
+	  <li><a href="">主页</a></li>
+	  <li class="active">毕设管理</li>
+	</ol>
+	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<div class="row">
 				<div class="col-md-2">
-					<a class="btn btn-info btn-block" role="button" href="admin/project/startproject">毕设题目管理</a>
+					<a class="btn btn-info btn-block" role="button" data-toggle="dropdown" >学生信息管理
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
+						<li><a href="admin/project/importstuinfo">导入学生信息</a></li>
+						<li><a href="admin/project/studentmanagement">学生信息管理</a></li>
+					</ul>
+					
 				</div>
 			</div>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li>开启添加毕业设计题目功能</li>
-				<li>上传论证报告模板</li>
+				<li>导入学生信息（学号、姓名）</li>
+				<li>学生信息管理包括密码重置、删除</li>
+				<li>清除学生信息，主要用于信息导入错误，如已开始选题，<span class="label label-danger">禁止</span>该操作</li>
 			</ul>
 		</div>
 	</div>
+	<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-2">
+						<a class="btn btn-info btn-block" role="button" href="admin/project/divide">人数分配管理</a>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<ul>
+					<li>分配教师所带毕业设计学生人数</li>
+				</ul>
+			</div>
+		</div>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-md-2">
+						<a class="btn btn-info btn-block" role="button" href="admin/project/startproject">毕设题目管理</a>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<ul>
+					<li>开启添加毕业设计题目功能</li>
+					<li>上传论证报告模板</li>
+				</ul>
+			</div>
+		</div>
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<div class="row">

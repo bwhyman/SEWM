@@ -40,6 +40,16 @@
 		    	    }
 				})
 			})
+			
+			$('.deltitle').click(function(){
+				var current = $(this);
+				$.post('project/deltitle',{
+					'id':current.attr('href')
+				},function(){
+					location.href = 'project/addtitle';
+				})
+				return false;
+			})
 		})
 	</script>
 	<script src="resources/js/fileinput.min.js"></script>
@@ -60,7 +70,42 @@
 			<strong>错误！</strong> ${exception }
 		</div>
 	</c:if>
-	<form class="form-horizontal" action="project/addproject" method="POST" enctype="multipart/form-data">
+	<c:if test="${ fileDetails.size()>0 }">
+		
+		<div class="table-responsive">
+			<table class="table table-striped table-condensed table-hover">
+			<thead>
+				<tr>
+					 <th>#</th>
+	                  <th>题目</th>
+	                  <th>题目性质</th>
+	                  <th>指导教师</th>
+	                  <th>论证报告</th>
+	                  <th>操作</th>
+				</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${fileDetails }" var="p" varStatus="s">
+							<tr>
+								<td>${s.count }</td>
+								<td><a href="project/title/${p.title.id }">${p.title.name }</a></td>
+								<td>${p.title.property }</td>
+								<td>${p.title.teacher.user.name }</td>
+								<td>
+									<a href="download/${p.directory }/${p.fileName}/">论证报告</a>
+								</td>
+								<td>
+									<a href="project/updatetitle/${p.title.id}">修改</a>
+									<a href="${p.title.id }" class="deltitle">删除</a>
+								</td>
+							</tr>
+				</c:forEach>
+				</tbody>
+		</table>
+		</div>
+	</c:if>
+	
+	<form class="form-horizontal" action="project/addtitle" method="POST" enctype="multipart/form-data">
 					<div class="form-group">
 						<label for="name" class="col-sm-2 col-md-1 control-label">题目</label>
 						<div class="col-sm-10 col-md-3">
@@ -90,7 +135,7 @@
 					</div>
 					<div class="form-group">
 						<label for="objective" class="col-sm-2 col-md-1 control-label">立题依据</label>
-						<div class="col-sm-10 col-md-3">
+						<div class="col-sm-10 col-md-8">
 							<textarea class="form-control" rows="15" placeholder="立题依据" name="objective" id="editor_id"></textarea>
 						</div>
 					</div>
@@ -119,7 +164,9 @@
 				resizeType : 1,
 				allowPreviewEmoticons : false,
 				allowImageUpload : false,
-				items : []
+				items : [ 'justifyleft', 'justifycenter', 'justifyright','justifyfull', 'insertorderedlist','|', 
+				          'formatblock', 'fontname', 'fontsize', '|',
+				          'forecolor', 'hilitecolor', 'bold','italic', 'underline']
 			});
 		});
 	</script>

@@ -1,5 +1,7 @@
 package com.se.working.service;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,15 @@ import com.se.working.entity.User;
 import com.se.working.entity.UserAuthority;
 import com.se.working.entity.UserAuthority.UserAuthorityLevel;
 import com.se.working.entity.UserAuthority.UserAuthorityType;
+import com.se.working.exception.SEWMException;
 import com.se.working.invigilation.dao.TeacherInviDao;
 import com.se.working.invigilation.entity.TeacherInvigilation;
+import com.se.working.project.dao.StudentProjectDao;
+import com.se.working.project.entity.StudentProject;
+import com.se.working.task.dao.TeacherTaskDao;
+import com.se.working.task.entity.TeacherTask;
 import com.se.working.util.MD5;
+import com.se.working.util.StudentExcelUtil;
 
 
 
@@ -34,7 +42,85 @@ public class AdminService extends GenericService<User, Long> {
 	private TeacherInviDao teacherInviDao;
 	@Autowired
 	private TeacherTitleDao teacherTitleDao;
+	@Autowired
+	private StudentProjectDao studentProjectDao;
+	@Autowired
+	private TeacherTaskDao teacherTaskDao;
 
+	/**
+	 * 查询所有通知者
+	 * @return
+	 */
+	public List<User> findNotifusers(){
+		List<User> users = new ArrayList<>();
+		for (TeacherTask teacherTask : teacherTaskDao.list()) {
+			users.add(teacherTask.getUser());
+		}
+		return users;
+	}
+	
+	/**
+	 * 清除所有学生信息（仅限于导入信息有误）
+	 */
+	public void clearStudents(){
+		studentProjectDao.deleteAll();
+		userDao.delStudents();
+	}
+	
+	/**
+	 * 根据id删除学生信息（用于信息上传错误）
+	 * @param userId
+	 */
+	public void delStudent(long userId){
+		studentProjectDao.delete(new StudentProject(userId));
+		userDao.delete(new User(userId));
+	}
+	
+	/**
+	 * 查询所有学生信息
+	 * @return
+	 */
+	public List<User> findStudents(){
+		return userDao.listStudent();
+	}
+	
+	/**
+	 * 导入学生信息
+	 * @param file
+	 * @return
+	 */
+	public List<User> importStudent(File file){
+		List<User> users = new ArrayList<>();
+		users = StudentExcelUtil.getExcel(file);
+		if (users == null) {
+			if (file.exists()) {
+				file.delete();
+			}
+			throw new SEWMException("读取学生信息为空");
+		}
+		List<User> oldUsers = userDao.listStudent(); 
+		for (User user : users) {
+			boolean isExist = false;
+			for (User user2 : oldUsers) {
+				if (user2.getEmployeeNumber().equals(user.getEmployeeNumber())) {
+					isExist = true;
+					break;
+				}
+			}
+			if (!isExist) {
+				user.setPassword(MD5.generateMD5(user.getEmployeeNumber()));
+				user.setUserAuthority(new UserAuthority(UserAuthorityType.STUDENT));
+				userDao.persist(user);
+				
+				StudentProject studentProject = new StudentProject();
+				studentProject.setUser(user);
+				studentProjectDao.persist(studentProject);
+			}
+			
+		}
+		return users;
+	}
+	
 	/**
 	 * 添加用户，需重写 单向关系，没有级联，需手动创建关联对象
 	 */

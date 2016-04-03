@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -21,15 +20,12 @@ public class ProjectFileDetail {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@ManyToOne
-	private StudentProject student;
-	@ManyToOne
-	private ProjectTitle title;
-	@ManyToOne
 	private ProjectFileType projectFileType;
 	private String fileName;
 	private String directory;
+	@ManyToOne
+	private ProjectTitle title;
 	@OneToMany(mappedBy = "projectFileDetail")
-	@OrderBy("id ASC")
 	private Set<GuideRecord> guideRecords;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -44,21 +40,6 @@ public class ProjectFileDetail {
 		this.id = id;
 	}
 
-	public StudentProject getStudent() {
-		return student;
-	}
-
-	public void setStudent(StudentProject student) {
-		this.student = student;
-	}
-
-	public ProjectTitle getTitle() {
-		return title;
-	}
-
-	public void setTitle(ProjectTitle title) {
-		this.title = title;
-	}
 
 	public ProjectFileType getProjectFileType() {
 		return projectFileType;
@@ -95,6 +76,8 @@ public class ProjectFileDetail {
 	public void setDirectory(String directory) {
 		this.directory = directory;
 	}
+
+
 	public Set<GuideRecord> getGuideRecords() {
 		return guideRecords;
 	}
@@ -102,5 +85,14 @@ public class ProjectFileDetail {
 	public void setGuideRecords(Set<GuideRecord> guideRecords) {
 		this.guideRecords = guideRecords;
 	}
+
+	public ProjectTitle getTitle() {
+		return title;
+	}
+
+	public void setTitle(ProjectTitle title) {
+		this.title = title;
+	}
+
 
 }

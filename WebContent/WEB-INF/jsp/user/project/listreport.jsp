@@ -35,7 +35,7 @@
 			</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${projectFileDetails }" var="p" varStatus="s">
+				<c:forEach items="${fileDetails }" var="p" varStatus="s">
 						<tr>
 							<td>${s.count }</td>
 							<td>${p.title.name }</td>
