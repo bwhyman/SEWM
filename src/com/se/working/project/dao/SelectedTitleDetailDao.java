@@ -11,14 +11,15 @@ import com.se.working.project.entity.SelectedTitleDetail;
 public class SelectedTitleDetailDao extends GenericDao<SelectedTitleDetail, Long> {
 	
 	/**
-	 * 根据教师id查询未被确认的选题信息
+	 * 根据教师id查询选题信息
 	 * @param teacherId
+	 * @param confirmed
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<SelectedTitleDetail> listUnconfirmedByTeacherId(long teacherId){
-		String HQL = "FROM SelectedTitleDetail s WHERE s.confirmed = false AND s.title.teacher.id =:teacherId";
-		return getSessionFactory().getCurrentSession().createQuery(HQL).setLong("teacherId", teacherId).list();
+	public List<SelectedTitleDetail> listByTeacherIdAndconfirmed(long teacherId, boolean confirmed){
+		String HQL = "FROM SelectedTitleDetail s WHERE s.confirmed =:confirmed AND s.title.teacher.id =:teacherId";
+		return getSessionFactory().getCurrentSession().createQuery(HQL).setBoolean("confirmed", confirmed).setLong("teacherId", teacherId).list();
 	}
 	
 	/**

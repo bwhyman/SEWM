@@ -24,6 +24,7 @@ import com.se.working.project.entity.ProjectFileType.FileTypes;
 import com.se.working.project.entity.ProjectTitle;
 import com.se.working.project.entity.TeacherProject;
 import com.se.working.project.service.ProjectService;
+import com.se.working.service.UserService;
 import com.se.working.util.StringUtils;
 
 @Controller
@@ -34,6 +35,8 @@ public class UserProjectController {
 	private String basePath = "/user/project/";
 	@Autowired
 	private ProjectService projectService;
+	@Autowired
+	private UserService userService;
 	
 	@RequestMapping(path = "/exportSelectResult")
 	public ResponseEntity<byte[]> downloadSelectResult(){
@@ -193,8 +196,11 @@ public class UserProjectController {
 			stIds[i] = Long.valueOf(strs[i]);
 		}
 		
-		projectService.updateSelectTitle(stIds);
-		return redirect + "selecttitles/" + ((User)session.getAttribute("user")).getId();
+		
+		User user = (User)session.getAttribute("user");
+		projectService.updateSelectTitle(user.getId(), stIds);
+		user = userService.findById(user.getId());
+		return redirect + "selecttitles/" + user.getId();
 	}
 	
 	/**
@@ -208,6 +214,7 @@ public class UserProjectController {
 		User user = (User) session.getAttribute("user");
 		List<ProjectTitle> titles = projectService.findUncomfirmedByTeacherId(user.getId());
 		vMap.put("titles", titles);
+		vMap.put("leadNum", projectService.findLeadNumById(user.getId()));
 		return basePath + "selectprojectdetail";
 	}
 	

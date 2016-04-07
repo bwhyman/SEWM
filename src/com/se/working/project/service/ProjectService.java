@@ -89,9 +89,15 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 */
 	public List<ProjectTitle> findUncomfirmedByTeacherId(long teacherId){
 		List<ProjectTitle> titles = new ArrayList<>();
-		for (SelectedTitleDetail selectedTitleDetail : selectedTitleDetailDao.listUnconfirmedByTeacherId(teacherId)) {
+		
+		List<ProjectTitle> confirmeds = new ArrayList<>();
+		for (SelectedTitleDetail selectedTitleDetail : selectedTitleDetailDao.listByTeacherIdAndconfirmed(teacherId, true)) {
+			confirmeds.add(selectedTitleDetail.getTitle());
+		}
+		
+		for (SelectedTitleDetail selectedTitleDetail : selectedTitleDetailDao.listByTeacherIdAndconfirmed(teacherId, false)) {
 			ProjectTitle title = selectedTitleDetail.getTitle();
-			if (!titles.contains(title)) {
+			if (!confirmeds.contains(title) && !titles.contains(title)) {
 				titles.add(title);
 			}
 		}
@@ -323,13 +329,29 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	
 	/**
 	 * 确认学生选题信息，删除未被确认的学生选题信息
-	 * @param detailid
-	 * @param studentId
+	 * @param userId
+	 * @param stIds
+	 * @return
 	 */
-	public void updateSelectTitle(long[] stIds){
+	public int updateSelectTitle(long userId, long[] stIds){
+		TeacherProject teacher = teacherProjectDao.get(userId);
+		teacher.setLeadNum(teacher.getLeadNum() - stIds.length);
+		teacherProjectDao.update(teacher);
+		teacherProjectDao.flush();
+		teacherProjectDao.refresh(teacher);
 		for (long studentId : stIds) {
 			studentProjectDao.get(studentId).getSelectedTitleDetail().setConfirmed(true);
 		}
+		return teacher.getLeadNum();
+	}
+	
+	/**
+	 * 获取指导人数
+	 * @param userId
+	 * @return
+	 */
+	public int findLeadNumById(long userId){
+		return  teacherProjectDao.get(userId).getLeadNum();
 	}
 	
 	/**

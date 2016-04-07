@@ -13,6 +13,23 @@
 <jsp:attribute name="footer">
 	<script>
 		$(function(){
+			var leadNum = parseInt('${leadNum}');
+			
+			$('.myradio').click(function(){
+				var current = $(this);
+				if(current.prop('checked')==true){
+					var i = 0;
+					$('.myradio').each(function(){
+						if($(this).prop('checked')){
+							i++;
+							if (i>leadNum) {
+								current.radiocheck('uncheck'); 
+							}
+						}
+					})
+				}
+			})
+			
 			$("#mybtn").click(function(){
 	            var str = new Array();
 	            var i = 0;
@@ -21,6 +38,9 @@
 						str[i++] = $(this).val();
 					}
 				})
+				if(i==0){
+					return false;
+				}
 				$.post('project/confirmselectproject',{
 					'studentId':str.toString()
 				},function(){
@@ -46,7 +66,7 @@
 						<div class="form-group">
 							<div class="col-sm-2 col-md-1 control-label"></div>
 							<label class="radio col-md-1 ">
-						         <input type="radio" data-toggle="radio" class="myradio" name="radio${t.id} " id="optionsRadios1" value="${st.student.user.id }" data-radiocheck-toggle="radio" required>
+						         <input type="radio" data-toggle="radio" class="myradio" name="radio${t.id} " value="${st.student.user.id }" data-radiocheck-toggle="radio" required>
 						          ${st.student.user.name }
 						    </label>
 						</div>
