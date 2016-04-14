@@ -59,10 +59,10 @@ public class SelectedToExcelUtil {
             StudentProject student = students.get(i); 
             HSSFCell cell = row.createCell(0);
             cell.setCellStyle(style);
-            cell.setCellValue(student.getUser().getEmployeeNumber());  
+            cell.setCellValue(student.getStudent().getStudentId());  
             cell = row.createCell(1);
             cell.setCellStyle(style);
-            cell.setCellValue(student.getUser().getName()); 
+            cell.setCellValue(student.getStudent().getName()); 
             cell = row.createCell(2);
             cell.setCellStyle(style);
             cell.setCellValue(student.getSelectedTitleDetail().getTitle().getName()); 

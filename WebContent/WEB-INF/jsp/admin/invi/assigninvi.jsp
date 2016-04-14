@@ -185,7 +185,7 @@
 							 value="true" name="notice"   checked="checked"/>
 			</div>
 		</div>	
-				<div class="form-group">
+				<!-- <div class="form-group">
 						<div class="col-sm-2 col-md-1 control-label"><p class="text-danger">说明</p></div>
 						<div class="col-sm-10 col-md-11">
 							<p class="text-danger">
@@ -208,12 +208,14 @@
 							提交即发送监考通知，当前测试关闭</span>
 							</p>
 						</div>
-					</div>
+					</div> -->
 						
 					<div class="form-group">
 						<div class="col-sm-2 col-md-1 control-label"></div>
-						<div class="col-sm-10 col-md-3">
+						<div class="col-sm-10 col-md-2">
 							<button type="submit" class="btn btn-primary btn-wide" id="submit">提交</button>
+						</div>
+						<div class="col-sm-10 col-md-2">
 							<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>	
 						</div>
 					</div>

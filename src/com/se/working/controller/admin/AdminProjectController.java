@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.se.working.entity.User;
+import com.se.working.entity.Student;
 import com.se.working.exception.SEWMException;
 import com.se.working.project.entity.ProjectFileType;
 import com.se.working.project.entity.ProjectFileType.FileTypes;
@@ -56,14 +56,14 @@ public class AdminProjectController {
 	}
 	
 	@RequestMapping(path = "/delstudent", method = RequestMethod.POST)
-	public String delStudent(long userId){
-		adminService.delStudent(userId);
+	public String delStudent(long studentId){
+		adminService.delStudent(studentId);
 		return redirect + "studentmanagement";
 	}
 	
 	@RequestMapping(path = "/resetpassword", method = RequestMethod.POST)
-	public @ResponseBody String resetPassword(long userId){
-		adminService.updateDefaultPassword(userId);
+	public @ResponseBody String resetPassword(long studentId){
+		adminService.updateStudentDefaultPassword(studentId);
 		return "success";
 	}
 	
@@ -102,8 +102,9 @@ public class AdminProjectController {
 		try {
 			File file = new File(path + fileName);
 			uploadFile.transferTo(file);
-			List<User> users = adminService.importStudent(file);
-			vMap.addFlashAttribute("users", users);
+			List<Student> students = adminService.importStudent(file);
+			vMap.addFlashAttribute("students", students);
+			file.delete();
 		} finally {
 			uploadFile = null;
 		}

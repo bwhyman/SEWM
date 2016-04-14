@@ -19,7 +19,7 @@
 				var strs= new Array();
 				strs = current.attr('href').split(",");
 				$.post('student/project/selecttitle',{
-					'id':strs[0],
+					'titleId':strs[0],
 					'teacherId':strs[1]},function(){
 					location.href = 'student/project/listtitles/' + '${type}';
 				}) 
@@ -105,7 +105,7 @@
 								<td>
 										<c:forEach items="${p.title.selectedTitleDetails }" var="st">
 											<c:if test="${st.confirmed == true }">
-												<span class="label label-success myspan">${st.student.user.name }</span>
+												<span class="label label-success myspan">${st.student.student.name }</span>
 											</c:if>
 											<c:if test="${st.confirmed == false }">
 												<a href="${p.title.id },${p.title.teacher.user.id}" class="selecttitle" id="${p.title.teacher.user.id}">选择</a>

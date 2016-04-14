@@ -60,25 +60,25 @@
 		<form class="form-horizontal" action="project/confirmselectproject" method="POST">
 			<c:forEach items="${titles }" var="t">
 					<div class="form-group">
-						<div class="col-sm-12 col-md-10">${t.name }</div>
+						<div class="col-sm-12 col-md-10 col-md-offset-1">${t.name }</div>
 					</div>
 					<c:forEach items="${t.selectedTitleDetails }" var="st">
 						<div class="form-group">
 							<div class="col-sm-2 col-md-1 control-label"></div>
-							<label class="radio col-md-1 ">
-						         <input type="radio" data-toggle="radio" class="myradio" name="radio${t.id} " value="${st.student.user.id }" data-radiocheck-toggle="radio" required>
-						          ${st.student.user.name }
+							<label class="radio col-md-1 col-md-offset-1">
+						         <input type="radio" data-toggle="radio" class="myradio" name="radio${t.id} " value="${st.student.student.id }" data-radiocheck-toggle="radio" required>
+						          ${st.student.student.name }
 						    </label>
 						</div>
 					</c:forEach>
 			</c:forEach>
-			<div class="form-group">
+			<!-- <div class="form-group">
 				<div class="col-sm-10 col-md-11 ">
 					<p class="text-danger">说明：确认后无法修改，请慎重考虑。</p>
 				</div>
-			</div>
+			</div> -->
 			<div class="form-group">
-				<div class="col-md-1">
+				<div class="col-md-1 col-md-offset-1">
 					<button type="button" class="btn btn-primary btn-wide" id="mybtn">提交</button>
 				</div>
 			</div>

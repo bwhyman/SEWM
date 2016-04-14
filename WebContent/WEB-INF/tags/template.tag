@@ -137,6 +137,7 @@
 								</a></li>
 						<li><a href="student/project/projectmanagement">毕设信息</a></li>
 					</ul>
+					
 				</div>
 			</c:if>
 			

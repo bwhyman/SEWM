@@ -53,7 +53,7 @@
 				<td>
 					<c:forEach items="${p.title.selectedTitleDetails }" var="st">
 						<c:if test="${st.confirmed == true }">
-							<span class="label label-success">${st.student.user.name }</span>
+							<span class="label label-success">${st.student.student.name }</span>
 						</c:if>
 					</c:forEach>
 				</td>

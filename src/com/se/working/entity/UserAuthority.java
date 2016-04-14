@@ -23,6 +23,9 @@ public class UserAuthority {
 	@OneToMany(mappedBy = "userAuthority")
 	@OrderBy(value ="id ASC")
 	private Set<User> users;
+	@OneToMany(mappedBy = "userAuthority")
+	@OrderBy(value ="id ASC")
+	private Set<Student> students;
 	
 	/**
 	 * 用户权限值
@@ -79,6 +82,12 @@ public class UserAuthority {
 	}
 	public UserAuthority() {
 		// TODO Auto-generated constructor stub
+	}
+	public Set<Student> getStudents() {
+		return students;
+	}
+	public void setStudents(Set<Student> students) {
+		this.students = students;
 	}
 
 }

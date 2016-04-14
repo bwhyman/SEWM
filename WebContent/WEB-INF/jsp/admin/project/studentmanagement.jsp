@@ -18,7 +18,7 @@
 					var current = $(this);
 					$.ajax({
 						url:'admin/project/resetpassword',
-						data:{'userId':current.attr('href')},
+						data:{'studentId':current.attr('href')},
 						type:'POST',
 						dataType:'text',
 						success:function(data){
@@ -33,7 +33,7 @@
 				$(".delbtn").click(function(){
 					var current = $(this);
 					$.post('admin/project/delstudent',{
-						'userId':current.attr('href')
+						'studentId':current.attr('href')
 					},function(){
 						location.href = 'admin/project/studentmanagement';
 					})
@@ -63,17 +63,21 @@
 					 <th>#</th>
 	                 <th>学号</th>
 	                 <th>姓名</th>
-	                 <th>操作</th>
+	                 <th>性别</th>
+                     <th>班级</th>
+                     <th>操作</th>
 				</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${users }" var="u" varStatus="s">
+					<c:forEach items="${users }" var="i" varStatus="s">
 						<tr>
 							<td>${s.count }</td>
-							<td>${u.employeeNumber }</td>
-							<td>${u.name }</td>
-							<td><a class="btn btn-primary btn-wide mybtn" href="${u.id }">密码重置</a>
-							<a class="btn btn-primary btn-wide delbtn" href="${u.id }">删除</a></td>
+							<td>${i.studentId }</td>
+							<td>${i.name }</td>
+							<td>${i.sex }</td>
+							<td>${i.classes.name }</td>
+							<td><a class="btn btn-primary btn-wide mybtn" href="${i.id }">密码重置</a>
+							<a class="btn btn-primary btn-wide delbtn" href="${i.id }">删除</a></td>
 						</tr>
 				</c:forEach>
 				</tbody>

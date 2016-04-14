@@ -12,6 +12,8 @@
   <mapping class="com.se.working.entity.TeacherTitle"/>
   <mapping class="com.se.working.entity.User"/>
   <mapping class="com.se.working.entity.UserAuthority"/>
+  <mapping class="com.se.working.entity.Student"/>
+  <mapping class="com.se.working.entity.Classes"/>
   <mapping class="com.se.working.invigilation.entity.Course"/>
   <mapping class="com.se.working.invigilation.entity.CourseSection"/>
   <mapping class="com.se.working.invigilation.entity.Invigilation"/>

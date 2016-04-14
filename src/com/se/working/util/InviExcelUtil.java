@@ -68,13 +68,15 @@ public class InviExcelUtil {
 			if (row != null) {
 				for (int cellIndex = row.getLastCellNum(); cellIndex >= 0; cellIndex--) {
 					Cell cell = row.getCell(cellIndex);
-					if (cell != null
-							&& !StringUtils.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
-						// 判断是否为专业监考信息
-						mNum = pNum.matcher(cell.getStringCellValue());
-						if (mNum.find()) {
-							infos.add(getRowInfos(row));
-							break;
+					if (cell != null) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						if (!StringUtils.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
+							// 判断是否为专业监考信息
+							mNum = pNum.matcher(cell.getStringCellValue());
+							if (mNum.find()) {
+								infos.add(getRowInfos(row));
+								break;
+							}
 						}
 					}
 				}

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.se.working.entity.User;
+import com.se.working.entity.Student;
 import com.se.working.project.entity.GuideRecord;
 import com.se.working.project.entity.ProjectFileDetail;
 import com.se.working.project.entity.ProjectFileType;
@@ -40,8 +40,7 @@ public class StudentProjectController {
 	 */
 	@RequestMapping(path = "/listguiderecord/{typeId}")
 	public String listGuideRecord(@PathVariable long typeId , Map<String, Object> vMap, HttpSession session){
-		User user = (User) session.getAttribute("user");
-		List<GuideRecord> guideRecords = projectService.findByStudentIdAndTypeId(user.getId(), typeId);
+		List<GuideRecord> guideRecords = projectService.findByStudentIdAndTypeId(((Student)session.getAttribute("user")).getId(), typeId);
 		String typeCH = projectService.findFileTypeById(typeId).getName();
 		vMap.put("typeCH", typeCH);
 		vMap.put("guideRecords", guideRecords);
@@ -100,8 +99,7 @@ public class StudentProjectController {
 	 */
 	@RequestMapping(path = "/uploadfile/{type}", method = RequestMethod.POST)
 	public String uploadFile(@PathVariable String type,long typeId, MultipartFile uploadfile, HttpSession session){
-		User user = (User) session.getAttribute("user");
-		projectService.uploadProjectFile(user.getId(), typeId, uploadfile);
+		projectService.uploadProjectFile(((Student)session.getAttribute("user")).getId(), typeId, uploadfile);
 		return redirect + basePath + "projectmanagement";
 	}
 	
@@ -112,9 +110,8 @@ public class StudentProjectController {
 	 */
 	@RequestMapping(path = "/projectmanagement")
 	public String projectManagement(Map<String, Object> vMap, HttpSession session){
-		
-		User user = (User) session.getAttribute("user");
-		boolean openedProject = projectService.findStudentProjectOpened(user.getId()); 
+
+		boolean openedProject = projectService.findStudentProjectOpened(((Student)session.getAttribute("user")).getId()); 
 		
 		ProjectFileType openReport = projectService.findFileTypeById(FileTypes.OPENINGREPORT);
 		ProjectFileType openRecord = projectService.findFileTypeById(FileTypes.OPENDEFENSERECORD);
@@ -133,9 +130,8 @@ public class StudentProjectController {
 	}
 	
 	@RequestMapping(path = "/selecttitle", method = RequestMethod.POST)
-	public String selectTitle(long id, long teacherId, HttpSession session){
-		User user = (User) session.getAttribute("user");
-		projectService.addSelectedTitleDetail(user.getId(), id);
+	public String selectTitle(long titleId, long teacherId, HttpSession session){
+		projectService.addSelectedTitleDetail(((Student)session.getAttribute("user")).getId(), titleId);
 		return redirect + "listtitles/" + teacherId;
 	}
 	
@@ -148,8 +144,8 @@ public class StudentProjectController {
 	@RequestMapping(path = "/listtitles/{type}")
 	public String listTitles(@PathVariable long type, Map<String, Object> vMap, HttpSession session){
 		//判断所选题目是否已被导师确认
-		User user = (User) session.getAttribute("user");
-		ProjectFileDetail fileDetail = projectService.findFileDetailByStudentId(user.getId(), FileTypes.DEMONSTRATIONREPORT);
+		Student student = (Student)session.getAttribute("user");
+		ProjectFileDetail fileDetail = projectService.findFileDetailByStudentId(student.getId(), FileTypes.DEMONSTRATIONREPORT);
 		if (fileDetail !=null) {
 			vMap.put("fileDetail", fileDetail);
 		}else{
@@ -164,7 +160,7 @@ public class StudentProjectController {
 			vMap.put("fileDetails", fileDetails);
 			
 			//查看当前选择题目
-			SelectedTitleDetail selectedTitleDetail = projectService.findSelectedTitleDetailByStudentId(user.getId());
+			SelectedTitleDetail selectedTitleDetail = projectService.findSelectedTitleDetailByStudentId(student.getId());
 			vMap.put("selectedTitleDetail", selectedTitleDetail);
 		}
 		return basePath + "listprojects";

@@ -59,7 +59,7 @@
  	<form class="form-horizontal" enctype="multipart/form-data" action="admin/project/startproject" method="post">
  	
  		<div class="form-group">
-			<label for="opened" class="col-sm-2 col-md-1 control-label">开启题目管理</label>
+			<label for="opened" class="col-sm-2 col-md-2 control-label">开启题目管理</label>
 			<div class="col-md-1">
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
 				<c:if test="${startProject.opened=='true' }">checked='checked'</c:if> name="opened"  value="1" id="opened"/>
@@ -67,13 +67,13 @@
 		</div>
 		<input type="hidden" name="id" value="${startProject.id }">
 		<div class="form-group" id="myfileinput">
-			<label for="uploadFile" class="col-sm-2 col-md-1 control-label">论证报告模板</label>
+			<label for="uploadFile" class="col-sm-2 col-md-2 control-label">论证报告模板</label>
 			<div class="col-sm-10 col-md-8">
 				<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="0" accept=".doc,.docx">
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-1 control-label"></div>
+			<div class="col-sm-2 col-md-2 control-label"></div>
 				<div class="col-sm-10 col-md-3">
 					<button type="submit" class="btn btn-primary btn-wide">提交</button>
 				</div>

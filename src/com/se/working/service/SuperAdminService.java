@@ -19,7 +19,6 @@ import com.se.working.invigilation.entity.InvigilationStatusType;
 import com.se.working.invigilation.entity.SpecialInvigilationType;
 import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.project.dao.ProjectFileTypeDao;
-import com.se.working.project.dao.StudentProjectDao;
 import com.se.working.project.dao.TeacherProjectDao;
 import com.se.working.project.entity.ProjectFileType;
 import com.se.working.project.entity.TeacherProject;

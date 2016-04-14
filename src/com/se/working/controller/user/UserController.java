@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.se.working.entity.Student;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
+import com.se.working.entity.UserAuthority.UserAuthorityLevel;
 import com.se.working.exception.SEWMException;
 import com.se.working.service.UserService;
 import com.se.working.util.FileTaskUtils;
@@ -60,9 +62,14 @@ public class UserController {
 
 		User user = userService.findByPassword(employeeNumber, password);
 		if (user != null) {
-			user.getUserAuthority().getLevel();
+			session.setAttribute("level", user.getUserAuthority().getLevel());
 			session.setAttribute(USER, user);
-
+			return redirect + "main";
+		}
+		Student student = userService.findStudentByPassword(employeeNumber, password);
+		if (student != null) {
+			session.setAttribute("level", student.getUserAuthority().getLevel());
+			session.setAttribute(USER, student);
 			return redirect + "main";
 		}
 		errorMap.addFlashAttribute("exception", "员工号或密码错误！");
@@ -93,9 +100,13 @@ public class UserController {
 	 */
 	@RequestMapping(path = "/updatepassword", method = RequestMethod.POST)
 	public String updatePassword(String pwd, HttpSession session) {
-		System.out.println(pwd);
-		// userService.updatePassword(((User)session.getAttribute("user")).getId(),
-		// pwd);
+		int level = (int) session.getAttribute("level");
+		if (level == UserAuthorityLevel.STUDENT) {
+			userService.updateStudentPassword(((Student)session.getAttribute(USER)).getId(), pwd);
+		}else {
+			userService.updatePassword(((User)session.getAttribute("user")).getId(),pwd);
+		}
+		
 		return redirect + "updateusersetting";
 	}
 

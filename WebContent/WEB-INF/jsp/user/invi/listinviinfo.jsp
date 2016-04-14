@@ -27,10 +27,10 @@
 	<a id="done" class="btn btn-primary" href="invi/listinviinfo/done" role="button">已完成</a>
 	<a id="all" class="btn btn-primary" href="invi/listinviinfo/all" role="button">全部</a>
 	<c:if test="${user.userAuthority.level>=15 }">
-	<p class="text-danger">说明: 
+	<!-- <p class="text-danger">说明: 
 	编辑，对监考信息进行修改，修改监考时间地点，添加监考课程名称等，提交后自动转到监考分配<br>
 	分配，对已分配监考完成重新分配，对未分配监考创建监考分配
-	</p>
+	</p> -->
 	</c:if>
 		 <div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">

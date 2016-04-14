@@ -12,7 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.se.working.entity.User;
+import com.se.working.entity.Student;
 
 @Entity
 public class StudentProject {
@@ -22,7 +22,7 @@ public class StudentProject {
 	private long id;
 	@MapsId
 	@OneToOne
-	private User user;
+	private Student student;
 	private boolean opened = false;
 	@OneToOne(mappedBy = "student")
 	private SelectedTitleDetail selectedTitleDetail;
@@ -47,12 +47,13 @@ public class StudentProject {
 		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
+
+	public Student getStudent() {
+		return student;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setStudent(Student student) {
+		this.student = student;
 	}
 
 	public Date getInsertTime() {

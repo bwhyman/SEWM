@@ -21,6 +21,16 @@
 	        browseClass: "btn btn-primary",
 			initialCaption: "上传学生信息文件",
 		});
+		
+		$(".delbtn").click(function(){
+			var current = $(this);
+			$.post('admin/project/delstudent',{
+				'studentId':current.attr('href')
+			},function(){
+				location.href = 'admin/project/studentmanagement';
+			})
+			return false;
+		})
 	})
 </script>
 <script src="resources/js/fileinput.min.js"></script>
@@ -49,7 +59,7 @@
 				<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="1" accept=".xls,.xlsx">
 			</div>
 		</div>
-		<div class="form-group">
+		<!-- <div class="form-group">
 			<div class="col-sm-2 col-md-12">
 				<p class="text-danger">说明: 
 				表格第一行列名称学号、姓名，第二行开始为数据<br>
@@ -59,9 +69,9 @@
 				</p>
 				
 			</div>
-		</div>
+		</div> -->
 	</form>
-     <c:if test="${users != null }">
+     <c:if test="${students != null }">
 		 <div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
@@ -69,14 +79,20 @@
 				 <th>#</th>
                   <th>学号</th>
                   <th>姓名</th>
+                  <th>性别</th>
+                  <th>班级</th>
+                  <th>操作</th>
 			</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${users }" var="i" varStatus="s">
+				<c:forEach items="${students }" var="i" varStatus="s">
 				<tr>
 				<td>${s.count }</td>
-				<td>${i.employeeNumber }</td>
+				<td>${i.studentId }</td>
 				<td>${i.name }</td>
+				<td>${i.sex }</td>
+				<td>${i.classes.name }</td>
+				<td><a class="btn btn-primary btn-wide delbtn" href="${i.id }">删除</a></td>
 			</tr>
 			</c:forEach>
 			</tbody>

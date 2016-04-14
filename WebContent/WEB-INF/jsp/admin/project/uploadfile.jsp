@@ -69,7 +69,7 @@
  	<form class="form-horizontal" enctype="multipart/form-data" action="admin/project/uploadfile/${type }" method="post">
  	
  		<div class="form-group">
-			<label for="opened" class="col-sm-2 col-md-1 control-label">${typeCH }</label>
+			<label for="opened" class="col-sm-2 col-md-2 control-label">${typeCH }</label>
 			<div class="col-md-1">
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
 				<c:if test="${reportType.opened=='true' }">checked='checked'</c:if> name="opened"  value="1" id="opened"/>
@@ -78,19 +78,19 @@
 		<input type="hidden" name="reportid" value="${reportType.id }">
 		<input type="hidden" name="recordid" value="${recordType.id }">
 		<div class="form-group" id="myfileinput">
-			<label for="uploadFile" class="col-sm-2 col-md-1 control-label">${typeReportCH }</label>
+			<label for="uploadFile" class="col-sm-2 col-md-2 control-label">${typeReportCH }</label>
 			<div class="col-sm-10 col-md-8">
 				<input id="file-1" type="file" name="uploadFiles" multiple data-min-file-count="0" accept=".doc,.docx">
 			</div>
 		</div>
 		<div class="form-group" id="myfileinput1">
-			<label for="uploadFile" class="col-sm-2 col-md-1 control-label">${typeRecodeCH }</label>
+			<label for="uploadFile" class="col-sm-2 col-md-2 control-label">${typeRecodeCH }</label>
 			<div class="col-sm-10 col-md-8">
 				<input id="file-2" type="file" name="uploadFiles" multiple data-min-file-count="0" accept=".doc,.docx">
 			</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-1 control-label"></div>
+			<div class="col-sm-2 col-md-2 control-label"></div>
 				<div class="col-sm-10 col-md-3">
 					<button type="submit" class="btn btn-primary btn-wide">提交</button>
 				</div>

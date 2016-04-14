@@ -33,6 +33,7 @@
 				 <th>#</th>
                   <th>学号</th>
                   <th>学生</th>
+                  <th>班级</th>
                   <th>题目</th>
                   <th>指导老师</th>
 			</tr>
@@ -41,8 +42,9 @@
 				<c:forEach items="${students }" var="st" varStatus="s">
 				<tr>
 				<td>${s.count }</td>
-				<td>${st.user.employeeNumber }</td>
-				<td>${st.user.name }</td>
+				<td>${st.student.studentId }</td>
+				<td>${st.student.name }</td>
+				<td>${st.student.classes.name }</td>
 				<td>${st.selectedTitleDetail.title.name }</td>
 				<td>${st.selectedTitleDetail.title.teacher.user.name }</td>
 			</tr>

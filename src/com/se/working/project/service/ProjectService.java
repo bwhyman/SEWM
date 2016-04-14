@@ -127,7 +127,7 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 		ProjectTitle title2 = projectTitleDao.get(title.getId());
 		ProjectFileDetail projectFileDetail = projectFileDetailDao.getByTitleIdAndTypeId(title.getId(), FileTypes.DEMONSTRATIONREPORT);
 		
-		String fileName = null;
+		String fileName = projectFileDetail.getFileName();
 		if (!title.getName().equals(title2.getName())) {
 			String ext = StringUtils.getFilenameExtension(projectFileDetail.getFileName());
 			fileName = ProjectFileUtil.getFileName(projectFileDetail.getProjectFileType().getName(), title.getName(), ext);
@@ -223,7 +223,7 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 				
 				String ext = StringUtils.getFilenameExtension(uploadfile.getOriginalFilename());
 				String fileName = null;
-				fileName = ProjectFileUtil.getGuideRecordName(fileDetail.getProjectFileType().getName(), selectedTitleDetailDao.getByTitleId(fileDetail.getTitle().getId()).getStudent().getUser().getName(), ext);
+				fileName = ProjectFileUtil.getGuideRecordName(fileDetail.getProjectFileType().getName(), selectedTitleDetailDao.getByTitleId(fileDetail.getTitle().getId()).getStudent().getStudent().getName(), ext);
 				guideRecord.setFileName(fileName);		
 				File file = ProjectFileUtil.getOrCreateProjectFile("指导记录", fileName);
 				ProjectFileUtil.transferTo(uploadfile, file);
@@ -297,7 +297,7 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 			fileDetail.setDirectory(directory);
 			String ext = StringUtils.getFilenameExtension(uploadFile.getOriginalFilename());
 			String fileName = null;
-			fileName = ProjectFileUtil.getFileName(studentProject.getUser().getEmployeeNumber() + "_" + studentProject.getUser().getName(), fileType.getName(), ext);
+			fileName = ProjectFileUtil.getFileName(studentProject.getStudent().getStudentId() + "_" + studentProject.getStudent().getName(), fileType.getName(), ext);
 			fileDetail.setFileName(fileName);
 					
 			File file = ProjectFileUtil.getOrCreateProjectFile(directory, fileName);

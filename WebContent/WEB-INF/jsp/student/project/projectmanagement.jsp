@@ -43,7 +43,7 @@
 					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
 						<li><a href="download/${openReport.directory }/${openReport.templeteFile}/">下载开题报告模板</a></li>
 						<li><a href="download/${openRecord.directory }/${openRecord.templeteFile}/">下载答辩记录模板</a></li>
-						<c:if test="${openedProject == false }">
+						<c:if test="${openedProject == false ||openReport.opened == true }">
 							<li><a href="student/project/uploadfile/openreport">上传开题报告</a></li>
 							<li><a href="student/project/uploadfile/openrecord">上传开题答辩记录</a></li>
 						</c:if>

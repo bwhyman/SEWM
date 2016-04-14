@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.se.working.dao.ClassesDao;
+import com.se.working.dao.StudentDao;
 import com.se.working.dao.TeacherTitleDao;
 import com.se.working.dao.UserDao;
+import com.se.working.entity.Classes;
+import com.se.working.entity.Student;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
 import com.se.working.entity.UserAuthority;
@@ -20,8 +24,6 @@ import com.se.working.invigilation.dao.TeacherInviDao;
 import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.project.dao.StudentProjectDao;
 import com.se.working.project.entity.StudentProject;
-import com.se.working.task.dao.TeacherTaskDao;
-import com.se.working.task.entity.TeacherTask;
 import com.se.working.util.MD5;
 import com.se.working.util.StudentExcelUtil;
 
@@ -45,7 +47,9 @@ public class AdminService extends GenericService<User, Long> {
 	@Autowired
 	private StudentProjectDao studentProjectDao;
 	@Autowired
-	private TeacherTaskDao teacherTaskDao;
+	private StudentDao studentDao;
+	@Autowired
+	private ClassesDao classesDao;
 
 	/**
 	 * 查询所有通知者
@@ -53,8 +57,8 @@ public class AdminService extends GenericService<User, Long> {
 	 */
 	public List<User> findNotifusers(){
 		List<User> users = new ArrayList<>();
-		for (TeacherTask teacherTask : teacherTaskDao.list()) {
-			users.add(teacherTask.getUser());
+		for (User user : userDao.list()) {
+			users.add(user);
 		}
 		return users;
 	}
@@ -64,24 +68,24 @@ public class AdminService extends GenericService<User, Long> {
 	 */
 	public void clearStudents(){
 		studentProjectDao.deleteAll();
-		userDao.delStudents();
+		studentDao.delStudents();
 	}
 	
 	/**
 	 * 根据id删除学生信息（用于信息上传错误）
-	 * @param userId
+	 * @param studentId
 	 */
-	public void delStudent(long userId){
-		studentProjectDao.delete(new StudentProject(userId));
-		userDao.delete(new User(userId));
+	public void delStudent(long studentId){
+		studentProjectDao.delete(new StudentProject(studentId));
+		studentDao.delete(new Student(studentId));
 	}
 	
 	/**
 	 * 查询所有学生信息
 	 * @return
 	 */
-	public List<User> findStudents(){
-		return userDao.listStudent();
+	public List<Student> findStudents(){
+		return studentDao.list();
 	}
 	
 	/**
@@ -89,36 +93,47 @@ public class AdminService extends GenericService<User, Long> {
 	 * @param file
 	 * @return
 	 */
-	public List<User> importStudent(File file){
-		List<User> users = new ArrayList<>();
-		users = StudentExcelUtil.getExcel(file);
-		if (users == null) {
+	public List<Student> importStudent(File file){
+		List<Student> students = new ArrayList<>();
+		students = StudentExcelUtil.getExcel(file);
+		if (students == null) {
 			if (file.exists()) {
 				file.delete();
 			}
 			throw new SEWMException("读取学生信息为空");
 		}
-		List<User> oldUsers = userDao.listStudent(); 
-		for (User user : users) {
+		List<Student> oldStudents = studentDao.list();
+		for (Student student : students) {
 			boolean isExist = false;
-			for (User user2 : oldUsers) {
-				if (user2.getEmployeeNumber().equals(user.getEmployeeNumber())) {
+			for (Student student2 : oldStudents) {
+				if (student2.getStudentId().equals(student.getStudentId())) {
 					isExist = true;
 					break;
 				}
 			}
 			if (!isExist) {
-				user.setPassword(MD5.generateMD5(user.getEmployeeNumber()));
-				user.setUserAuthority(new UserAuthority(UserAuthorityType.STUDENT));
-				userDao.persist(user);
-				
+				student.setPassword(MD5.generateMD5(student.getStudentId()));
+				student.setUserAuthority(new UserAuthority(UserAuthorityType.STUDENT));
+				Classes classes = student.getClasses();
+				Classes classes2 = classesDao.getByName(classes.getName());
+				if (classes2 != null) {
+					classes.setId(classes2.getId());
+				}else {
+					classesDao.persist(classes);
+					classesDao.flush();
+					classesDao.refresh(classes);
+				}
+				studentDao.persist(student);
+				studentDao.flush();
+				studentDao.refresh(student);
 				StudentProject studentProject = new StudentProject();
-				studentProject.setUser(user);
+				studentProject.setStudent(student);
 				studentProjectDao.persist(studentProject);
+				studentProjectDao.flush();
 			}
-			
 		}
-		return users;
+			
+		return students;
 	}
 	
 	/**
@@ -134,6 +149,16 @@ public class AdminService extends GenericService<User, Long> {
 		teacherInvigilation.setUser(user);
 		teacherInviDao.persist(teacherInvigilation);
 
+	}
+	
+	/**
+	 * 初始密码重置为用户名，即学号
+	 * 
+	 * @param studentId
+	 */
+	public void updateStudentDefaultPassword(long studentId) {
+		Student student = studentDao.get(studentId);
+		student.setPassword(MD5.generateMD5(student.getStudentId()));
 	}
 
 	/**

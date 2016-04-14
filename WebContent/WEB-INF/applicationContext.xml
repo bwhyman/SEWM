@@ -60,9 +60,10 @@
 	</bean>
 	<!-- SpringMVC Interceptor -->
 	<mvc:interceptors>
-		<!-- 登录用户操作 -->
+		
+		<!-- 教师登录操作 -->
 		<mvc:interceptor>
-			<!-- 所有操作 -->
+		<!-- 所有操作 -->
 			<mvc:mapping path="/**" />
 			<!-- 排除login操作 -->
 			<mvc:exclude-mapping path="/login" />
@@ -70,6 +71,13 @@
 			<!-- 排除资源 -->
 			<mvc:exclude-mapping path="/resources/**" />
 			<bean class="com.se.working.interceptor.UserInterceptor"></bean>
+		</mvc:interceptor>
+		<!-- 学生登录操作 -->
+		<mvc:interceptor>
+			<!-- 所有操作 -->
+			<mvc:mapping path="/student/**" />
+			<mvc:exclude-mapping path="/resources/**" />
+			<bean class="com.se.working.interceptor.StudentInterceptor"></bean>
 		</mvc:interceptor>
 		<!-- 管理员操作 -->
 		<mvc:interceptor>

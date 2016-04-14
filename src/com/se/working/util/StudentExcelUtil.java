@@ -14,13 +14,16 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import com.se.working.entity.User;
+import com.se.working.entity.Classes;
+import com.se.working.entity.Student;
 import com.se.working.exception.SEWMException;
 
 public class StudentExcelUtil {
 
 	public static String REGEX_STUDENTID = "^[0-9]{8,}$";
-	public static List<User> getExcel(File excelFile) {
+	public static String REGEX_ClASSES = "软件(一|二)班";
+	public static String REGEX_SEX = "(男|女)";
+	public static List<Student> getExcel(File excelFile) {
 		Workbook workbook = null;
 		try {
 			workbook = WorkbookFactory.create(excelFile);
@@ -40,26 +43,29 @@ public class StudentExcelUtil {
 				}
 				workbook = null;
 			}
-			excelFile.delete();
 		}
 		
 	}
 	
-	private static List<User> getRow(Sheet sheet) throws ParseException {
-		List<User> users = new ArrayList<>();
+	private static List<Student> getRow(Sheet sheet) throws ParseException {
+		List<Student> students = new ArrayList<>();
 		for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
 			Row row = sheet.getRow(rowIndex);
 			if (row != null) {
-				users.add(getRowInfos(row));
+				students.add(getRowInfos(row));
 			}
 		}
-		return users;
+		return students;
 	}
 	
-	private static User getRowInfos(Row row){
+	private static Student getRowInfos(Row row){
 		Pattern pID = Pattern.compile(REGEX_STUDENTID);
+		Pattern pClass = Pattern.compile(REGEX_ClASSES);
+		Pattern pSex = Pattern.compile(REGEX_SEX);
 		Matcher mID = null;
-		User user = new User();
+		Matcher mClass = null;
+		Matcher mSex = null;
+		Student student = new Student();
 		for (int cellIndex = 0; cellIndex <= row.getLastCellNum(); cellIndex++) {
 			Cell cell = row.getCell(cellIndex);
 			if (cell != null){
@@ -67,15 +73,23 @@ public class StudentExcelUtil {
 				if (!StringUtils.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
 					String cellInfo = cell.getStringCellValue().trim();
 					mID = pID.matcher(cellInfo);
+					mClass = pClass.matcher(cellInfo);
+					mSex = pSex.matcher(cellInfo);
 					if (mID.find()) {
-						user.setEmployeeNumber(cellInfo);
+						student.setStudentId(cellInfo);
+					}else if (mClass.find()) {
+						Classes classes = new Classes();
+						classes.setName(cellInfo);
+						student.setClasses(classes);
+					}else if (mSex.find()) {
+						student.setSex(cellInfo);
 					}else {
-						user.setName(cellInfo);
+						student.setName(cellInfo);
 					}
 				}
 			}
 		}
-		return user;
+		return student;
 	}
 	public StudentExcelUtil() {
 		// TODO Auto-generated constructor stub

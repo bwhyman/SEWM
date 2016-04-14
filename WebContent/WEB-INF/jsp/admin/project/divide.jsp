@@ -37,7 +37,7 @@
  	<form class="form-horizontal" enctype="multipart/form-data" action="admin/project/divide" method="post">
  		<c:forEach items="${teachers }" var="t">
  			<div class="form-group">
-				<label for="opened" class="col-sm-2 col-md-1 control-label">${t.user.name }</label>
+				<label for="opened" class="col-sm-2 col-md-2 control-label">${t.user.name }</label>
 				<div class="col-md-1">
 					<input type="number" name="leadNum" min="0" value="${t.leadNum }">
 				</div>
@@ -45,7 +45,7 @@
  		</c:forEach>
  		
 		<div class="form-group">
-			<div class="col-sm-2 col-md-1 control-label"></div>
+			<div class="col-sm-2 col-md-2 control-label"></div>
 			<div class="col-sm-10 col-md-3">
 				<button type="submit" class="btn btn-primary btn-wide">提交</button>
 			</div>

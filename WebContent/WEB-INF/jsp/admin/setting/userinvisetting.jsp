@@ -22,15 +22,15 @@
 	<div class="form-group">
 			<label class="col-md-1 control-label">姓名</label>
 			<label class="col-md-1 control-label">监考</label>
-			<label class="col-md-1 control-label">特殊监考</label>
-			<label class="col-md-1 control-label">监考推荐</label>
+			<label class="col-md-2 control-label">特殊监考</label>
+			<label class="col-md-2 control-label">监考推荐</label>
 			</div>
 		<c:forEach items="${inviusers }" var="u" varStatus="s">
 		<div class="form-group">
 			<label class="col-md-1 control-label">${u.user.name }</label>
 			<label class="col-md-1 control-label">${u.invigilations.size() }</label>
-			<div class="col-md-1"><input type="text" class="form-control" value="${u.sqecQuantity }" name="invqs"></div>
-			<div class="col-md-1">
+			<div class="col-md-1 col-md-offset-1"><input type="text" class="form-control" value="${u.sqecQuantity }" name="invqs"></div>
+			<div class="col-md-1 col-md-offset-1">
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
 							<c:if test="${u.enabledRecommend=='true' }">checked='checked'</c:if> name="checkeds"  value="${u.id }"/>
 				</div>
