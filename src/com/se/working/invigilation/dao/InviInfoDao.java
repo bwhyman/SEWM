@@ -69,4 +69,29 @@ public class InviInfoDao extends GenericDao<InvigilationInfo, Long>{
 		query.setLong("typeId", typeId);
 		return query.list();
 	}
+	/**
+	 * 基于指定监考信息状态，分页查询
+	 * @param inviTypeId
+	 * @param firstResult
+	 * @param fetchSize
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<InvigilationInfo> listInviInfos(long inviTypeId, int firstResult, int maxResults) {
+		String HQL = "FROM InvigilationInfo i WHERE i.currentStatusType.id = :typeId ORDER BY id DESC";
+		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+		query.setFirstResult(firstResult);
+		query.setMaxResults(maxResults);
+		query.setLong("typeId", inviTypeId);
+		return query.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<InvigilationInfo> list(int firstResult, int maxResults) {
+		// TODO Auto-generated method stub
+		return getSessionFactory().getCurrentSession().createCriteria(InvigilationInfo.class)
+				.addOrder(org.hibernate.criterion.Order.desc("id")).setFirstResult(firstResult).setMaxResults(maxResults)
+				.list();
+	}
 }

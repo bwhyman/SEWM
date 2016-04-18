@@ -34,7 +34,7 @@
                   <th>日期</th>
                   <th>时间</th>
                   <th>地点</th>
-                  <th>课程</th>
+                  <th>备注/课程</th>
                   <th>人数</th>
                   <th>分配</th>
                   <th>状态</th>
@@ -52,7 +52,7 @@
 				<td><fmt:formatDate pattern="HH:mm" value="${i.startTime.getTime() }"/>
 					- <fmt:formatDate pattern="HH:mm" value="${i.endTime.getTime() }"/></td>
 				<td>${i.location }</td>
-				<td>${i.course }</td>
+				<td>${i.comment }</td>
 				<td>${i.requiredNumber }</td>
 				<td>
 					<c:forEach items="${i.invigilations }" var="t">${t.teacher.user.name }<br></c:forEach>

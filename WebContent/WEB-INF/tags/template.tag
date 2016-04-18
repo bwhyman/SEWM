@@ -24,8 +24,7 @@
 <link href="resources/css/default.css" rel="stylesheet">
 <link href="resources/images/favicon.ico" rel="shortcut icon"  type="image/x-icon">
 
-<!-- Private -->
-<jsp:invoke fragment="header" />
+
 <!-- Flat-ui -->
 <link href="resources/css/flat-ui.min.css" rel="stylesheet">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -34,13 +33,13 @@
       <script src="resources/js/html5shiv.min.js"></script>
       <script src="resources/js/respond.min.js"></script>
     <![endif]-->
-
+<!-- Private -->
+<jsp:invoke fragment="header" />
 <title>专业工作管理平台</title>
 </head>
 <body>
 	<!-- 导航 -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container-fluid">
+	<nav class="navbar navbar-inverse">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
 					aria-expanded="false" aria-controls="navbar">
@@ -54,9 +53,7 @@
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<strong>${user.name }
-								<c:if test="${user.userAuthority.level >=10}">, 老师</c:if>
-							</strong>
+							<strong>${user.name }, 老师</strong>
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
@@ -72,74 +69,50 @@
 					<input type="text" class="form-control" placeholder="Search...">
 				</form> -->
 			</div>
-		</div>
 	</nav>
 	<div class="container-fluid">
 		<div class="row">
 			<!-- 左导航 -->
-			<c:if test="${user.userAuthority.level >=10 }">
-				<div class="col-sm-3 col-md-2 sidebar">
-					<ul class="nav nav-sidebar">
-						<li class="active"><a href="#">
-								任务信息
-								<span class="sr-only">(current)</span>
-							</a></li>
-						<li><a href="task/listmytask/undone">我的任务</a></li>
-						<li><a href="task/list/started">任务信息</a></li>
-						<li><a href="task/listnotification/started">通知信息</a></li>
-					</ul>
-					<ul class="nav nav-sidebar">
-						<li class="active"><a href="#">
-								监考信息
-								<span class="sr-only">(current)</span>
-							</a></li>
-							<li><a href="invi/listmyinviinfo/undone">我的监考</a></li>
-						<li><a href="invi/listinviinfo/unassinvi">监考信息</a></li>
-					</ul>
-					<ul class="nav nav-sidebar">
-						<li class="active"><a href="#">
-								毕设信息
-								<span class="sr-only">(current)</span>
-							</a></li>
-							<li><a href="project/projectmanagement">毕设信息</a></li>
-					</ul>
-					<c:if test="${user.userAuthority.level >=15 }">
-					<ul class="nav nav-sidebar">
-						<li class="active"><a href="#">
-								工作管理
-								<span class="sr-only">(current)</span>
-							</a></li>
-						<li><a href="admin/invi/invimanagement">监考管理</a></li>
-						<li><a href="admin/task/taskmanagement">任务管理</a></li>
-						<li><a href="admin/setting/usersetting">用户管理</a></li>
-						<li><a href="admin/project/projectmanagement">毕设管理</a></li>
-					</ul>
-					</c:if>
-					<c:if test="${user.userAuthority.level >=20 }">
-					<ul class="nav nav-sidebar">
-						<li class="active"><a href="#">
-								系统管理
-								<span class="sr-only">(current)</span>
-							</a></li>
-						<li><a href="">通配符</a></li>
-						<li><a href="">维护日志</a></li>
-						<li><a href="superadmin/initsys">系统初始化</a></li>
-					</ul>
-					</c:if>
-				</div>
-			</c:if>
-			<c:if test="${user.userAuthority.level == 5 }">
-				<div class="col-sm-3 col-md-2 sidebar">
-					<ul class="nav nav-sidebar">
-						<li class="active"><a href="#">
-							毕设信息
+			<div class="col-sm-3 col-md-2 sidebar">
+				<ul class="nav nav-sidebar">
+					<li class="active"><a href="#">
+							任务信息
 							<span class="sr-only">(current)</span>
-								</a></li>
-						<li><a href="student/project/projectmanagement">毕设信息</a></li>
-					</ul>
-				</div>
-			</c:if>
-			
+						</a></li>
+						<li><a href="task/listmytask/undone">我的任务</a></li>
+					<li><a href="task/list/started">任务信息</a></li>
+				</ul>
+				<ul class="nav nav-sidebar">
+					<li class="active"><a href="#">
+							监考信息
+							<span class="sr-only">(current)</span>
+						</a></li>
+						<li><a href="invi/listmyinviinfo/undone">我的监考</a></li>
+					<li><a href="invi/listinviinfo/unassinvi">监考信息</a></li>
+				</ul>
+				<c:if test="${user.userAuthority.level >=15 }">
+				<ul class="nav nav-sidebar">
+					<li class="active"><a href="#">
+							工作管理
+							<span class="sr-only">(current)</span>
+						</a></li>
+					<li><a href="admin/invi/invimanagement">监考管理</a></li>
+					<li><a href="admin/task/taskmanagement">任务管理</a></li>
+					<li><a href="admin/setting/usersetting">用户管理</a></li>
+				</ul>
+				</c:if>
+				<c:if test="${user.userAuthority.level >=20 }">
+				<ul class="nav nav-sidebar">
+					<li class="active"><a href="#">
+							系统管理
+							<span class="sr-only">(current)</span>
+						</a></li>
+					<li><a href="">通配符</a></li>
+					<li><a href="">维护日志</a></li>
+					<li><a href="superadmin/initsys">系统初始化</a></li>
+				</ul>
+				</c:if>
+			</div>
 			<!-- 主界面 -->
 			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 				<jsp:doBody></jsp:doBody>

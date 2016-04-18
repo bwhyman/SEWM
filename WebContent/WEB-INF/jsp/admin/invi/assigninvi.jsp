@@ -63,7 +63,8 @@
 			<tbody>	
 				<tr>
 				<td>
-						<fmt:formatDate pattern="yyyy-MM-dd" value="${inviInfo.startTime.getTime() }" />
+						第${week }周 / 
+						<fmt:formatDate pattern="E yyyy-MM-dd" value="${inviInfo.startTime.getTime() }" />
 					</td>
 				<td>
 						<fmt:formatDate pattern="HH:mm" value="${inviInfo.startTime.getTime() }" />
@@ -85,7 +86,7 @@
 					
 					<c:if test="${olders != null}">
 					<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label">
+						<div class="col-sm-2 col-md-2 control-label">
 						<span class="label label-success">推荐</span>
 						</div>
 							<div class="col-sm-10 col-md-10">
@@ -115,7 +116,7 @@
 					<!------------------------ 未分配 ---------------------------------->
 					<c:if test="${olders == null}">
 						<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label">
+						<div class="col-sm-2 col-md-2 control-label">
 						<span class="label label-success">推荐</span>
 						</div>
 							<div class="col-sm-10 col-md-10">
@@ -135,7 +136,7 @@
 					
 					
 					<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label">
+						<div class="col-sm-2 col-md-2 control-label">
 						<span class="label label-warning">推荐关闭</span>
 						</div>
 							<div class="col-sm-10 col-md-10">
@@ -150,7 +151,7 @@
 					</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label">
+						<div class="col-sm-2 col-md-2 control-label">
 						<span class="label label-danger">冲突</span>
 						</div>
 							<div class="col-sm-10 col-md-10">
@@ -166,7 +167,7 @@
 			</div>
 			
 			<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label">
+						<div class="col-sm-2 col-md-2 control-label">
 						<span class="label label-default">关闭</span>
 						</div>
 							<div class="col-sm-10 col-md-10">
@@ -178,15 +179,16 @@
 							</c:forEach>
 					</div>
 			</div>
-			<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-1 control-label">通知</label>
-			<div class="col-sm-10 col-md-10">
-				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
-							 value="true" name="notice"   checked="checked"/>
-			</div>
-		</div>	
+		
+		<div class="form-group">
+						<div class="col-sm-2 col-md-2 control-label"></div>
+						<div class="col-sm-10 col-md-4">
+							<button type="submit" class="btn btn-primary btn-wide" id="submit">提交</button>
+							<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>	
+						</div>
+					</div>
 				<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label"><p class="text-danger">说明</p></div>
+						<div class="col-sm-2 col-md-2 control-label"><p class="text-danger">说明</p></div>
 						<div class="col-sm-10 col-md-11">
 							<p class="text-danger">
 							颜色：使用不同颜色区分不同信息，一目了然：
@@ -203,20 +205,12 @@
 							但该教师12345678均有课，即可酌情分配其他教师完成该监考。<br>
 							监考必须一次分配完成，不支持保存下次再次分配。
 							如，需2人，仅分配1人保存，但又将监考人数修改为3人，逻辑过于混乱<br>
-						<span class="label label-danger checkboxspan">
-						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-							提交即发送监考通知，当前测试关闭</span>
+						
 							</p>
 						</div>
 					</div>
 						
-					<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label"></div>
-						<div class="col-sm-10 col-md-3">
-							<button type="submit" class="btn btn-primary btn-wide" id="submit">提交</button>
-							<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>	
-						</div>
-					</div>
+					
 					
 				</form>	
 			

@@ -186,7 +186,7 @@ public class AdminTaskController {
 	 */
 	@RequestMapping(path = "/addnotification", method = RequestMethod.POST)
 	public String addNotifcation(@DateTimeFormat(pattern="yyyy-MM-dd HH:mm") Date datetime, 
-			String comment, boolean advanced, int point, long[] teachers) {
+			String comment, boolean advanced, int point, long[] teachers,  HttpSession session) {
 		Notification notification = new Notification();
 		notification.setComment(comment);
 		if (datetime != null) {
@@ -197,7 +197,8 @@ public class AdminTaskController {
 		if (advanced) {
 			notification.setPoint(point);
 		}
-		
+		User user = (User) session.getAttribute(USER);
+		notification.setCreateUser(new TeacherTask(user.getId()));
 		taskService.addNotification(notification, teachers);
 		
 		return redirect + "addnotification";

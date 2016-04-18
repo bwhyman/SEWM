@@ -78,8 +78,7 @@ public class UserController {
 	 */
 	@RequestMapping("/updateusersetting")
 	public String updateUserSetting(Map<String, Object> vMap, HttpSession session) {
-		User user = (User) session.getAttribute(USER);
-		vMap.put(USER, user);
+		vMap.put(USER, userService.findById(((User) session.getAttribute(USER)).getId()));
 		vMap.put("titles", userService.findTeacherTitles());
 		return basePath + "updateusersetting";
 	}
@@ -93,9 +92,7 @@ public class UserController {
 	 */
 	@RequestMapping(path = "/updatepassword", method = RequestMethod.POST)
 	public String updatePassword(String pwd, HttpSession session) {
-		System.out.println(pwd);
-		// userService.updatePassword(((User)session.getAttribute("user")).getId(),
-		// pwd);
+		userService.updatePassword(((User)session.getAttribute(USER)).getId(), pwd);
 		return redirect + "updateusersetting";
 	}
 

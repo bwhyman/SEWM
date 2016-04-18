@@ -33,6 +33,7 @@
 	</p>
 	</c:if>
 		 <div class="table-responsive">
+		 (${firstresult+1 } - ${firstresult + infos.size() } / ${typesize })
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
 			<tr>
@@ -40,7 +41,7 @@
                   <th>日期</th>
                   <th>时间</th>
                   <th>地点</th>
-                  <th>课程</th>
+                  <th>备注/课程</th>
                   <th>人数</th>
                   <th>分配</th>
                   <th>状态</th>
@@ -52,12 +53,12 @@
 			<tbody>
 				<c:forEach items="${infos }" var="i" varStatus="s">
 				<tr>
-				<td>${s.count }</td>
+				<td>${s.count + firstresult }</td>
 				<td><fmt:formatDate pattern="yyyy-MM-dd" value="${i.startTime.getTime() }"/></td>
 				<td><fmt:formatDate pattern="HH:mm" value="${i.startTime.getTime() }"/>
 					- <fmt:formatDate pattern="HH:mm" value="${i.endTime.getTime() }"/></td>
 				<td>${i.location }</td>
-				<td>${i.course }</td>
+				<td>${i.comment }</td>
 				<td>${i.requiredNumber }</td>
 				<td>
 					<c:forEach items="${i.invigilations }" var="t">${t.teacher.user.name }<br></c:forEach>
@@ -88,5 +89,20 @@
 			</tbody>
 	</table>
 	</div>
+	
+		<div>
+            <ul class="pagination">
+            <c:if test="${currentpage > 1 }">
+            	<li class="previous"><a href="invi/listinviinfo/${type}/${currentpage-1}" class="fui-arrow-left"></a></li>
+            </c:if>
+              <c:forEach var="x" begin="1" end="${countpages }" step="1">
+              	<li <c:if test="${x == currentpage }">class="active"</c:if>>
+              	<a href="invi/listinviinfo/${type}/${x }">${x }</a></li>
+              </c:forEach>
+              <c:if test="${currentpage < countpages }">
+            	<li class="next"><a href="invi/listinviinfo/${type}/${currentpage+1}" class="fui-arrow-right"></a></li>
+            </c:if>   
+            </ul>
+          </div>
     </jsp:body>
 </myTemplate:template>

@@ -31,6 +31,8 @@ public class InviExcelUtil {
 	/**
 	 * 从表格中提取专业监考信息集
 	 * 
+	 * 2016.04.05，强制将cell类型转为string
+	 * 
 	 * @param excelPath
 	 * @return 专业监考信息集
 	 * @throws SEWMException 
@@ -68,8 +70,12 @@ public class InviExcelUtil {
 			if (row != null) {
 				for (int cellIndex = row.getLastCellNum(); cellIndex >= 0; cellIndex--) {
 					Cell cell = row.getCell(cellIndex);
-					if (cell != null
-							&& !StringUtils.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
+					
+					if (cell == null) {
+						continue;
+					}
+					cell.setCellType(Cell.CELL_TYPE_STRING);
+					if (!StringUtils.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
 						// 判断是否为专业监考信息
 						mNum = pNum.matcher(cell.getStringCellValue());
 						if (mNum.find()) {
@@ -108,7 +114,11 @@ public class InviExcelUtil {
 		String sEndTime = null;
 		for (int cellIndex = row.getLastCellNum(); cellIndex >= 0; cellIndex--) {
 			Cell cell = row.getCell(cellIndex);
-			if (cell != null && !StringUtils.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
+			if (cell == null) {
+				continue;
+			}
+			cell.setCellType(Cell.CELL_TYPE_STRING);
+			if (!StringUtils.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
 
 				String cellInfo = cell.getStringCellValue().trim();
 				mNum = pNum.matcher(cellInfo);

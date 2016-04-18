@@ -1,6 +1,6 @@
 package com.se.working.controller.admin;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collections;
@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -63,7 +62,7 @@ public class AdminInviController {
 	@RequestMapping(path = "/importtimetable", method = RequestMethod.POST)
 	public String importTimetable(MultipartFile uploadFile, RedirectAttributes vMap) {
 		if (uploadFile.isEmpty()) {
-			throw new SEWMException("文件错误");
+			throw new SEWMException("上传文件为空");
 		}
 		String fileName = uploadFile.getOriginalFilename();
 		// 前端已经通过属性控制上传文件类型，再一次判断文件扩展名，但并不保证文件一定为可读excel文件
@@ -90,10 +89,10 @@ public class AdminInviController {
 	 * @throws SEWMException
 	 */
 	@RequestMapping(path = "/importinvi", method = RequestMethod.POST)
-	public String importInvigilation(MultipartFile uploadFile, HttpServletRequest request, RedirectAttributes vMap) throws IllegalStateException, IOException {
+	public String importInvigilation(MultipartFile uploadFile, RedirectAttributes vMap) {
 
 		if (uploadFile.isEmpty()) {
-			throw new SEWMException("文件错误");
+			throw new SEWMException("上传文件为空");
 		}
 		String fileName = uploadFile.getOriginalFilename();
 
@@ -101,16 +100,9 @@ public class AdminInviController {
 				|| StringUtils.getFilenameExtension(fileName).equals("xlsx"))) {
 			throw new SEWMException("不是Excel表格文件");
 		}
-		String path = request.getServletContext().getRealPath("/");
-		path = path + "\\WEB-INF\\JSP\\upload\\invi\\";
-		File directory = new File(path);
-		if (!directory.exists() && !directory.isDirectory()) {
-			directory.mkdirs();
-		}
+		
 		try {
-			File file = new File(path + fileName);
-			uploadFile.transferTo(file);
-			List<InvigilationInfo> infos = inviService.importInvi(file);
+			List<InvigilationInfo> infos = inviService.importInvi(uploadFile);
 			// 反序
 			Collections.reverse(infos);
 			vMap.addFlashAttribute("infos", infos);
@@ -181,36 +173,65 @@ public class AdminInviController {
 				}
 			}
 		}
-
+		// 返回周数
+		int week = DateUtils.getWeekRelativeBaseDate(inviInfo.getStartTime());
 		vMap.put("olders", olders);
 		vMap.put("inviInfo", inviInfo);
 		vMap.put("conflicts", conflicts);
 		vMap.put("urcds", urcds);
 		vMap.put("rcds", rcds);
 		vMap.put("disusers", disUsers);
+		vMap.put("week", week);
 		return basePath + "assigninvi";
 	}
 
 	/**
-	 * 提交监考安排，返回至user下的列表
-	 * 
+	 * 提交监考安排，返回至发送监考通知
 	 * @param inviInfoId
 	 * @param checkeds
 	 * @return
-	 * @throws SEWMException
 	 */
 	@RequestMapping(path = "/assigninvi", method = RequestMethod.POST)
-	public String assignInvi(long inviInfoId, long[] checkeds, boolean notice) {
+	public String assignInvi(long inviInfoId, long[] checkeds) {
 		if (checkeds == null) {
 			throw new SEWMException("没有分配监考教师");
 		}
 		InvigilationInfo info = inviService.addinvi(inviInfoId, checkeds);
-		// 是否发送短信通知
-		if (notice) {
-			// inviService.sendInviNoticMessage(info);
-		}
+		
+		return redirect + basePath + "sendinvimessage/" + info.getId();
+	}
 
-		return redirect + "/invi/listinviinfo/unassinvi";
+	/**
+	 * 加载发送短信通知监考信息
+	 * @param inviinfoid
+	 * @param vMap
+	 * @return
+	 */
+	@RequestMapping(path = "/sendinvimessage/{inviinfoid}", method = RequestMethod.GET)
+	public String sendInviMessage(@PathVariable long inviinfoid, Map<String, Object> vMap) {
+		InvigilationInfo info = inviService.findInviInfo(inviinfoid);
+		vMap.put("invis", info.getInvigilations());
+		vMap.put("inviinfoid", inviinfoid);
+		return basePath + "sendinvimessage";
+	}
+	
+	/**
+	 * 发送监考短信通知
+	 * @param inviids
+	 * @param inviinfoid
+	 * @param vMap
+	 * @return
+	 */
+	@RequestMapping(path = "/sendinvimessage", method = RequestMethod.POST)
+	public String sendIviMessage(long[] inviids, long inviinfoid, RedirectAttributes vMap) {
+		if (inviids != null) {
+			List<String> results = inviService.sendInviNoticeMessage(inviids);
+			vMap.addFlashAttribute("results", results);
+		} else {
+			throw new SEWMException("没有选择发送短信教师！");
+		}
+		
+		return redirect + basePath + "sendinvimessage/" +inviinfoid;
 	}
 
 	/**
@@ -341,6 +362,12 @@ public class AdminInviController {
 		
 		vMap.addFlashAttribute("teachers", inviService.findTeacherInvigilations());
 		return redirect + basePath + "importtimetabletask";
+	}
+	
+	@RequestMapping(path = "/sendinviremind", method = RequestMethod.POST)
+	public String sendInviRemind() {
+		inviService.sendInviRemind();
+		return redirect + basePath + "invimanagement";
 	}
 	
 	/**

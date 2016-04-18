@@ -37,8 +37,5 @@
 		<form class="form-horizontal"  action="superadmin/initfilestatus" method="POST">
 			<button type="submit" class="btn btn-primary btn-wide">初始化任务状态</button>
 		</form>
-		<form class="form-horizontal"  action="superadmin/initProjectFileType" method="POST">
-			<button type="submit" class="btn btn-primary btn-wide">初始化毕设文件类型</button>
-		</form>
 	</jsp:body>
 </myTemplate:template>

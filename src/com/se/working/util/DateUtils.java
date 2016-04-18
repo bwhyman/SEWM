@@ -69,4 +69,24 @@ public class DateUtils {
 		}
 		return calendar;
 	}
+	
+	/**
+	 * 基于日期返回相对基点时间的周数<br>
+	 * 从第一周开始，没有第0周
+	 * @param date
+	 * @return
+	 */
+	public static int getWeekRelativeBaseDate(Calendar date) {
+		int iWeek = 0;
+		// 判断是否跨年
+		if (date.getWeekYear() > DateUtils.getBaseCalender().getWeekYear()) {
+			iWeek = date.get(Calendar.WEEK_OF_YEAR) - getBaseCalender().get(Calendar.WEEK_OF_YEAR)
+					+ DateUtils.getBaseCalender().getWeeksInWeekYear();
+		} else {
+			iWeek = date.get(Calendar.WEEK_OF_YEAR) - DateUtils.getBaseCalender().get(Calendar.WEEK_OF_YEAR);
+		}
+		// 没有第0周
+		iWeek = iWeek + 1;
+		return iWeek;
+	}
 }

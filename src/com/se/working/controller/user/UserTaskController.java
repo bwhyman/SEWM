@@ -3,7 +3,6 @@ package com.se.working.controller.user;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +21,6 @@ import com.se.working.exception.SEWMException;
 import com.se.working.task.entity.FileTask;
 import com.se.working.task.entity.FileTaskDetail;
 import com.se.working.task.entity.FileTaskStatus.FileTaskStatusType;
-import com.se.working.task.entity.Notification;
-import com.se.working.task.service.NotificationService;
 import com.se.working.task.service.TaskService;
 import com.se.working.util.FileTaskUtils;
 
@@ -35,48 +32,6 @@ public class UserTaskController {
 	private String basePath = "/user/task/";
 	@Autowired
 	private TaskService taskService;
-	@Autowired
-	private NotificationService notifiService;
-	
-	@RequestMapping(path = "/notificationdetail/{id}")
-	public String getNotificationDetail(@PathVariable long id, Map<String, Object> vMap){
-		Notification notification = notifiService.findById(id);
-		boolean isExpired = false;
-		if (notification.getEndTime().getTime().before(new Date())) {
-			isExpired = true;
-		} 
-		vMap.put("notification", notification);
-		vMap.put("isExpired", isExpired);
-		return basePath + "notificationdetail";
-	}
-	
-	/**
-	 * 查询通知信息
-	 * @param type
-	 * @param vMap
-	 * @return
-	 */
-	@RequestMapping(path = "/listnotification/{type}", method = RequestMethod.GET)
-	public String listNotification(@PathVariable String type, Map<String, Object> vMap, HttpSession session){
-		List<Notification> notifications = new ArrayList<>();
-		
-		switch (type) {
-		case "expired":
-		case "started":
-			notifications = notifiService.findNotifiByEndTime(type);
-			break;
-		case "all":
-			notifications = notifiService.findAll();
-			break;
-		default:
-			return basePath + "error";
-		}
-		
-		Collections.reverse(notifications);
-		vMap.put("type", type);
-		vMap.put("notifications", notifications);
-		return basePath + "listnotification";
-	}
 
 	/**
 	 * 列出任务

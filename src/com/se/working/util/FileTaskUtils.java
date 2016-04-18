@@ -24,30 +24,51 @@ import com.se.working.exception.SEWMException;
 public class FileTaskUtils {
 
 	private static String ROOT = setUploadDirectory();
-	private static String TIMETABLE = setTimeDirectory();
+	private static String TIMETABLE = setTimetableDirectory();
+	private static String INVIGILATION = setInviDirectory();
 	
 	/**
 	 * 空文件，在课表文件夹下创建课表文件
 	 * @param fileName
 	 * @return
-	 * @throws SEWMException 
 	 */
 	public static File getTimetableFile(String fileName) {
 	
 		return new File(TIMETABLE + "\\" + fileName);
 	}
 	
-	private static String setTimeDirectory() {
-		String webapp = System.getProperty("webapp.root");
-		String uploadDirectory = webapp + "\\WEB-INF\\jsp\\upload\\Timetables";
-		File directory = new File(uploadDirectory);
+	/**
+	 * 空文件，在监考信息文件夹下创建监考文件
+	 * @param fileName
+	 * @return
+	 */
+	public static File getInviFile(String fileName) {
+		return new File(INVIGILATION + "\\" + fileName);
+	}
+	/**
+	 * 创建课表文件夹
+	 * @return
+	 */
+	private static String setTimetableDirectory() {
+		String timetableDirectory = ROOT + "\\Timetables";
+		File directory = new File(timetableDirectory);
 		if (!directory.exists() && !directory.isDirectory()) {
 			directory.mkdirs();
 		}
-		return uploadDirectory;
+		return timetableDirectory;
 	}
-	
-	
+	/**
+	 * 创建监考信息文件夹
+	 * @return
+	 */
+	private static String setInviDirectory() {
+		String inviDirectory = ROOT + "\\Invigilations";
+		File directory = new File(inviDirectory);
+		if (!directory.exists() && !directory.isDirectory()) {
+			directory.mkdirs();
+		}
+		return inviDirectory;
+	}
 	
 	
 	/**
@@ -59,7 +80,7 @@ public class FileTaskUtils {
 	 */
 	public static String getOrCreateTaskDirectory(long id, String name) {
 		String taskName = String.valueOf(id) + "-" + name;
-		String taskPath = getUploadDirectory() + taskName;
+		String taskPath = ROOT + taskName;
 		File taskDirectory = new File(taskPath);
 		if (!taskDirectory.exists() && !taskDirectory.isDirectory()) {
 			taskDirectory.mkdirs();
@@ -112,10 +133,9 @@ public class FileTaskUtils {
 	 * @param directory
 	 * @param fileName
 	 * @return
-	 * @throws SEWMException 
 	 */
 	public static File getOrCreateFileTaskFile(String directory, String fileName) {
-		File file = new File(getUploadDirectory() + directory + "\\" + fileName);
+		File file = new File(ROOT + directory + "\\" + fileName);
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -131,11 +151,10 @@ public class FileTaskUtils {
 	 * 删除目录，及目录下的所有文件
 	 * 
 	 * @param directory
-	 * @throws SEWMException 
 	 */
 	public static void deleteDirectory(String directory) {
 		try {
-			File file = new File(getUploadDirectory() + directory);
+			File file = new File(ROOT + directory);
 			if (file.exists() && file.isDirectory()) {
 				FileUtils.deleteDirectory(file);
 			}
@@ -151,7 +170,7 @@ public class FileTaskUtils {
 	 * @param FileName
 	 */
 	public static void deleteFileTaskFile(String directory, String FileName) {
-		File file = new File(getUploadDirectory() +directory + "\\" + FileName);
+		File file = new File(ROOT +directory + "\\" + FileName);
 		if (file.exists() && file.isFile()) {
 			file.delete();
 		}else {
@@ -165,15 +184,14 @@ public class FileTaskUtils {
 	 * 返回以文件夹名命名的压缩文件
 	 * @param directoryPath
 	 * @return
-	 * @throws SEWMException 
 	 */
 	public static File zipDirectory(String directoryPath) {
-		File directory = new File(getUploadDirectory() + directoryPath);
+		File directory = new File(ROOT + directoryPath);
 		File[] files = directory.listFiles();
 		if (files == null || files.length == 0) {
 			throw new SEWMException("没有任务文件，无法打包下载");
 		}
-		File zipFile = new File(getUploadDirectory() + directoryPath + "\\" + directoryPath + ".zip");
+		File zipFile = new File(ROOT + directoryPath + "\\" + directoryPath + ".zip");
 		InputStream input = null;
 		ZipOutputStream zipOut = null;
 		try {
@@ -212,28 +230,21 @@ public class FileTaskUtils {
 		}
 		return uploadDirectory;
 	}
-
-	public static String getUploadDirectory() {
-		
-		return ROOT;
-	}
-
 	
 	/**
 	 * 抽象上传文件保存至本地，用于同一异常处理即简化开发
 	 * @param uploadFile
 	 * @param file
-	 * @throws SEWMException
 	 */
 	public static void transferTo(MultipartFile uploadFile, File file) {
 		try {
 			uploadFile.transferTo(file);
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
-			throw new SEWMException("文件上传失败；" + e.getMessage());
+			throw new SEWMException("文件保存至本地时失败；" + e.getMessage());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			throw new SEWMException("文件上传失败；" + e.getMessage());
+			throw new SEWMException("文件保存至本地时失败；" + e.getMessage());
 		}
 	}
 

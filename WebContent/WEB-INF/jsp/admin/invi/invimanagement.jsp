@@ -15,11 +15,39 @@
 		<li><a href="">主页</a></li>
 		<li class="active">监考管理</li>
 	</ol>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<div class="row">
+				<div class="col-sm-4 col-md-3 col-lg-2">
+					<div class="btn-group btn-block">
+						<a class="btn btn-info dropdown-toggle  btn-block" role="button" data-toggle="dropdown">
+							添加监考信息
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
+							<li><a href="admin/invi/addinviinfo">添加监考信息</a></li>
+							<li><a href="admin/invi/addspecinviinfo">添加特殊监考</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel-body">
+			<ul>
+				<li>添加普通/特殊监考</li>
+				<li>
+					<form action="admin/invi/sendinviremind" method="POST">
+						<button type="submit" class="btn btn-primary btn-wide">发送明日监考提醒</button>
+					</form>
+				</li>
+			</ul>
+		</div>
+	</div>
 
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<div class="row">
-				<div class="col-md-2">
+				<div class="col-sm-4 col-md-3 col-lg-2">
 					<a class="btn btn-info btn-block" role="button" href="admin/invi/importinvi">导入监考信息</a>
 				</div>
 			</div>
@@ -34,7 +62,7 @@
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<div class="row">
-				<div class="col-md-2">
+				<div class="col-sm-4 col-md-3 col-lg-2">
 					<div class="btn-group btn-block">
 						<a class="btn btn-info dropdown-toggle  btn-block" role="button" data-toggle="dropdown">
 							导入课表信息
@@ -55,49 +83,7 @@
 			</ul>
 		</div>
 	</div>
-	
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<div class="row">
-				<div class="col-md-2">
-					<a class="btn btn-info btn-block" role="button" href="invi/list/unassinvi">监考编辑/分配</a>
-				</div>
-			</div>
-		</div>
-		<div class="panel-body">
-			<ul>
-				<li>对未分配监考完成监考分配。</li>
-				<li>对已分配、已完成监考完成监考分配更新；当教师临时代替监考后，即使监考已完成也可强制重新声明监考安排，用于工作量的精确统计。</li>
-				<li>编辑，修改监考信息，如时间、地点、监考人数等</li>
-			</ul>
-		</div>
-	</div>
 
 
-
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<div class="row">
-				<div class="col-md-2">
-					<div class="btn-group btn-block">
-						<a class="btn btn-info dropdown-toggle  btn-block" role="button" data-toggle="dropdown">
-							添加监考信息
-							<span class="caret"></span>
-						</a>
-						<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
-							<li><a href="admin/invi/addinviinfo">添加监考信息</a></li>
-							<li><a href="admin/invi/addspecinviinfo">添加特殊监考</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="panel-body">
-			<ul>
-				<li>添加普通/特殊监考</li>
-
-			</ul>
-		</div>
-	</div>
     </jsp:body>
 </myTemplate:template>
