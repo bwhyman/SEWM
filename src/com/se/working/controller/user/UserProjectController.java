@@ -25,6 +25,7 @@ import com.se.working.project.entity.ProjectTitle;
 import com.se.working.project.entity.TeacherProject;
 import com.se.working.project.service.ProjectService;
 import com.se.working.service.UserService;
+import com.se.working.util.EnumConstant;
 import com.se.working.util.StringUtils;
 
 @Controller
@@ -71,6 +72,8 @@ public class UserProjectController {
 		vMap.put("demonFileDetails", projectService.findFileDetailsByTeacherIdAndTypeId(user.getId(), FileTypes.DEMONSTRATIONREPORT));
 		return basePath + "uploadfile";
 	}
+	
+	
 	
 	/**
 	 * 添加指导记录
@@ -200,7 +203,7 @@ public class UserProjectController {
 		User user = (User)session.getAttribute("user");
 		projectService.updateSelectTitle(user.getId(), stIds);
 		user = userService.findById(user.getId());
-		return redirect + "selecttitles/" + user.getId();
+		return redirect + "selecttitles/" + user.getId() + "/1";
 	}
 	
 	/**
@@ -218,19 +221,25 @@ public class UserProjectController {
 		return basePath + "selectprojectdetail";
 	}
 	
-	@RequestMapping(path = "/selectresult/{type}")
-	public String selectResult(@PathVariable String type, Map<String, Object> vMap){
+	@RequestMapping(path = "/selectresult/{type}/{page}")
+	public String selectResult(@PathVariable String type, @PathVariable int page, Map<String, Object> vMap){
+		long count = 0;
 		switch (type) {
 		case "selected":
-			vMap.put("students", projectService.findSelectSuccess());
+			vMap.put("students", projectService.findSelectSuccessByPage(page));
+			count = projectService.getCountSelectSuccess();
 			break;
 		case "unselect":
-			vMap.put("students", projectService.findSelectfail());
+			vMap.put("students", projectService.findSelectfailByPage(page));
+			count = projectService.getCountSelectFail();
 			break;
 		default:
 			break;
 		}
-		
+		vMap.put("count", count);
+		vMap.put("currentPage", page);
+		vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
+				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		vMap.put("type", type);
 		return basePath + "selectresult";
 	}
@@ -241,18 +250,24 @@ public class UserProjectController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(path = "/selecttitles/{type}")
-	public String selectProjects(@PathVariable long type, Map<String, Object> vMap, HttpSession session){
+	@RequestMapping(path = "/selecttitles/{type}/{page}")
+	public String selectProjects(@PathVariable long type, @PathVariable int page, Map<String, Object> vMap, HttpSession session){
 		List<TeacherProject> teachers = projectService.findAllTeacherProjects();
 		List<ProjectFileDetail> fileDetails = new ArrayList<>();
 		if (type == -1) {
-			fileDetails = projectService.findFileDetailsByTypeId(FileTypes.DEMONSTRATIONREPORT);
+			fileDetails = projectService.findFileDetailsByTypeId(FileTypes.DEMONSTRATIONREPORT, page);
+			long count = projectService.getCountByTypeId(FileTypes.DEMONSTRATIONREPORT);
+			vMap.put("count", count);
+			vMap.put("currentPage", page);
+			vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
+					?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		} else {
 			fileDetails = projectService.findFileDetailsByTeacherIdAndTypeId(type, FileTypes.DEMONSTRATIONREPORT);
 		}
 		vMap.put("teachers", teachers);
 		vMap.put("fileDetails", fileDetails);
 		vMap.put("type", type);
+		
 		return basePath + "selectproject";
 	}
 	
@@ -314,18 +329,24 @@ public class UserProjectController {
 	 * @param vMap
 	 * @return
 	 */
-	@RequestMapping(path = "/listtitles/{type}")
-	public String listTitles(@PathVariable long type, Map<String, Object> vMap){
+	@RequestMapping(path = "/listtitles/{type}/{page}")
+	public String listTitles(@PathVariable long type, @PathVariable int page, Map<String, Object> vMap){
 		List<TeacherProject> teachers = projectService.findAllTeacherProjects();
 		List<ProjectFileDetail> fileDetails = new ArrayList<>();
 		if (type == -1) {
-			fileDetails = projectService.findFileDetailsByTypeId(FileTypes.DEMONSTRATIONREPORT);
+			fileDetails = projectService.findFileDetailsByTypeId(FileTypes.DEMONSTRATIONREPORT,page);
+			long count = projectService.getCountByTypeId(FileTypes.DEMONSTRATIONREPORT);
+			vMap.put("count", count);
+			vMap.put("currentPage", page);
+			vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
+					?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		} else {
 			fileDetails = projectService.findFileDetailsByTeacherIdAndTypeId(type, FileTypes.DEMONSTRATIONREPORT);
 		}
 		vMap.put("teachers", teachers);
 		vMap.put("fileDetails", fileDetails);
 		vMap.put("type", type);
+		
 		return basePath + "listtitles";
 	}
 	

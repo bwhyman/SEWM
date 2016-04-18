@@ -14,6 +14,22 @@
 	<script>
 		$(function(){
 			$('#'+'${type}').attr('class','btn btn-danger');
+			if('${currentPage}'=='1'){
+				$('#previous').addClass('disabled');
+				$('#previous').click(function(){
+					return false;
+				})
+			}else{
+				$('#previous').removeClass('disabled');
+			}
+			if('${currentPage}'=='${countPage}'){
+				$('#next').addClass('disabled');
+				$('#next').click(function(){
+					return false;
+				})
+			}else{
+				$('#next').removeClass('disabled');
+			}
 		})
 	</script>
 </jsp:attribute>
@@ -23,9 +39,17 @@
 	  <li><a href="project/projectmanagement">毕设管理</a></li>
 	  <li class="active">结果信息</li>
 	</ol>
-	<a id="selected" class="btn btn-primary" href="project/selectresult/selected" role="button">已选题</a>
-	<a id="unselect" class="btn btn-primary" href="project/selectresult/unselect" role="button">未选题</a>
+	<a id="selected" class="btn btn-primary" href="project/selectresult/selected/1" role="button">已选题</a>
+	<a id="unselect" class="btn btn-primary" href="project/selectresult/unselect/1" role="button">未选题</a>
 	<a class="btn btn-primary" href="project/exportSelectResult" role="button">导出选题信息</a>
+	<br>
+		<c:if test="${currentPage*15>=count }">
+			(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
+		</c:if>
+		<c:if test="${currentPage*15<count }">
+			(${(currentPage-1)*15+1 }&nbsp;-&nbsp;${currentPage*15 }&nbsp;/&nbsp;${count })
+		</c:if>
+	<br>
 	<div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
@@ -41,7 +65,7 @@
 			<tbody>
 				<c:forEach items="${students }" var="st" varStatus="s">
 				<tr>
-				<td>${s.count }</td>
+				<td>${s.count + (currentPage-1)*15 }</td>
 				<td>${st.student.studentId }</td>
 				<td>${st.student.name }</td>
 				<td>${st.student.classes.name }</td>
@@ -51,6 +75,28 @@
 			</c:forEach>
 			</tbody>
 	</table>
+	<nav>
+			  <ul class="pagination pagination-lg">
+			    <li id="previous">
+			      <a href="project/selectresult/${type }/${currentPage-1 }" aria-label="Previous">
+			        <span aria-hidden="true">&laquo;</span>
+			      </a>
+			    </li>
+			    <c:forEach begin="1" end="${countPage }" var="c">
+			    	<c:if test="${c==currentPage }">
+			    		<li class="active"><a href="project/selectresult/${type }/${c }">${c }</a></li>
+			    	</c:if>
+			    	<c:if test="${c!=currentPage }">
+			    		<li><a href="project/selectresult/${type }/${c }">${c }</a></li>
+			    	</c:if>
+			    </c:forEach>
+			    <li id="next">
+			      <a href="project/selectresult/${type }/${currentPage+1 }" aria-label="Next">
+			        <span aria-hidden="true">&raquo;</span>
+			      </a>
+			    </li>
+			  </ul>
+			</nav>
 	</div>
     </jsp:body>
 </myTemplate:template>

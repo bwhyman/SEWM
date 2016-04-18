@@ -44,7 +44,7 @@
 		<div class="panel-heading">
 			<div class="row">
 				<div class="col-md-2">
-					<a class="btn btn-info btn-block" role="button" href="project/listtitles/${user.id }">毕设题目</a>
+					<a class="btn btn-info btn-block" role="button" href="project/listtitles/${user.id }/1">毕设题目</a>
 				</div>
 			</div>
 		</div>
@@ -64,8 +64,8 @@
 						<c:if test="${demonstration.opened == true }">
 							<li><a href="project/myselecttitles">确认选题</a></li>
 						</c:if>
-						<li><a href="project/selecttitles/${user.id }">选题信息</a></li>
-						<li><a href="project/selectresult/selected">结果信息</a></li>
+						<li><a href="project/selecttitles/${user.id }/1">选题信息</a></li>
+						<li><a href="project/selectresult/selected/1">结果信息</a></li>
 					</ul>
 					
 				</div>

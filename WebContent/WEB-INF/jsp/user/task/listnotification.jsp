@@ -14,6 +14,22 @@
 	<script>
 		$(function() {
 			$('#'+'${type}').attr('class','btn btn-danger');
+			if('${currentPage}'=='1'){
+				$('#previous').addClass('disabled');
+				$('#previous').click(function(){
+					return false;
+				})
+			}else{
+				$('#previous').removeClass('disabled');
+			}
+			if('${currentPage}'=='${countPage}'){
+				$('#next').addClass('disabled');
+				$('#next').click(function(){
+					return false;
+				})
+			}else{
+				$('#next').removeClass('disabled');
+			}
 		})
 	</script>
 </jsp:attribute>
@@ -23,12 +39,22 @@
   <li class="active">通知信息</li>
 </ol>
 
-	<a id="started" class="btn btn-primary" href="task/listnotification/started" role="button">已开启</a>
-	<a id="expired" class="btn btn-primary" href="task/listnotification/expired" role="button">已过期</a>
-	<a id="all" class="btn btn-primary" href="task/listnotification/all" role="button">全部</a>
+	<a id="started" class="btn btn-primary" href="task/listnotification/started/1" role="button">已开启</a>
+	<a id="expired" class="btn btn-primary" href="task/listnotification/expired/1" role="button">已过期</a>
+	<a id="all" class="btn btn-primary" href="task/listnotification/all/1" role="button">全部</a>
 	<p class="text-danger">说明: 
 	详细：任务详细信息，任务提交操作<br>
 	</p>
+	<c:if test="${notifications.size()!=0 }">
+			<br>
+				<c:if test="${currentPage*15>=count }">
+					(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
+				</c:if>
+				<c:if test="${currentPage*15<count }">
+					(${(currentPage-1)*15+1 }&nbsp;-&nbsp;${currentPage*15 }&nbsp;/&nbsp;${count })
+				</c:if>
+			<br>
+	</c:if>
 		<div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
@@ -53,5 +79,29 @@
 			</tbody>
 	</table>
 	</div>
+	<c:if test="${notifications.size()!=0 }">
+			<nav>
+			  <ul class="pagination pagination-lg">
+			    <li id="previous">
+			      <a href="task/listnotification/${type }/${currentPage-1 }" aria-label="Previous">
+			        <span aria-hidden="true">&laquo;</span>
+			      </a>
+			    </li>
+			    <c:forEach begin="1" end="${countPage }" var="c">
+			    	<c:if test="${c==currentPage }">
+			    		<li class="active"><a href="task/listnotification/${type }/${c }">${c }</a></li>
+			    	</c:if>
+			    	<c:if test="${c!=currentPage }">
+			    		<li><a href="task/listnotification/${type }/${c }">${c }</a></li>
+			    	</c:if>
+			    </c:forEach>
+			    <li id="next">
+			      <a href="task/listnotification/${type }/${currentPage+1 }" aria-label="Next">
+			        <span aria-hidden="true">&raquo;</span>
+			      </a>
+			    </li>
+			  </ul>
+			</nav>
+		</c:if>
     </jsp:body>
 </myTemplate:template>

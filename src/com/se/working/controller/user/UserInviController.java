@@ -17,6 +17,7 @@ import com.se.working.entity.User;
 import com.se.working.invigilation.entity.InvigilationInfo;
 import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
 import com.se.working.invigilation.service.InviService;
+import com.se.working.util.EnumConstant;
 
 @Controller
 @RequestMapping("/invi")
@@ -34,19 +35,23 @@ public class UserInviController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(path = "listmyinviinfo/{invitype}", method = RequestMethod.GET)
-	public String listMyInviInfos(@PathVariable String invitype, Map<String, Object> vMap, HttpSession session){
+	@RequestMapping(path = "listmyinviinfo/{invitype}/{page}", method = RequestMethod.GET)
+	public String listMyInviInfos(@PathVariable String invitype, @PathVariable int page, Map<String, Object> vMap, HttpSession session){
 		List<InvigilationInfo> infos = new ArrayList<>();
 		User user = (User) session.getAttribute(USER);
+		long count = 0;
 		switch (invitype) {
 		case "undone":
-			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED);
+			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED, page);
+			count = inviService.getCountByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED);
 			break;
 		case "done":
-			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.DONE);
+			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.DONE, page);
+			count = inviService.getCountByUserIdAndTypeId(user.getId(), InviStatusType.DONE);
 			break;
 		case "all":
-			infos = inviService.findInviInfosByUserId(user.getId());
+			infos = inviService.findInviInfosByUserId(user.getId(), page);
+			count = inviService.getCountInviInfosByUserId(user.getId());
 			break;
 		}
 
@@ -54,6 +59,10 @@ public class UserInviController {
 		Collections.reverse(infos);
 		vMap.put("infos", infos);
 		vMap.put("type", invitype);
+		vMap.put("count", count);
+		vMap.put("currentPage", page);
+		vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
+				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		return basePath + "listmyinviinfo";
 	}
 	
@@ -62,21 +71,26 @@ public class UserInviController {
 	 * 
 	 * @param vMap
 	 */
-	@RequestMapping(path = "listinviinfo/{invitype}", method = RequestMethod.GET)
-	public String listInviInfos(@PathVariable String invitype, Map<String, Object> vMap) {
+	@RequestMapping(path = "listinviinfo/{invitype}/{page}", method = RequestMethod.GET)
+	public String listInviInfos(@PathVariable String invitype, @PathVariable int page, Map<String, Object> vMap) {
 		List<InvigilationInfo> infos = new ArrayList<>();
+		long count = 0;
 		switch (invitype) {
 		case "unassinvi":
-			infos = inviService.findInviInfosByTypeId(InviStatusType.UNASSIGNED);
+			infos = inviService.findInviInfosByTypeId(InviStatusType.UNASSIGNED, page);
+			count = inviService.getCountInviInfosByTypeId(InviStatusType.UNASSIGNED);
 			break;
 		case "assinvi":
-			infos = inviService.findInviInfosByTypeId(InviStatusType.ASSIGNED);
+			infos = inviService.findInviInfosByTypeId(InviStatusType.ASSIGNED, page);
+			count = inviService.getCountInviInfosByTypeId(InviStatusType.ASSIGNED);
 			break;
 		case "done":
-			infos = inviService.findInviInfosByTypeId(InviStatusType.DONE);
+			infos = inviService.findInviInfosByTypeId(InviStatusType.DONE, page);
+			count = inviService.getCountInviInfosByTypeId(InviStatusType.DONE);
 			break;
 		case "all":
-			infos = inviService.findAllInviInfos();
+			infos = inviService.findAllInviInfosByPage(page);
+			count = inviService.findAllInviInfosCount();
 			break;
 			default:
 				return basePath + "error";
@@ -85,6 +99,10 @@ public class UserInviController {
 		Collections.reverse(infos);
 		vMap.put("infos", infos);
 		vMap.put("type", invitype);
+		vMap.put("count", count);
+		vMap.put("currentPage", page);
+		vMap.put("countPage", count%(EnumConstant.values()[0].getPageCount())==0
+				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		return basePath + "listinviinfo";
 	}
 	

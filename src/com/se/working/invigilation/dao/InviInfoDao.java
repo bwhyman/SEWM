@@ -8,8 +8,51 @@ import org.springframework.stereotype.Repository;
 
 import com.se.working.dao.GenericDao;
 import com.se.working.invigilation.entity.InvigilationInfo;
+import com.se.working.util.EnumConstant;
 @Repository
 public class InviInfoDao extends GenericDao<InvigilationInfo, Long>{
+	
+	/**
+	 * 分页查询某老师的所有监考信息
+	 * @param userId
+	 * @param page
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<InvigilationInfo> listByUserIdPage(long userId, int page){
+		String HQL = "SELECT i.invInfo FROM Invigilation i WHERE i.teacher.user.id = :userId";
+		return getSessionFactory().getCurrentSession().createQuery(HQL)
+				.setLong("userId", userId)
+				.setFirstResult((page-1)*EnumConstant.values()[0].getPageCount())
+				.setMaxResults(EnumConstant.values()[0].getPageCount()).list();
+	}
+	
+	/**
+	 * 根据状态类型分页查询
+	 * @param typeId
+	 * @param page
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<InvigilationInfo> listByTypeIdPage(long typeId, int page){
+		String HQL = "FROM InvigilationInfo i WHERE i.currentStatusType.id =:typeId";
+		return getSessionFactory().getCurrentSession().createQuery(HQL)
+				.setLong("typeId", typeId).setFirstResult((page-1)*EnumConstant.values()[0].getPageCount())
+				.setMaxResults(EnumConstant.values()[0].getPageCount()).list();
+	}
+	
+	/**
+	 * 分页查询
+	 * @param page
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<InvigilationInfo> listByPage(int page){
+		return getSessionFactory().getCurrentSession().createQuery("FROM InvigilationInfo")
+				.setFirstResult((page-1)*EnumConstant.values()[0].getPageCount())
+				.setMaxResults(EnumConstant.values()[0].getPageCount()).list();
+	}
+	
 	/**
 	 * 基于时间查找相应监考，全部监考状态<br>
 	 * 查询条件：开始时间在监考时间内，或，结束时间在监考时间内，或，开始时间在监考时间前同时结束时间在监考时间后

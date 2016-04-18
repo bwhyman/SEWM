@@ -82,12 +82,11 @@ public class AdminTaskController {
 		}
 		// 创建文件任务，基于单文件、普通文件有不同实现
 		long fileTaskId = taskService.addFileTask(fileTask, filetypeid, teachers, uploadFile, user.getId());
-			
-		if (mytask) {
+		if (mytask!=null && mytask) {
 			taskService.implementFileTask(user.getId(), fileTaskId, uploadFile);
 		}
 		uploadFile = null;
-		return redirect +"/task/list/started";
+		return redirect +"/task/list/started/1";
 
 	}
 	

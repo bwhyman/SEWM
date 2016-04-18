@@ -51,6 +51,8 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	@Autowired
 	private GuideRecordDao guideRecordDao;
 	
+	
+	
 	/**
 	 * 导出选题信息
 	 * @return
@@ -63,10 +65,8 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * 未选题学生和选题失败学生
 	 * @return
 	 */
-	public List<StudentProject> findSelectfail(){
-		List<StudentProject> studentsAll = studentProjectDao.list();
-		studentsAll.removeAll(findSelectSuccess());
-		return studentsAll;
+	public List<StudentProject> findSelectfailByPage(int page){
+		return studentProjectDao.listSelectFailByPage(page);
 	}
 	
 	/**
@@ -76,6 +76,35 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	public List<StudentProject> findSelectSuccess(){
 		List<StudentProject> students = new ArrayList<>();
 		List<SelectedTitleDetail> selectedTitleDetails = selectedTitleDetailDao.listSuccess();
+		for (SelectedTitleDetail selectedTitleDetail : selectedTitleDetails) {
+			students.add(selectedTitleDetail.getStudent());
+		}
+		return students;
+	}
+	
+	/**
+	 * 选题未成功人数
+	 * @return
+	 */
+	public long getCountSelectFail(){
+		return studentProjectDao.list().size()-getCountSelectSuccess();
+	}
+	
+	/**
+	 * 选题成功人数
+	 * @return
+	 */
+	public long getCountSelectSuccess(){
+		return selectedTitleDetailDao.getCountSuccess();
+	}
+	
+	/**
+	 * 选题成功学生
+	 * @return
+	 */
+	public List<StudentProject> findSelectSuccessByPage(int page){
+		List<StudentProject> students = new ArrayList<>();
+		List<SelectedTitleDetail> selectedTitleDetails = selectedTitleDetailDao.listSuccessByPage(page);
 		for (SelectedTitleDetail selectedTitleDetail : selectedTitleDetails) {
 			students.add(selectedTitleDetail.getStudent());
 		}
@@ -262,6 +291,7 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * 根据teacherid和文件类型id查看某阶段学生毕设详细信息
 	 * @param teacherId
 	 * @param fileTypeId
+	 * @param page
 	 * @return
 	 */
 	public List<ProjectFileDetail> findByTeacherIdAndTypeId(long teacherId, long fileTypeId){
@@ -387,13 +417,17 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 		return projectFileDetailDao.get(id);
 	}
 	
+	public long getCountByTypeId(long typeId){
+		return projectFileDetailDao.getCountByTypeId(typeId);
+	}
+	
 	/**
 	 * 根据文件类型id查找毕设题目详细信息
 	 * @param typeId
 	 * @return
 	 */
-	public List<ProjectFileDetail> findFileDetailsByTypeId(long typeId){
-		return projectFileDetailDao.listByTypeId(typeId);
+	public List<ProjectFileDetail> findFileDetailsByTypeId(long typeId, int page){
+		return projectFileDetailDao.listByTypeId(typeId, page);
 	}
 	
 	/**

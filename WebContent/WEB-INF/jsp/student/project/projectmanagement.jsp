@@ -20,7 +20,7 @@
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-md-2">
-						<a class="btn btn-info btn-block" role="button" href="student/project/listtitles/-1">题目信息</a>
+						<a class="btn btn-info btn-block" role="button" href="student/project/listtitles/-1/1">题目信息</a>
 					</div>
 				</div>
 			</div>

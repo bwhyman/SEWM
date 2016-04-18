@@ -8,9 +8,20 @@ import org.springframework.stereotype.Repository;
 
 import com.se.working.dao.GenericDao;
 import com.se.working.project.entity.ProjectFileDetail;
+import com.se.working.util.EnumConstant;
 
 @Repository
 public class ProjectFileDetailDao extends GenericDao<ProjectFileDetail, Long> {
+	
+	/**
+	 * 根据typeId查询文件详细信息总数
+	 * @param typeId
+	 * @return
+	 */
+	public long getCountByTypeId(long typeId){
+		String HQL = "SELECT count(*) FROM ProjectFileDetail p WHERE p.projectFileType =:typeId";
+		return (long) getSessionFactory().getCurrentSession().createQuery(HQL).setLong("typeId", typeId).uniqueResult();
+	}
 	
 	/**
 	 * 根据typeId查询文件详细信息
@@ -18,9 +29,11 @@ public class ProjectFileDetailDao extends GenericDao<ProjectFileDetail, Long> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<ProjectFileDetail> listByTypeId(long typeId){
+	public List<ProjectFileDetail> listByTypeId(long typeId, int page){
 		String HQL = "FROM ProjectFileDetail p WHERE p.projectFileType =:typeId";
-		return getSessionFactory().getCurrentSession().createQuery(HQL).setLong("typeId", typeId).list();
+		return getSessionFactory().getCurrentSession().createQuery(HQL).setLong("typeId", typeId)
+				.setFirstResult((page-1) * EnumConstant.values()[0].getPageCount())
+				.setMaxResults(EnumConstant.values()[0].getPageCount()).list();
 	}
 	
 	/**

@@ -84,17 +84,17 @@
 								任务信息
 								<span class="sr-only">(current)</span>
 							</a></li>
-						<li><a href="task/listmytask/undone">我的任务</a></li>
-						<li><a href="task/list/started">任务信息</a></li>
-						<li><a href="task/listnotification/started">通知信息</a></li>
+						<li><a href="task/listmytask/undone/1">我的任务</a></li>
+						<li><a href="task/list/started/1">任务信息</a></li>
+						<li><a href="task/listnotification/started/1">通知信息</a></li>
 					</ul>
 					<ul class="nav nav-sidebar">
 						<li class="active"><a href="#">
 								监考信息
 								<span class="sr-only">(current)</span>
 							</a></li>
-							<li><a href="invi/listmyinviinfo/undone">我的监考</a></li>
-						<li><a href="invi/listinviinfo/unassinvi">监考信息</a></li>
+							<li><a href="invi/listmyinviinfo/undone/1">我的监考</a></li>
+						<li><a href="invi/listinviinfo/unassinvi/1">监考信息</a></li>
 					</ul>
 					<ul class="nav nav-sidebar">
 						<li class="active"><a href="#">

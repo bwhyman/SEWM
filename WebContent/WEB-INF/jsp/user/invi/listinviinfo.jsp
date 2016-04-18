@@ -14,6 +14,22 @@
 	<script>
 		$(function() {
 			$('#'+'${type}').attr('class','btn btn-danger');
+			if('${currentPage}'=='1'){
+				$('#previous').addClass('disabled');
+				$('#previous').click(function(){
+					return false;
+				})
+			}else{
+				$('#previous').removeClass('disabled');
+			}
+			if('${currentPage}'=='${countPage}'){
+				$('#next').addClass('disabled');
+				$('#next').click(function(){
+					return false;
+				})
+			}else{
+				$('#next').removeClass('disabled');
+			}
 		})
 	</script>
 </jsp:attribute>
@@ -22,16 +38,27 @@
   <li><a href="">主页</a></li>
   <li class="active">监考信息</li>
 </ol>
-	<a id="unassinvi" class="btn btn-primary" href="invi/listinviinfo/unassinvi" role="button">未分配</a>
-	<a id="assinvi" class="btn btn-primary" href="invi/listinviinfo/assinvi" role="button">已分配</a>
-	<a id="done" class="btn btn-primary" href="invi/listinviinfo/done" role="button">已完成</a>
-	<a id="all" class="btn btn-primary" href="invi/listinviinfo/all" role="button">全部</a>
+	<a id="unassinvi" class="btn btn-primary" href="invi/listinviinfo/unassinvi/1" role="button">未分配</a>
+	<a id="assinvi" class="btn btn-primary" href="invi/listinviinfo/assinvi/1" role="button">已分配</a>
+	<a id="done" class="btn btn-primary" href="invi/listinviinfo/done/1" role="button">已完成</a>
+	<a id="all" class="btn btn-primary" href="invi/listinviinfo/all/1" role="button">全部</a>
 	<c:if test="${user.userAuthority.level>=15 }">
 	<!-- <p class="text-danger">说明: 
 	编辑，对监考信息进行修改，修改监考时间地点，添加监考课程名称等，提交后自动转到监考分配<br>
 	分配，对已分配监考完成重新分配，对未分配监考创建监考分配
 	</p> -->
 	</c:if>
+	<c:if test="${infos.size()!=0 }">
+		<br>
+			<c:if test="${currentPage*15>=count }">
+				(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
+			</c:if>
+			<c:if test="${currentPage*15<count }">
+				(${(currentPage-1)*15+1 }&nbsp;-&nbsp;${currentPage*15 }&nbsp;/&nbsp;${count })
+			</c:if>
+		<br>
+	</c:if>
+	
 		 <div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
@@ -52,7 +79,7 @@
 			<tbody>
 				<c:forEach items="${infos }" var="i" varStatus="s">
 				<tr>
-				<td>${s.count }</td>
+				<td>${s.count + (currentPage-1)*15 }</td>
 				<td><fmt:formatDate pattern="yyyy-MM-dd" value="${i.startTime.getTime() }"/></td>
 				<td><fmt:formatDate pattern="HH:mm" value="${i.startTime.getTime() }"/>
 					- <fmt:formatDate pattern="HH:mm" value="${i.endTime.getTime() }"/></td>
@@ -88,5 +115,29 @@
 			</tbody>
 	</table>
 	</div>
+	<c:if test="${infos.size()!=0 }">
+		<nav>
+			  <ul class="pagination pagination-lg">
+			    <li id="previous">
+			      <a href="invi/listinviinfo/${type }/${currentPage-1 }" aria-label="Previous">
+			        <span aria-hidden="true">&laquo;</span>
+			      </a>
+			    </li>
+			    <c:forEach begin="1" end="${countPage }" var="c">
+			    	<c:if test="${c==currentPage }">
+			    		<li class="active"><a href="invi/listinviinfo/${type }/${c }">${c }</a></li>
+			    	</c:if>
+			    	<c:if test="${c!=currentPage }">
+			    		<li><a href="invi/listinviinfo/${type }/${c }">${c }</a></li>
+			    	</c:if>
+			    </c:forEach>
+			    <li id="next">
+			      <a href="invi/listinviinfo/${type }/${currentPage+1 }" aria-label="Next">
+			        <span aria-hidden="true">&raquo;</span>
+			      </a>
+			    </li>
+			  </ul>
+		</nav>
+	</c:if>
     </jsp:body>
 </myTemplate:template>

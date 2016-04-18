@@ -20,6 +20,7 @@ import com.se.working.project.entity.ProjectFileType.FileTypes;
 import com.se.working.project.entity.SelectedTitleDetail;
 import com.se.working.project.entity.TeacherProject;
 import com.se.working.project.service.ProjectService;
+import com.se.working.util.EnumConstant;
 
 @Controller
 @RequestMapping("/student/project/")
@@ -141,8 +142,8 @@ public class StudentProjectController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(path = "/listtitles/{type}")
-	public String listTitles(@PathVariable long type, Map<String, Object> vMap, HttpSession session){
+	@RequestMapping(path = "/listtitles/{type}/{page}")
+	public String listTitles(@PathVariable long type, @PathVariable int page, Map<String, Object> vMap, HttpSession session){
 		//判断所选题目是否已被导师确认
 		Student student = (Student)session.getAttribute("user");
 		ProjectFileDetail fileDetail = projectService.findFileDetailByStudentId(student.getId(), FileTypes.DEMONSTRATIONREPORT);
@@ -152,7 +153,7 @@ public class StudentProjectController {
 			List<TeacherProject> teachers = projectService.findAllTeacherProjects();
 			List<ProjectFileDetail> fileDetails = null;
 			if (type == -1) {
-				fileDetails = projectService.findFileDetailsByTypeId(FileTypes.DEMONSTRATIONREPORT);
+				fileDetails = projectService.findFileDetailsByTypeId(FileTypes.DEMONSTRATIONREPORT, page);
 			}else{
 				fileDetails = projectService.findByTeacherIdAndTypeId(type, FileTypes.DEMONSTRATIONREPORT);
 			}
@@ -162,6 +163,11 @@ public class StudentProjectController {
 			//查看当前选择题目
 			SelectedTitleDetail selectedTitleDetail = projectService.findSelectedTitleDetailByStudentId(student.getId());
 			vMap.put("selectedTitleDetail", selectedTitleDetail);
+			long count = projectService.getCountByTypeId(FileTypes.DEMONSTRATIONREPORT);
+			vMap.put("count", count);
+			vMap.put("currentPage", page);
+			vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
+					?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		}
 		return basePath + "listprojects";
 	}

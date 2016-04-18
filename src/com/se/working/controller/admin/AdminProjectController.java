@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.se.working.entity.Student;
 import com.se.working.exception.SEWMException;
 import com.se.working.project.entity.ProjectFileType;
 import com.se.working.project.entity.ProjectFileType.FileTypes;
 import com.se.working.project.entity.TeacherProject;
 import com.se.working.project.service.ProjectService;
 import com.se.working.service.AdminService;
+import com.se.working.util.EnumConstant;
 import com.se.working.util.FileTaskUtils;
 import com.se.working.util.StringUtils;
 
@@ -52,25 +52,19 @@ public class AdminProjectController {
 	@RequestMapping(path = "/clearStudents")
 	public String clearStudents(){
 		adminService.clearStudents();
-		return redirect + "studentmanagement";
+		return redirect + "studentmanagement/students/1";
 	}
 	
 	@RequestMapping(path = "/delstudent", method = RequestMethod.POST)
 	public String delStudent(long studentId){
 		adminService.delStudent(studentId);
-		return redirect + "studentmanagement";
+		return redirect + "studentmanagement/students/1";
 	}
 	
 	@RequestMapping(path = "/resetpassword", method = RequestMethod.POST)
 	public @ResponseBody String resetPassword(long studentId){
 		adminService.updateStudentDefaultPassword(studentId);
 		return "success";
-	}
-	
-	@RequestMapping(path = "/studentmanagement")
-	public String resetPassword(Map<String, Object> vMap){
-		vMap.put("users", adminService.findStudents());
-		return basePath + "studentmanagement";
 	}
 	
 	/**
@@ -102,14 +96,33 @@ public class AdminProjectController {
 		try {
 			File file = new File(path + fileName);
 			uploadFile.transferTo(file);
-			List<Student> students = adminService.importStudent(file);
-			vMap.addFlashAttribute("students", students);
+			adminService.importStudent(file);
+			
+			vMap.addFlashAttribute("students", adminService.findByPage(1));
+			long count = adminService.findStudents().size();
+			vMap.addFlashAttribute("count", count);
+			vMap.addFlashAttribute("currentPage", 1);
+			vMap.addFlashAttribute("location", "importstuinfo");
+			vMap.addFlashAttribute("countPage", count%EnumConstant.values()[0].getPageCount()==0
+					?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 			file.delete();
 		} finally {
 			uploadFile = null;
 		}
 
 		return redirect + "importstuinfo";
+	}
+	
+	@RequestMapping(path = "/{location}/students/{page}")
+	public String listStudentsByPage(@PathVariable String location, @PathVariable int page, Map<String, Object> vMap){
+		vMap.put("students", adminService.findByPage(page));
+		long count = adminService.findStudents().size();
+		vMap.put("count", count);
+		vMap.put("currentPage", page);
+		vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
+				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
+		vMap.put("location", location);
+		return basePath + location;
 	}
 	
 	/**

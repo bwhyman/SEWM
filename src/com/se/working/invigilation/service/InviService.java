@@ -220,46 +220,78 @@ public class InviService extends GenericService<Invigilation, Long> {
 	}
 
 	/**
-	 * 返回指定教师的全部监考信息
+	 * 分页返回指定教师的全部监考信息
 	 * @param userId
 	 * @return
 	 */
-	public List<InvigilationInfo> findInviInfosByUserId(long userId) {
-		List<InvigilationInfo> infos = new ArrayList<>();
-		for (Invigilation i : teacherInviDao.get(userId).getInvigilations()) {
-			infos.add(i.getInvInfo());
-		}
-		return infos;
+	public List<InvigilationInfo> findInviInfosByUserId(long userId, int page) {
+		return inviInfoDao.listByUserIdPage(userId, page);
 	}
+	
+	/**
+	 * 某位教师监考总数
+	 * @param userId
+	 * @return
+	 */
+	public long getCountInviInfosByUserId(long userId){
+		return teacherInviDao.get(userId).getInvigilations().size();
+	}
+	
+	/**
+	 * 返回指定教师、指定监考状态的所有监考信息总数
+	 * @param userId
+	 * @param typeId
+	 * @return
+	 */
+	public long getCountByUserIdAndTypeId(long userId, long typeId){
+		return inviDao.getCountByUserIdAndTypeId(userId, typeId);
+	}
+	
 	/**
 	 * 返回指定教师、指定监考状态的所有监考信息
 	 * @param userId
 	 * @param typeId
 	 * @return
 	 */
-	public List<InvigilationInfo> findInvisByUserIdAndTypeId(long userId, long typeId) {
+	public List<InvigilationInfo> findInvisByUserIdAndTypeId(long userId, long typeId, int page) {
 		List<InvigilationInfo> infos = new ArrayList<>();
-		for (Invigilation i : inviDao.listInvisByUserIdAndTypeId(userId, typeId)) {
+		for (Invigilation i : inviDao.listInvisByUserIdAndTypeId(userId, typeId, page)) {
 			infos.add(i.getInvInfo());
 		}
 		return infos;
 	}
 	
 	/**
+	 * 查找相应状态全部监考信息总数
+	 * @param inviTypeId
+	 * @return
+	 */
+	public long getCountInviInfosByTypeId(long inviTypeId){
+		return inviTypeDao.get(inviTypeId).getInvInfo().size();
+	}
+	
+	/**
 	 * 查找相应状态全部监考信息
 	 * @return
 	 */
-	public List<InvigilationInfo> findInviInfosByTypeId(long inviTypeId) {
-		return new ArrayList<>(inviTypeDao.get(inviTypeId).getInvInfo());
+	public List<InvigilationInfo> findInviInfosByTypeId(long inviTypeId, int page) {
+		return inviInfoDao.listByTypeIdPage(inviTypeId, page);
 	}
 	/**
-	 * 返回全部监考信息
+	 * 分页返回全部监考信息
 	 * @return
 	 */
-	public List<InvigilationInfo> findAllInviInfos() {
-		return new ArrayList<>(inviInfoDao.list());
+	public List<InvigilationInfo> findAllInviInfosByPage(int page) {
+		return inviInfoDao.listByPage(page);
 	}
 
+	/**
+	 * 返回全部监考信息总数
+	 * @return
+	 */
+	public long findAllInviInfosCount() {
+		return inviInfoDao.list().size();
+	}
 	/**
 	 * 返回指定监考信息
 	 * @param inviId

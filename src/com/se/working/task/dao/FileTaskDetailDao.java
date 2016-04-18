@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.se.working.dao.GenericDao;
 import com.se.working.task.entity.FileTaskDetail;
+import com.se.working.util.EnumConstant;
 @Repository
 public class FileTaskDetailDao extends GenericDao<FileTaskDetail, Long> {
 
@@ -40,18 +41,33 @@ public class FileTaskDetailDao extends GenericDao<FileTaskDetail, Long> {
 		return query.list();
 	}
 	/**
-	 * 指定用户，指定任务状态，的任务详细信息
+	 * 指定用户，指定任务状态的任务详细信息
 	 * @param userId
 	 * @param done
+	 * @param page
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<FileTaskDetail> listByUserId(long userId, boolean done) {
+	public List<FileTaskDetail> listByUserId(long userId, boolean done, int page) {
 		String HQL = "FROM FileTaskDetail f WHERE f.done=:done AND f.teacher.id=:userId";
 		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
 		query.setLong("userId", userId);
 		query.setBoolean("done", done);
-		return query.list();
+		return query.setFirstResult((page-1)*EnumConstant.values()[0].getPageCount()).setMaxResults(EnumConstant.values()[0].getPageCount()).list();
+	}
+	
+	/**
+	 * 指定用户，指定任务状态的任务详细信息
+	 * @param userId
+	 * @param done
+	 * @return
+	 */
+	public long getCountByUserId(long userId, boolean done) {
+		String HQL = "SELECT COUNT(*) FROM FileTaskDetail f WHERE f.done=:done AND f.teacher.id=:userId";
+		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+		query.setLong("userId", userId);
+		query.setBoolean("done", done);
+		return (long) query.uniqueResult();
 	}
 	
 	

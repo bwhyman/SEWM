@@ -19,10 +19,26 @@
 				$.post('project/deltitle',{
 					'id':current.attr('href')
 				},function(){
-					location.href = 'project/listtitles/'+ '${user.id}';
+					location.href = 'project/listtitles/'+ '${user.id}' + '/1';
 				})
 				return false;
 			})
+			if('${currentPage}'=='1'){
+				$('#previous').addClass('disabled');
+				$('#previous').click(function(){
+					return false;
+				})
+			}else{
+				$('#previous').removeClass('disabled');
+			}
+			if('${currentPage}'=='${countPage}'){
+				$('#next').addClass('disabled');
+				$('#next').click(function(){
+					return false;
+				})
+			}else{
+				$('#next').removeClass('disabled');
+			}
 		})
 	</script>
 </jsp:attribute>
@@ -33,9 +49,19 @@
   <li class="active">题目信息</li>
 </ol>
 	<c:forEach items="${teachers }" var="t">
-		<a id="${t.id }" class="btn btn-primary" href="project/listtitles/${t.id }" role="button" style="margin-bottom: 2px;">${t.user.name }(${t.leadNum })</a>
+		<a id="${t.id }" class="btn btn-primary" href="project/listtitles/${t.id }/1" role="button" style="margin-bottom: 2px;">${t.user.name }(${t.leadNum })</a>
 	</c:forEach>
-	<a id="-1" class="btn btn-primary" href="project/listtitles/-1" role="button">全部题目</a>
+	<a id="-1" class="btn btn-primary" href="project/listtitles/-1/1" role="button">全部题目</a>
+	<c:if test="${type==-1 }">
+			<br>
+				<c:if test="${currentPage*15>=count }">
+					(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
+				</c:if>
+				<c:if test="${currentPage*15<count }">
+					(${(currentPage-1)*15+1 }&nbsp;-&nbsp;${currentPage*15 }&nbsp;/&nbsp;${count })
+				</c:if>
+			<br>
+	</c:if>
 	<div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
@@ -53,7 +79,12 @@
 			<tbody>
 				<c:forEach items="${fileDetails }" var="p" varStatus="s">
 						<tr>
-							<td>${s.count }</td>
+							<c:if test="${type==-1 }">
+								<td>${s.count + (currentPage-1)*15 }</td>
+							</c:if>
+							<c:if test="${type!=-1 }">
+								<td>${s.count}</td>
+							</c:if>
 							<td><a href="project/title/${p.id }">${p.title.name }</a></td>
 							<td>${p.title.property }</td>
 							<td>${p.title.teacher.user.name }</td>
@@ -70,6 +101,30 @@
 			</c:forEach>
 			</tbody>
 	</table>
+	<c:if test="${type==-1 }">
+			<nav>
+			  <ul class="pagination pagination-lg">
+			    <li id="previous">
+			      <a href="project/listtitles/-1/${currentPage-1 }" aria-label="Previous">
+			        <span aria-hidden="true">&laquo;</span>
+			      </a>
+			    </li>
+			    <c:forEach begin="1" end="${countPage }" var="c">
+			    	<c:if test="${c==currentPage }">
+			    		<li class="active"><a href="project/listtitles/-1/${c }">${c }</a></li>
+			    	</c:if>
+			    	<c:if test="${c!=currentPage }">
+			    		<li><a href="project/listtitles/-1/${c }">${c }</a></li>
+			    	</c:if>
+			    </c:forEach>
+			    <li id="next">
+			      <a href="project/listtitles/-1/${currentPage+1 }" aria-label="Next">
+			        <span aria-hidden="true">&raquo;</span>
+			      </a>
+			    </li>
+			  </ul>
+			</nav>
+		</c:if>
 	</div>
     </jsp:body>
 </myTemplate:template>

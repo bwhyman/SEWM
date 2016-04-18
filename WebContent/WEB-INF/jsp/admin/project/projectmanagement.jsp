@@ -23,7 +23,7 @@
 					<span class="caret"></span></a>
 					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
 						<li><a href="admin/project/importstuinfo">导入学生信息</a></li>
-						<li><a href="admin/project/studentmanagement">学生信息管理</a></li>
+						<li><a href="admin/project/studentmanagement/students/1">学生信息管理</a></li>
 					</ul>
 					
 				</div>

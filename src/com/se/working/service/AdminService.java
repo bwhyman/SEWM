@@ -93,7 +93,7 @@ public class AdminService extends GenericService<User, Long> {
 	 * @param file
 	 * @return
 	 */
-	public List<Student> importStudent(File file){
+	public void importStudent(File file){
 		List<Student> students = new ArrayList<>();
 		students = StudentExcelUtil.getExcel(file);
 		if (students == null) {
@@ -132,8 +132,15 @@ public class AdminService extends GenericService<User, Long> {
 				studentProjectDao.flush();
 			}
 		}
-			
-		return students;
+	}
+	
+	/**
+	 * 分页查询学生信息
+	 * @param page
+	 * @return
+	 */
+	public List<Student> findByPage(int page){
+		return studentDao.listByPage(page);
 	}
 	
 	/**

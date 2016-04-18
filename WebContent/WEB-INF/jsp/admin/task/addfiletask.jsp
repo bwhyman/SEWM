@@ -48,7 +48,6 @@
                 	file.attr('accept', $('#'+type).attr('value'));
                 	file.fileinput('reset');
                 });
-                
             });
         </script>
         
@@ -155,7 +154,7 @@
 			<label for="mytask" class="col-sm-2 col-md-2 control-label">我的任务</label>
 			<div class="col-sm-10 col-md-4">
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
-							 value="true" name="mytask" />
+							 value="true" name="mytask" id="mytask"/>
 			</div>
 		</div>
 		<div class="form-group">

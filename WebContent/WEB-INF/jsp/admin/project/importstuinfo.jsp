@@ -31,6 +31,22 @@
 			})
 			return false;
 		})
+		if('${currentPage}'=='1'){
+			$('#previous').addClass('disabled');
+			$('#previous').click(function(){
+				return false;
+			})
+		}else{
+			$('#previous').removeClass('disabled');
+		}
+		if('${currentPage}'=='${countPage}'){
+			$('#next').addClass('disabled');
+			$('#next').click(function(){
+				return false;
+			})
+		}else{
+			$('#next').removeClass('disabled');
+		}
 	})
 </script>
 <script src="resources/js/fileinput.min.js"></script>
@@ -72,6 +88,14 @@
 		</div> -->
 	</form>
      <c:if test="${students != null }">
+     	<br>
+			<c:if test="${currentPage*15>=count }">
+				(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
+			</c:if>
+			<c:if test="${currentPage*15<count }">
+				(${(currentPage-1)*15+1 }&nbsp;-&nbsp;${currentPage*15 }&nbsp;/&nbsp;${count })
+			</c:if>
+		<br>
 		 <div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
@@ -87,7 +111,7 @@
 			<tbody>
 				<c:forEach items="${students }" var="i" varStatus="s">
 				<tr>
-				<td>${s.count }</td>
+				<td>${s.count + (currentPage-1)*15 }</td>
 				<td>${i.studentId }</td>
 				<td>${i.name }</td>
 				<td>${i.sex }</td>
@@ -98,6 +122,28 @@
 			</tbody>
 	</table>
 	</div>
+	<nav>
+			  <ul class="pagination pagination-lg">
+			    <li id="previous">
+			      <a href="admin/project/importstuinfo/students/${currentPage-1 }" aria-label="Previous">
+			        <span aria-hidden="true">&laquo;</span>
+			      </a>
+			    </li>
+			    <c:forEach begin="1" end="${countPage }" var="c">
+			    	<c:if test="${c==currentPage }">
+			    		<li class="active"><a href="admin/project/importstuinfo/students/${c }">${c }</a></li>
+			    	</c:if>
+			    	<c:if test="${c!=currentPage }">
+			    		<li><a href="admin/project/importstuinfo/students/${c }">${c }</a></li>
+			    	</c:if>
+			    </c:forEach>
+			    <li id="next">
+			      <a href="admin/project/importstuinfo/students/${currentPage+1 }" aria-label="Next">
+			        <span aria-hidden="true">&raquo;</span>
+			      </a>
+			    </li>
+			  </ul>
+		</nav>
 	</c:if>
 	  
     </jsp:body>

@@ -111,22 +111,43 @@ public class TaskService extends GenericService<FileTask, Long> {
 	}
 
 	/**
-	 * 返回相应状态的全部文件任务
-	 * 
+	 * 查询所有已关闭的任务
 	 * @param statusId
 	 * @return
 	 */
-	public List<FileTask> findFileTasksByStatusId(long statusId) {
+	public List<FileTask> findFileTasksByStatusId(long statusId){
 		return new ArrayList<>(fileTaskStatusDao.get(statusId).getFileTasks());
+	}
+	
+	/**
+	 * 分页返回相应状态的全部文件任务
+	 * @param statusId
+	 * @param page
+	 * @return
+	 */
+	public List<FileTask> findFileTasksByStatusId(long statusId, int page) {
+		return fileTaskDao.listByStatusIdPage(statusId, page);
+	}
+	
+	/**
+	 * 根据状态信息获取当前状态下任务总数
+	 * @param statusId
+	 * @return
+	 */
+	public long getCountTaskByStatusId(long statusId){
+		if (statusId == -1) {
+			return fileTaskDao.list().size();
+		}
+		return fileTaskStatusDao.get(statusId).getFileTasks().size();
 	}
 
 	/**
-	 * 返回全部文件任务
-	 * 
+	 * 分页返回全部文件任务
+	 * @param page
 	 * @return
 	 */
-	public List<FileTask> findFileTasks() {
-		return fileTaskDao.list();
+	public List<FileTask> findFileTasks(int page) {
+		return fileTaskDao.listByPage(page);
 	}
 
 	/**
@@ -170,10 +191,20 @@ public class TaskService extends GenericService<FileTask, Long> {
 	 * @param done
 	 * @return
 	 */
-	public List<FileTaskDetail> findFileTaskDetails(long userId, boolean done) {
-		return fileTaskDetailDao.listByUserId(userId, done);
+	public List<FileTaskDetail> findFileTaskDetails(long userId, boolean done, int page) {
+		return fileTaskDetailDao.listByUserId(userId, done, page);
 	}
 
+	/**
+	 * 查找指定用户，指定任务详细状态，的所有任务详细信息总数
+	 * @param userId
+	 * @param done
+	 * @return
+	 */
+	public long getCountByUserId(long userId, boolean done){
+		return fileTaskDetailDao.getCountByUserId(userId, done);
+	}
+	
 	/**
 	 * 基于用户ID及任务ID查找任务细节，没有为空
 	 * 
