@@ -198,4 +198,80 @@
 >>>>>>> origin/master
 =======
 </beans>
+<<<<<<< HEAD
+=======
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+	<!-- 注释扫描路径 -->
+	<context:component-scan base-package="com.se.working" />
+	<!-- 事务管理使用注释 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 使用GBLIB，基于类创建代理对象，用于业务层事务 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<!-- SpringMVC使用注释 -->
+	<mvc:annotation-driven />
+	<!-- 过滤静态资源请求 -->
+	<mvc:default-servlet-handler />
+
+	<!-- DataSource -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="root"></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/sewm"></property>
+	</bean>
+	<!-- Hibernate5 Session Factory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- Hibernate5 Transaction Manager -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<!-- SpringMVC -->
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<!-- SpringMVC Interceptor -->
+	<mvc:interceptors>
+		<!-- 登录用户操作 -->
+		<mvc:interceptor>
+			<!-- 所有操作 -->
+			<mvc:mapping path="/**" />
+			<!-- 排除login操作 -->
+			<mvc:exclude-mapping path="/login"/>
+			<!-- 排除资源 -->
+			<mvc:exclude-mapping path="/resources/**"/> 
+			<bean class="com.se.working.interceptor.UserInterceptor"></bean>
+		</mvc:interceptor>
+		<!-- 管理员操作 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/**" />
+			<bean class="com.se.working.interceptor.AdminInterceptor"></bean>
+		</mvc:interceptor>
+		<!-- 超级管理员操作 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/superadmin/**" />
+			<bean class="com.se.working.interceptor.SuperAdminInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+</beans>
+>>>>>>> parent of bd39542... marge
 >>>>>>> origin/master
