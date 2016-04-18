@@ -1,3 +1,91 @@
+<<<<<<< HEAD
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+	<!-- 注释扫描路径 -->
+	<context:component-scan base-package="com.se.working" />
+	<!-- 事务管理使用注释 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 使用GBLIB，基于类创建代理对象，用于业务层事务 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<!-- SpringMVC使用注释 -->
+	<mvc:annotation-driven />
+	<!-- 过滤静态资源请求 -->
+	<mvc:default-servlet-handler />
+	<task:annotation-driven/>
+	
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/sewm" />
+		<property name="username" value="root" />
+		<property name="password" value="future" />
+		<!-- 池启动时创建的连接数量 -->
+        <property name="initialSize" value="1"/>
+        <property name="minIdle" value="1" />
+        <!-- 设置自动回收超时连接 -->  
+        <property name="removeAbandoned" value="true" />
+         
+		
+	</bean>
+
+	<!-- Hibernate5 Session Factory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- Hibernate5 Transaction Manager -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<!-- SpringMVC -->
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<!-- SpringMVC Interceptor -->
+	<mvc:interceptors>
+		<!-- 登录用户操作 -->
+		<mvc:interceptor>
+			<!-- 所有操作 -->
+			<mvc:mapping path="/**" />
+			<!-- 排除login操作 -->
+			<mvc:exclude-mapping path="/login" />
+			<mvc:exclude-mapping path="/logout" />
+			<!-- 排除资源 -->
+			<mvc:exclude-mapping path="/resources/**" />
+			<bean class="com.se.working.interceptor.UserInterceptor"></bean>
+		</mvc:interceptor>
+		<!-- 管理员操作 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/**" />
+			<bean class="com.se.working.interceptor.AdminInterceptor"></bean>
+		</mvc:interceptor>
+		<!-- 超级管理员操作 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/superadmin/**" />
+			<bean class="com.se.working.interceptor.SuperAdminInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+<<<<<<< HEAD
+</beans>
+=======
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
@@ -70,3 +158,24 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>
+>>>>>>> origin/master
+=======
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- one of the properties available; the maximum file size in bytes -->
+		<!-- 50MB -->
+		<property name="maxUploadSize" value="50000000" />
+		<!-- 5MB -->
+		<property name="maxInMemorySize" value="5000000"></property>
+		<property name="uploadTempDir" value="WEB-INF/jsp/upload/temp" />
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<!-- 延迟文件解析，判断大小等 -->
+		<property name="resolveLazily" value="true" />
+	</bean>
+
+	<!-- 根目录重定向，设置welcome为空，定向view-name对应的视图名称，不调用controller -->
+	<mvc:view-controller path="/" view-name="/user/main" />
+	
+
+</beans>
+>>>>>>> origin/master

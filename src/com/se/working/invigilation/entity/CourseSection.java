@@ -1,6 +1,7 @@
 package com.se.working.invigilation.entity;
 
 import java.util.Calendar;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 /**
  * 每次课的课程时间片段
  * @author BO
@@ -20,8 +22,6 @@ public class CourseSection {
 	private long id;
 	@ManyToOne
 	private Course course;
-	@ManyToOne
-	private TeacherInvigilation teacher;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar startTime;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -52,12 +52,6 @@ public class CourseSection {
 	}
 	public void setEndTime(Calendar endTime) {
 		this.endTime = endTime;
-	}
-	public TeacherInvigilation getTeacher() {
-		return teacher;
-	}
-	public void setTeacher(TeacherInvigilation teacher) {
-		this.teacher = teacher;
 	}
 	
 }

@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
 
 /**
  * 监考安排状态
- * 未分配，已分配，已提醒，已完成
+ * 未分配，已分配，已完成
  * @author BO
  *
  */
@@ -27,17 +27,17 @@ public class InvigilationStatusType {
 	// 状态名称
 	private String name;
 	@OneToMany(mappedBy = "currentStatusType")
-	@OrderBy(value ="id DESC")
+	@OrderBy(value ="id ASC")
 	private Set<InvigilationInfo> invInfo;
 	@Temporal(TemporalType.TIMESTAMP )
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
 	
-	public interface InvStatusType {
+	public interface InviStatusType {
 		public static long UNASSIGNED = 1;
 		public static long ASSIGNED = 2;
 		public static int REMINDED = 3;
-		public static int DONE = 4;
+		public static long DONE = 4;
 	}
 	public InvigilationStatusType(long id) {
 		super();

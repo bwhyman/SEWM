@@ -19,7 +19,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private String name;
-	private String userName;
+	private String employeeNumber;
 	private String password;
 	// 职称
 	@ManyToOne
@@ -38,6 +38,14 @@ public class User {
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
 	
+	
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+	public User(long id) {
+		super();
+		this.id = id;
+	}
 	public long getId() {
 		return id;
 	}
@@ -50,11 +58,12 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getUserName() {
-		return userName;
+	
+	public String getEmployeeNumber() {
+		return employeeNumber;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setEmployeeNumber(String employeeNumber) {
+		this.employeeNumber = employeeNumber;
 	}
 	public String getPassword() {
 		return password;
