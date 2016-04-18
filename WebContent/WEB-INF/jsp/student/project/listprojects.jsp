@@ -20,8 +20,10 @@
 				strs = current.attr('href').split(",");
 				$.post('student/project/selecttitle',{
 					'titleId':strs[0],
-					'teacherId':strs[1]},function(){
-					location.href = 'student/project/listtitles/' + '${type}' + '/1';
+					'teacherId':strs[1]},function(data){
+						if(data=='success'){
+							location.href = 'student/project/listtitles/' + '${type}' + '/1';
+						}
 				}) 
 				return false;
 			})

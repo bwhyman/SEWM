@@ -39,8 +39,8 @@
 	  <li><a href="project/projectmanagement">毕设管理</a></li>
 	  <li class="active">结果信息</li>
 	</ol>
-	<a id="selected" class="btn btn-primary" href="project/selectresult/selected/1" role="button">已选题</a>
-	<a id="unselect" class="btn btn-primary" href="project/selectresult/unselect/1" role="button">未选题</a>
+	<a id="selected" class="btn btn-primary" href="project/selectresult/selected/1" role="button">成功选题</a>
+	<a id="unselect" class="btn btn-primary" href="project/selectresult/unselect/1" role="button">未成功题</a>
 	<a class="btn btn-primary" href="project/exportSelectResult" role="button">导出选题信息</a>
 	<br>
 		<c:if test="${currentPage*15>=count }">

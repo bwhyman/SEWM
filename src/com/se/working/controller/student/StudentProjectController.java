@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.se.working.entity.Student;
@@ -131,9 +132,9 @@ public class StudentProjectController {
 	}
 	
 	@RequestMapping(path = "/selecttitle", method = RequestMethod.POST)
-	public String selectTitle(long titleId, long teacherId, HttpSession session){
+	public @ResponseBody String selectTitle(long titleId, long teacherId, HttpSession session){
 		projectService.addSelectedTitleDetail(((Student)session.getAttribute("user")).getId(), titleId);
-		return redirect + "listtitles/" + teacherId;
+		return "success";
 	}
 	
 	/**
