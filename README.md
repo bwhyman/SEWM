@@ -1,15 +1,50 @@
 # SEWM
 
-生产环境
+2016-03-26 Update
+--------------------------------------
+毕设模块
 
-服务器：Tomcat(8.0.26)  
-数据库：MYSQL(5.6)  
-数据持久化层：JPA规范；Hibernate(5.0.1)实现  
-业务逻辑层：Spring(4.2.1)  
-控制层：SpringMVC  
-前端技术：AJAX；JQuery(2.1.4)；Bootstrap(3.3.5)；Flat-ui进一步优化界面；DateTime Picker日期选择器  
+2016-02-18 Update
+--------------------------------------
+课表导入
+监考导入
+手动添加监考
+手动添加特殊监考
+监考推荐
+监考分配
+监考分配短信发送
 
-其他  
-JSTL，标签库  
-POI，完成Excel读取及创建操作  
-dom4j，完成系统XML配置文件操作  
+已完成监考模块主要功能
+
+2016.02.07 Update
+------------------------------------
+完成admin用户的添加，用户基本信息、权限、通知、推荐的修改及设置  
+基于后台数据的checkbox默认状态
+默认基于正序的获取  
+自定义异常  
+修改课表等实体类
+文件上传  
+读取课表，封装为实体对象，保存
+基于enum的常量设计
+  
+
+2016.02.01 Update
+------------------------
+GenericDao: 使用反射获取子类声明的具体泛型类型，使子类无需传入泛型类型参数  
+JSON: 基于gson.jar，spring自动完成对象到json字符串的转化，前端ajax返回类型使用text接收json字符串，然后转为json对象  
+浏览工程根目录时映射到main，便于当作首页保存，支持拦截器  
+
+Development Environment
+-----------------------------------
+Server: Tomcat(8.0.26)  
+Database: MySQL(5.6)  
+Persistence Layer: JPA; Hibernate(5.0.1)  
+Business Layer: Spring(4.2.1)  
+Controller Layer: SpringMVC  
+UI: AJAX; JQuery(2.1.4); Bootstrap(3.3.5); Flat-ui; DateTime Picker
+
+Others  
+----------
+JSTL
+POI
+dom4j
