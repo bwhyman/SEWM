@@ -337,7 +337,7 @@ public class TaskService extends GenericService<FileTask, Long> {
 	 * @param notification
 	 * @param teacherIds
 	 */
-	public void addNotification(Notification notification, long[] teacherIds) {
+	public Notification addNotification(Notification notification, long[] teacherIds) {
 		Set<TeacherTask> teachers = new LinkedHashSet<>();
 		for (int i = 0; i < teacherIds.length; i++) {
 			teachers.add(new TeacherTask(teacherIds[i]));
@@ -347,5 +347,11 @@ public class TaskService extends GenericService<FileTask, Long> {
 		notificationDao.flush();
 		notificationDao.refresh(notification);
 		alidayuMessage.sendNotification(notification);
+		// 同步至数据库
+		notificationDao.flush();
+		// 更新
+		notificationDao.refresh(notification);
+		alidayuMessage.sendNotification(notification);
+		return notification;
 	}
 }

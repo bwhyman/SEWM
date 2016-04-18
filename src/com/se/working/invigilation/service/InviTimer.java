@@ -28,25 +28,21 @@ public class InviTimer {
 	 * 查询当前时间24hrs以内的已分配及未分配监考
 	 */
 	// @Scheduled(cron = "30 23 * * * ? ")
-	public void print() {
+	public void inviRemind() {
 		Date CurrentDateTime = new Date();
 		Calendar startTime = Calendar.getInstance();
 		startTime.setTime(CurrentDateTime);
 		Calendar endTime = Calendar.getInstance();
 		endTime.setTime(CurrentDateTime);
+		// 支持跨月日期
 		endTime.add(Calendar.DAY_OF_MONTH, 1);
-		System.out.println(startTime.getTime());
-		System.out.println(endTime.getTime());
+		
 		// 已分配监考，发送监考提醒
-		// List<InvigilationInfo> assInfos = infoDao.listInviInfos(startTime, endTime, InviStatusType.ASSIGNED);
-		
-		
-		
-		/*for (InvigilationInfo i : assInfos) {
-			aMessage.sendInviNotice(i);
-			System.out.println(i.getLocation());
-			i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.REMINDED));
-		}*/
+		List<InvigilationInfo> assInfos = infoDao.listInviInfos(startTime, endTime, InviStatusType.ASSIGNED);
+		for (InvigilationInfo i : assInfos) {
+			aMessage.sendInviRemind(i);
+			// i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.REMINDED));
+		}
 	}
 	
 	

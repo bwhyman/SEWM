@@ -19,7 +19,7 @@
 		<div class="panel panel-primary">
 		<div class="panel-heading">
 			<div class="row">
-			<div class="col-md-2">
+			<div class="col-sm-4 col-md-3 col-lg-2">
 			<a class="btn btn-info btn-block" role="button" href="admin/task/addfiletask">创建文件任务</a>
 			</div>
 			</div>
@@ -33,17 +33,8 @@
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<div class="row">
-			<div class="col-md-2">
-			<div class="btn-group btn-block">
-						<a class="btn btn-info dropdown-toggle  btn-block" role="button" data-toggle="dropdown">
-							创建通知
-							<span class="caret"></span>
-						</a>
-						<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
-							<li><a href="admin/task/addnotification">创建普通通知</a></li>
-							<li><a href="admin/invi/addspecinviinfo">创建任务通知</a></li>
-						</ul>
-					</div>
+			<div class="col-sm-4 col-md-3 col-lg-2">
+			<a class="btn btn-info btn-block" role="button" href="admin/task/addnotification">创建通知</a>
 			</div>
 			</div>
 		</div>

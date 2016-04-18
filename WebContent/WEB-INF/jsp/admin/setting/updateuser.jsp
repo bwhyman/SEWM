@@ -68,8 +68,8 @@
 </ol>
 	<form class="form-horizontal">
       <div class="form-group">
-						<label for="select_userupdate" class="col-sm-2 col-md-1 control-label">用户</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="select_userupdate" class="col-sm-2 col-md-2 control-label">用户</label>
+						<div class="col-sm-10 col-md-4">
 							<select data-toggle="select" class="select select-primary mrs mbm" name="userId" id="select_userupdate">
 							<option value="0">用户</option>
 							<c:forEach items="${users}" var="u">

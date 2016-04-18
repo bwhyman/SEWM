@@ -63,6 +63,8 @@ public class InviService extends GenericService<Invigilation, Long> {
 	private AlidayuMessage alidayuMessage;
 	@Autowired
 	private TaskService taskService;
+	@Autowired
+	private InviTimer inviTimer;
 
 	/**
 	 * 
@@ -110,7 +112,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 			if (excelFile.exists()) {
 				excelFile.delete();
 			}
-			throw new SEWMException("非本专业教师课表，" + excelFile.getName());
+			throw new SEWMException(name + "非本专业教师，" + excelFile.getName());
 		}
 		// 如果已经导入过课表，则首先清空
 		if (teacher.getCourses().size() > 0) {
@@ -130,6 +132,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 		}
 		return courses;
 	}
+	
 	
 	/**
 	 * 查询所有课程
@@ -167,7 +170,13 @@ public class InviService extends GenericService<Invigilation, Long> {
 	 * @throws SEWMException
 	 * @throws Exception
 	 */
-	public List<InvigilationInfo> importInvi(File excelFile) {
+	public List<InvigilationInfo> importInvi(MultipartFile uploadFile) {
+		if (uploadFile.isEmpty()) {
+			return null;
+		}
+		File excelFile = FileTaskUtils.getInviFile(uploadFile.getOriginalFilename());
+		FileTaskUtils.transferTo(uploadFile, excelFile);
+		
 		List<InvigilationInfo> newInfos = new ArrayList<>();
 		// 封装监考人数，地点，起止时间
 		List<InvigilationInfo> infos = InviExcelUtil.getExcel(excelFile);
@@ -175,7 +184,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 			if (excelFile.exists()) {
 				excelFile.delete();
 			}
-			throw new SEWMException("读取课表文件信息为空");
+			throw new SEWMException("未读取到专业相关监考信息");
 		}
 		List<InvigilationInfo> oldInfos = inviInfoDao.list();
 		for (InvigilationInfo i : infos) {
@@ -253,11 +262,28 @@ public class InviService extends GenericService<Invigilation, Long> {
 		return new ArrayList<>(inviTypeDao.get(inviTypeId).getInvInfo());
 	}
 	/**
+	 * 基于指定监考信息状态，分页查询
+	 * @param inviTypeId
+	 * @param firstResult
+	 * @param maxResults
+	 * @return
+	 */
+	public List<InvigilationInfo> findInviInfosByTypeId(long inviTypeId, int firstResult, int maxResults) {
+		return inviInfoDao.listInviInfos(inviTypeId, firstResult, maxResults);
+	}
+	/**
 	 * 返回全部监考信息
 	 * @return
 	 */
 	public List<InvigilationInfo> findAllInviInfos() {
 		return new ArrayList<>(inviInfoDao.list());
+	}
+	/**
+	 * 返回全部监考信息，分页
+	 * @return
+	 */
+	public List<InvigilationInfo> findAllInviInfos(int firstResult, int maxResults) {
+		return new ArrayList<>(inviInfoDao.list(firstResult, maxResults));
 	}
 
 	/**
@@ -440,8 +466,12 @@ public class InviService extends GenericService<Invigilation, Long> {
 	 * 发送监考分配短信
 	 * @param info
 	 */
-	public void sendInviNoticMessage(InvigilationInfo info) {
-		alidayuMessage.sendInviNotice(info);
+	public List<String> sendInviNoticeMessage(long[] inviids) {
+		List<Invigilation> invigilations = new ArrayList<>();
+		for (int i = 0; i < inviids.length; i++) {
+			invigilations.add(inviDao.get(inviids[i]));
+		}
+		return alidayuMessage.sendInviNotice(invigilations);
 	}
 	
 	/**
@@ -481,6 +511,10 @@ public class InviService extends GenericService<Invigilation, Long> {
 		inviInfoDao.flush();
 		inviInfoDao.refresh(info);
 		return info.getId();
+	}
+	
+	public void sendInviRemind() {
+		inviTimer.inviRemind();
 	}
 	
 }
