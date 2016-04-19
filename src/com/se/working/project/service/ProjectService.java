@@ -51,7 +51,15 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	@Autowired
 	private GuideRecordDao guideRecordDao;
 	
-	
+	/**
+	 * 修改确认选题的学生
+	 * @param oldStudentId
+	 * @param studentId
+	 */
+	public void updateSelect(long oldStudentId, long studentId){
+		studentProjectDao.get(oldStudentId).getSelectedTitleDetail().setConfirmed(false);
+		studentProjectDao.get(studentId).getSelectedTitleDetail().setConfirmed(true);
+	}
 	
 	/**
 	 * 导出选题信息

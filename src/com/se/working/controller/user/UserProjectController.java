@@ -221,6 +221,17 @@ public class UserProjectController {
 		return basePath + "selectprojectdetail";
 	}
 	
+	/**
+	 * 教师修改确认选题的学生
+	 * @param studentid
+	 * @return
+	 */
+	@RequestMapping(path = "/updateselectproject", method = RequestMethod.POST)
+	public String updateSelect(long oldstudentid, long studentid, HttpSession session){
+		projectService.updateSelect(oldstudentid, studentid);
+		return redirect + "selecttitles/" + ((User)session.getAttribute("user")).getId() + "/1";
+	}
+	
 	@RequestMapping(path = "/selectresult/{type}/{page}")
 	public String selectResult(@PathVariable String type, @PathVariable int page, Map<String, Object> vMap){
 		long count = 0;

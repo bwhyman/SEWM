@@ -15,6 +15,7 @@
 		$(function(){
 			var leadNum = parseInt('${leadNum}');
 			
+			//点击时判断已选人数是否超过系统要求人数
 			$('.myradio').click(function(){
 				var current = $(this);
 				if(current.prop('checked')==true){
@@ -29,8 +30,9 @@
 					})
 				}
 			})
-			
+
 			$("#mybtn").click(function(){
+				//创建存储已选学生id的数组，已1,2,3的形式传至服务器进行解析，将选中学生的选题信息确认成功
 	            var str = new Array();
 	            var i = 0;
 				$(".myradio").each(function(){
@@ -44,9 +46,26 @@
 				$.post('project/confirmselectproject',{
 					'studentId':str.toString()
 				},function(){
-					location.href = "project/selecttitles/" + ${user.id};
+					location.href = "project/selecttitles/" + ${user.id} + '/1';
 				})
 			})
+			
+			var curstudentid = 0;
+			var clicktimes = 0;
+			//使用clicktimes根据点击次数设置radio的值，因执行radio的点击事件时radio已选中
+			$('.myradio').click(function(){
+				if(curstudentid != $(this).attr('value')){
+					curstudentid = $(this).attr('value');
+					clicktimes = 1;
+				}
+				if(clicktimes%2==0){
+					$(this).radiocheck('uncheck');
+				}else{
+					$(this).radiocheck('check');
+				}
+				clicktimes++;
+			})
+			
 		})
 	</script>
 </jsp:attribute>
