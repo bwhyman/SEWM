@@ -48,6 +48,16 @@
 			}else{
 				$('#next').removeClass('disabled');
 			}
+			
+			$(".telphone").mouseenter(function(){
+				$(this).popover('show');
+			})
+			$(".telphone").mouseleave(function(){
+				$(this).popover('hide');
+			})
+			/* $(".telphone").mouseout(function(){
+				$(this).children('a').popover('toggle');
+			}) */
 		})
 	</script>
 </jsp:attribute>
@@ -110,10 +120,9 @@
 				<tr>
 					 <th>#</th>
 	                  <th>题目</th>
-	                  <th>题目性质</th>
 	                  <th>指导教师</th>
 	                  <th>论证报告</th>
-	                  <th>已选人数</th>
+	                  <th>已选学生</th>
 	                  <th>已确认学生/操作</th>
 				</tr>
 				</thead>
@@ -122,12 +131,13 @@
 							<tr>
 								<td>${s.count+(currentPage-1)*15 }</td>
 								<td><a href="project/projecttitle/${p.id }">${p.title.name }</a></td>
-								<td>${p.title.property }</td>
-								<td>${p.title.teacher.user.name }</td>
+								<td >
+									 <a class="telphone" tabindex="0" data-toggle="popover" data-trigger="focus" data-placement="top" title="联系方式" data-content="${p.title.teacher.user.phoneNumber }">${p.title.teacher.user.name }</a>
+								</td>
 								<td>
 									<a href="download/${p.directory }/${p.fileName}/">论证报告</a>
 								</td>
-								<td>${p.title.selectedTitleDetails.size() }</td>
+								<td><c:forEach items="${p.title.selectedTitleDetails }" var="t">${t.student.student.name }<br></c:forEach></td>
 								<td>
 										<c:forEach items="${p.title.selectedTitleDetails }" var="st">
 											<c:if test="${st.confirmed == true }">

@@ -53,6 +53,12 @@
 				}
 				clicktimes++;
 			})
+			$(".telphone").mouseenter(function(){
+				$(this).popover('show');
+			})
+			$(".telphone").mouseleave(function(){
+				$(this).popover('hide');
+			})
 		})
 	</script>
 </jsp:attribute>
@@ -84,9 +90,8 @@
                   <th>题目</th>
                   <th>题目性质</th>
                   <th>论证报告</th>
-                  <th>已选人数</th>
+                  <th>已选学生</th>
                   <th>已确认学生</th>
-                  <th>操作</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -104,54 +109,20 @@
 						<td>
 							<a href="download/${p.directory }/${p.fileName}/">论证报告</a>
 						</td>
-						<td>${p.title.selectedTitleDetails.size() }</td>
-						<c:if test="${p.title.selectedTitleDetails.size()==0 }">
-							<td></td>
-							<td></td>
-						</c:if>
-						<c:forEach items="${p.title.selectedTitleDetails }" var="st">
-							<c:if test="${st.confirmed == true }">
-								<td><span class="label label-success">${st.student.student.name }</span></td>							
-							</c:if>
-							<c:if test="${ p.title.teacher.id == user.id && st.confirmed == true}">
-								<td><a class="updatestudent" href="#" data-toggle="modal" data-target="#myModal">修改</a>
-										<!-- Modal -->
-										<div class="modal fade myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-										  <div class="modal-dialog" role="document">
-										    <div class="modal-content">
-										      <div class="modal-header">
-										        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-										        <h6 class="modal-title" id="myModalLabel">${p.title.name }</h6>
-										      </div>
-										      <form class="form-horizontal" action="project/updateselectproject" method="POST">
-										      <div class="modal-body">
-											        <c:forEach items="${p.title.selectedTitleDetails }" var="st">
-														<div class="form-group">
-															<div class="col-sm-2 col-md-1 control-label"></div>
-															<label class="radio col-md-4 col-md-offset-1">
-														         <input type="radio" data-toggle="radio" class="myradio" name="studentid" value="${st.student.student.id }" data-radiocheck-toggle="radio" required
-														        	<c:if test="${st.confirmed == true }">checked="checked"</c:if>>
-														        	<c:if test="${st.confirmed == true }">
-														        		<input type="hidden" name="oldstudentid" value="${st.student.student.id }">
-														        	</c:if>
-														          ${st.student.student.name }
-														    </label>
-														</div>
-													</c:forEach>
-										      </div>
-										      <div class="modal-footer">
-										        <button type="submit" class="btn btn-primary">保存</button>
-										        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-										      </div>
-										      </form>
-										    </div>
-										  </div>
-										</div></td>
-									</c:if>
-								<c:if test="${ p.title.teacher.id != user.id && st.confirmed == true}">
-									<td></td>
+						<td>
+							<c:forEach items="${p.title.selectedTitleDetails }" var="t">
+								<a class="telphone" tabindex="0" data-toggle="popover" data-trigger="focus" data-placement="top" title="${t.student.student.name }" data-content="${t.student.student.phoneNumber }">${t.student.student.name }</a>
+								<br>
+							</c:forEach>
+						</td>
+						<td>
+							<c:forEach items="${p.title.selectedTitleDetails }" var="st">
+								<c:if test="${st.confirmed == true }">
+									<span class="label label-success">${st.student.student.name }</span>						
 								</c:if>
-						</c:forEach>
+							</c:forEach>
+						</td>
+						
 				</tr>
 			</c:forEach>
 			</tbody>

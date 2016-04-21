@@ -29,10 +29,10 @@ public class StudentDao extends GenericDao<Student, Long> {
 	 * @param password
 	 * @return
 	 */
-	public Student getBypassword(String employeeNumber, String password) {
+	public Student getBypassword(String studentId, String password) {
 		String HQL = "FROM Student u WHERE u.studentId=:studentId AND u.password=:password";
 		Query query = getSessionFactory().getCurrentSession().createQuery(HQL)
-				.setString("studentId", employeeNumber)
+				.setString("studentId", studentId)
 				.setString("password", password);
 		return (Student) query.uniqueResult();
 	}

@@ -34,8 +34,8 @@
 	<div class="logindiv">
 		<!-- 按钮触发模态框 -->
 		<button class="btn btn-lg btn-info btn-block" data-toggle="modal" data-target="#myModal">专业工作管理平台</button>
+		<button class="btn btn-lg btn-info btn-block" data-toggle="modal" data-target="#myModalStudent">学生入口</button>
 	</div>
-
 
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -82,6 +82,52 @@
 		</div>
 		<!-- /.modal -->
 	</div>
+	
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="myModalStudent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h6 class="modal-title" id="myModalLabel">请登录</h6>
+				</div>
+				<div class="modal-body">
+					<form class="form-signin" action="student/studentlogin" method="post">
+						<div class="input-group ">
+							<label for="studentId" class="sr-only">学号</label>
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-user"></span>
+							</span>
+							<input type="text" name="studentId" class="form-control" placeholder="学号" required>
+						</div>
+
+						<div class="input-group">
+							<label for="password" class="sr-only">密码</label>
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-lock"></span>
+							</span>
+							<input type="password" name="password" class="form-control" placeholder="密码" required>
+						</div>
+
+						<c:if test="${studentexception != null}">
+					&nbsp&nbsp
+							<div class="alert alert-danger alert-dismissable" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+								${studentexception }
+							</div>
+						</c:if>
+
+						<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+					</form>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
 	<!-- Bootstrap core JavaScript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
@@ -92,7 +138,9 @@
 		$(document).ready(function() {
 			if ('${exception}'.length > 0) {
 				$('#myModal').modal('show');
-
+			}
+			if( '${studentexception}'.length > 0){
+				$('#myModalStudent').modal('show');
 			}
 		})
 	</script>

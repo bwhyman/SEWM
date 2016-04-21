@@ -66,12 +66,7 @@ public class UserController {
 			session.setAttribute(USER, user);
 			return redirect + "main";
 		}
-		Student student = userService.findStudentByPassword(employeeNumber, password);
-		if (student != null) {
-			session.setAttribute("level", student.getUserAuthority().getLevel());
-			session.setAttribute(USER, student);
-			return redirect + "main";
-		}
+		
 		errorMap.addFlashAttribute("exception", "员工号或密码错误！");
 		return redirect + "login";
 	}

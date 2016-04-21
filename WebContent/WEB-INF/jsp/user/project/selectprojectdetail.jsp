@@ -84,9 +84,9 @@
 					<c:forEach items="${t.selectedTitleDetails }" var="st">
 						<div class="form-group">
 							<div class="col-sm-2 col-md-1 control-label"></div>
-							<label class="radio col-md-1 col-md-offset-1">
+							<label class="radio col-md-6 col-md-offset-1" style="font-size: 1em;">
 						         <input type="radio" data-toggle="radio" class="myradio" name="radio${t.id} " value="${st.student.student.id }" data-radiocheck-toggle="radio" required>
-						          ${st.student.student.name }
+						          ${st.student.student.name }(&nbsp;tel:&nbsp;${st.student.student.phoneNumber }&nbsp;)
 						    </label>
 						</div>
 					</c:forEach>

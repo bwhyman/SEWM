@@ -19,6 +19,8 @@ public class Student {
 	private String password;
 	private String name;
 	private String sex;
+	@Column(length = 15)
+	private String phoneNumber;
 	@ManyToOne
 	private Classes classes;
 	@ManyToOne
@@ -79,6 +81,12 @@ public class Student {
 	}
 	public void setUserAuthority(UserAuthority userAuthority) {
 		this.userAuthority = userAuthority;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 }

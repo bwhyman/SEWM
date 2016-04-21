@@ -227,7 +227,7 @@ public class UserProjectController {
 	 * @return
 	 */
 	@RequestMapping(path = "/updateselectproject", method = RequestMethod.POST)
-	public String updateSelect(long oldstudentid, long studentid, HttpSession session){
+	public String updateSelect(long oldstudentid, String studentid, HttpSession session){
 		projectService.updateSelect(oldstudentid, studentid);
 		return redirect + "selecttitles/" + ((User)session.getAttribute("user")).getId() + "/1";
 	}

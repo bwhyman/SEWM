@@ -41,15 +41,7 @@ public class UserService extends GenericService<User, Long>{
 		return userDao.getBypassword(employeeNumber, MD5.generateMD5(password));
 	}
 	
-	/**
-	 * 学生登录验证
-	 * @param userName
-	 * @param password
-	 * @return
-	 */
-	public Student findStudentByPassword(String employeeNumber, String password) {
-		return studentDao.getBypassword(employeeNumber, MD5.generateMD5(password));
-	}
+	
 	
 	
 	/**

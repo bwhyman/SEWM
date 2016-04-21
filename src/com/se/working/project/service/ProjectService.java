@@ -56,9 +56,16 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param oldStudentId
 	 * @param studentId
 	 */
-	public void updateSelect(long oldStudentId, long studentId){
-		studentProjectDao.get(oldStudentId).getSelectedTitleDetail().setConfirmed(false);
-		studentProjectDao.get(studentId).getSelectedTitleDetail().setConfirmed(true);
+	public void updateSelect(long oldStudentId, String studentId){
+		StudentProject studentProject = studentProjectDao.get(oldStudentId);
+		studentProject.getSelectedTitleDetail().setConfirmed(false);
+		if (studentId!=null) {
+			studentProjectDao.get(Long.valueOf(studentId)).getSelectedTitleDetail().setConfirmed(true);
+		}else{
+			TeacherProject teacherProject = studentProject.getSelectedTitleDetail().getTitle().getTeacher();
+			teacherProject.setLeadNum(teacherProject.getLeadNum()+1);
+		}
+		
 	}
 	
 	/**
