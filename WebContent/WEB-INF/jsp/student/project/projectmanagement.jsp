@@ -49,6 +49,7 @@
 						</c:if>
 						<c:if test="${openedProject == true }">
 							<li><a href="student/project/listguiderecord/${openReport.id }">指导记录</a></li>
+							<li><a href="student/project/evaluation/opening">开题评审结果</a></li>
 						</c:if>
 					</ul>
 					
@@ -74,13 +75,13 @@
 					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
 						<li><a href="download/${interimReport.directory }/${interimReport.templeteFile}/">下载中期检查报告模板</a></li>
 						<li><a href="download/${interimRecord.directory }/${interimRecord.templeteFile}/">下载中期答辩记录模板</a></li>
-						<c:if test="${openedProject == true && interimReport.opened == true }">
+						<c:if test="${openedProject== true && interimReport.opened == true && openEval.managerEval== true && openEval.teacherEval== true }">
 							<li><a href="student/project/uploadfile/interimreport">上传中期检查报告</a></li>
 							<li><a href="student/project/uploadfile/interimrecord">上传中期答辩记录</a></li>
-							
 						</c:if>
 						<c:if test="${openedProject == true }">
 							<li><a href="student/project/listguiderecord/${interimReport.id }">指导记录</a></li>
+							<li><a href="student/project/evaluation/interim">中期评审结果</a></li>
 						</c:if>
 					</ul>
 				</div>
@@ -101,12 +102,13 @@
 					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
 						<li><a href="download/${paperReport.directory }/${paperReport.templeteFile}/">下载论文模板</a></li>
 						<li><a href="download/${paperRecord.directory }/${paperRecord.templeteFile}/">下载论文答辩记录模板</a></li>
-						<c:if test="${openedProject == true && paperReport.opened == true }">
+						<c:if test="${openedProject == true && paperReport.opened == true && interimEval.managerEval== true && interimEval.teacherEval== true}">
 							<li><a href="student/project/uploadfile/paperreport">上传论文</a></li>
 							<li><a href="student/project/uploadfile/paperrecord">上传论文答辩记录</a></li>
 						</c:if>
 						<c:if test="${openedProject == true }">
 							<li><a href="student/project/listguiderecord/${paperReport.id }">指导记录</a></li>
+							<li><a href="student/project/evaluation/paper">终期评审结果</a></li>
 						</c:if>
 					</ul>
 				</div>

@@ -82,7 +82,13 @@
 		<div class="panel-heading">
 			<div class="row">
 				<div class="col-md-2">
-					<a class="btn btn-info btn-block" role="button" href="project/listguiderecord/openreport">开题管理</a>
+					<a class="btn btn-info btn-block" role="button" data-toggle="dropdown" >开题管理
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
+						<li><a href="project/listguiderecord/openreport">开题指导</a></li>
+						<li><a href="project/listevaluation/opening">开题评审</a></li>
+						<li><a href="project/listevaluation/opening/1">开题评审结果</a></li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -96,7 +102,13 @@
 		<div class="panel-heading">
 			<div class="row">
 				<div class="col-md-2">
-					<a class="btn btn-info btn-block" role="button" href="project/listguiderecord/interimreport">中期管理</a>
+					<a class="btn btn-info btn-block" role="button" data-toggle="dropdown" >中期管理
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
+						<li><a href="project/listguiderecord/interimreport">中期指导</a></li>
+						<li><a href="project/listevaluation/interim">中期评审</a></li>
+						<li><a href="project/listevaluation/interim/1">中期评审结果</a></li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -110,7 +122,13 @@
 		<div class="panel-heading">
 			<div class="row">
 				<div class="col-md-2">
-					<a class="btn btn-info btn-block" role="button" href="project/listguiderecord/paperreport">论文管理</a>
+					<a class="btn btn-info btn-block" role="button" data-toggle="dropdown" >终期管理
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu dropdown-menu-inverse" role="menu">
+						<li><a href="project/listguiderecord/paperreport">终期指导</a></li>
+						<li><a href="project/listevaluation/paper">终期评审</a></li>
+						<li><a href="project/listevaluation/paper/1">终期评审结果</a></li>
+					</ul>
 				</div>
 			</div>
 		</div>

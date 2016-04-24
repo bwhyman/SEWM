@@ -19,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.se.working.exception.SEWMException;
+import com.se.working.project.entity.Evaluation;
 import com.se.working.project.entity.ProjectFileType;
 import com.se.working.project.entity.ProjectFileType.FileTypes;
+import com.se.working.project.entity.StudentProject;
 import com.se.working.project.entity.TeacherProject;
 import com.se.working.project.service.ProjectService;
 import com.se.working.service.AdminService;
@@ -44,6 +46,66 @@ public class AdminProjectController {
 	private ProjectService projectService;
 	@Autowired
 	private AdminService adminService;
+	
+	@RequestMapping(path = "/updateevaluation", method = RequestMethod.POST)
+	public String updateEvaluation(long[] studentIds, String type){
+		if (studentIds !=null) {
+			switch (type) {
+			case "opening":
+				projectService.updateEvaluation(studentIds,FileTypes.OPENINGREPORT);
+				break;
+			case "interim":
+				projectService.updateEvaluation(studentIds,FileTypes.INTERIMREPORT);
+				break;
+			case "paper":
+				projectService.updateEvaluation(studentIds,FileTypes.PAPER);
+				break;
+			default:
+				break;
+			}
+		}
+		return redirect + "listevaluation/" + type + "/1";
+	}
+	
+	@RequestMapping(path = "/listevaluation/{type}/{page}")
+	public String listEvaluation(@PathVariable String type, @PathVariable int page, Map<String, Object> vMap){
+		List<Evaluation> evaluations = null;
+		List<StudentProject> studentProjects = null;
+		int count = 0;
+		String typeZH = null;
+		switch (type) {
+		case "opening":
+			studentProjects = projectService.findEvalStudentByTypeId(FileTypes.OPENINGREPORT);
+			evaluations = projectService.findByTypeId(FileTypes.OPENINGREPORT, page);
+			count = projectService.getEvalCountByTypeId(FileTypes.OPENINGREPORT);
+			typeZH = "开题";
+			break;
+		case "interim":
+			studentProjects = projectService.findEvalStudentByTypeId(FileTypes.INTERIMREPORT);
+			evaluations = projectService.findByTypeId(FileTypes.INTERIMREPORT, page);
+			count = projectService.getEvalCountByTypeId(FileTypes.INTERIMREPORT);
+			typeZH = "中期";
+			break;
+		case "paper":
+			studentProjects = projectService.findEvalStudentByTypeId(FileTypes.PAPER);
+			evaluations = projectService.findByTypeId(FileTypes.PAPER, page);
+			count = projectService.getEvalCountByTypeId(FileTypes.PAPER);
+			typeZH = "终期";
+			break;
+		default:
+			break;
+		}
+		vMap.put("studentProjects", studentProjects);
+		vMap.put("evaluations", evaluations);
+		vMap.put("type", type);
+		vMap.put("typeZH", typeZH);
+		vMap.put("count", count);
+		vMap.put("currentPage", page);
+		vMap.put("location", "importstuinfo");
+		vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
+				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
+		return basePath + "evaluation";
+	}
 	
 	/**
 	 * 清除所有学生信息（仅限于导入信息有误）

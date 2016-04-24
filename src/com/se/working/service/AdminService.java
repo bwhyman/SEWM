@@ -51,6 +51,8 @@ public class AdminService extends GenericService<User, Long> {
 	@Autowired
 	private ClassesDao classesDao;
 
+	
+	
 	/**
 	 * 查询所有通知者
 	 * @return
@@ -76,7 +78,7 @@ public class AdminService extends GenericService<User, Long> {
 	 * @param studentId
 	 */
 	public void delStudent(long studentId){
-		studentProjectDao.delete(new StudentProject(studentId));
+		studentProjectDao.delete(studentProjectDao.get(studentId));
 		studentDao.delete(new Student(studentId));
 	}
 	

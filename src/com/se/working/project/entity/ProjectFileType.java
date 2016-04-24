@@ -22,6 +22,8 @@ public class ProjectFileType {
 	private String templeteFile;
 	private String directory;
 	private boolean opened = false;
+	@OneToMany(mappedBy = "fileType")
+	public Set<Evaluation> evaluations;
 	@OneToMany(mappedBy = "projectFileType")
 	private Set<ProjectFileDetail> projectFileDetails;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -122,6 +124,14 @@ public class ProjectFileType {
 
 	public void setProjectFileDetails(Set<ProjectFileDetail> projectFileDetails) {
 		this.projectFileDetails = projectFileDetails;
+	}
+
+	public Set<Evaluation> getEvaluations() {
+		return evaluations;
+	}
+
+	public void setEvaluations(Set<Evaluation> evaluations) {
+		this.evaluations = evaluations;
 	}
 
 }

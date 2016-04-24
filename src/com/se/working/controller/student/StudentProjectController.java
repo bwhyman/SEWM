@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.se.working.entity.Student;
+import com.se.working.project.entity.Evaluation;
 import com.se.working.project.entity.GuideRecord;
 import com.se.working.project.entity.ProjectFileDetail;
-import com.se.working.project.entity.ProjectFileType;
 import com.se.working.project.entity.ProjectFileType.FileTypes;
 import com.se.working.project.entity.SelectedTitleDetail;
 import com.se.working.project.entity.TeacherProject;
@@ -27,11 +27,39 @@ import com.se.working.util.EnumConstant;
 @RequestMapping("/student/project/")
 public class StudentProjectController {
 
+	private String USER = "user";
 	private String redirect = "redirect:";
 	private String basePath = "/student/project/";
 	
 	@Autowired
 	private ProjectService projectService;
+	
+	@RequestMapping(path = "/evaluation/{type}")
+	public String getEvaluation(@PathVariable String type, Map<String, Object> vMap, HttpSession session){
+		Student student = (Student) session.getAttribute("user");
+		Evaluation evaluation = null;
+		String typeZH = null;
+		switch (type) {
+		case "opening":
+			evaluation = projectService.findEvaluation(student.getId(),FileTypes.OPENINGREPORT);
+			typeZH = "开题";
+			break;
+		case "interim":
+			evaluation = projectService.findEvaluation(student.getId(),FileTypes.INTERIMREPORT);
+			typeZH = "中期";
+			break;
+		case "paper":
+			evaluation = projectService.findEvaluation(student.getId(),FileTypes.PAPER);
+			typeZH = "终期";
+			break;
+		default:
+			break;
+		}
+		vMap.put("evaluation", evaluation);
+		vMap.put("type", type);
+		vMap.put("typeZH", typeZH);
+		return basePath + "evaluation";
+	}
 	
 	/**
 	 * 指定毕业设计阶段和题目查找指导记录
@@ -42,7 +70,7 @@ public class StudentProjectController {
 	 */
 	@RequestMapping(path = "/listguiderecord/{typeId}")
 	public String listGuideRecord(@PathVariable long typeId , Map<String, Object> vMap, HttpSession session){
-		List<GuideRecord> guideRecords = projectService.findByStudentIdAndTypeId(((Student)session.getAttribute("user")).getId(), typeId);
+		List<GuideRecord> guideRecords = projectService.findByStudentIdAndTypeId(((Student)session.getAttribute(USER)).getId(), typeId);
 		String typeCH = projectService.findFileTypeById(typeId).getName();
 		vMap.put("typeCH", typeCH);
 		vMap.put("guideRecords", guideRecords);
@@ -101,7 +129,7 @@ public class StudentProjectController {
 	 */
 	@RequestMapping(path = "/uploadfile/{type}", method = RequestMethod.POST)
 	public String uploadFile(@PathVariable String type,long typeId, MultipartFile uploadfile, HttpSession session){
-		projectService.uploadProjectFile(((Student)session.getAttribute("user")).getId(), typeId, uploadfile);
+		projectService.uploadProjectFile(((Student)session.getAttribute(USER)).getId(), typeId, uploadfile);
 		return redirect + basePath + "projectmanagement";
 	}
 	
@@ -112,22 +140,17 @@ public class StudentProjectController {
 	 */
 	@RequestMapping(path = "/projectmanagement")
 	public String projectManagement(Map<String, Object> vMap, HttpSession session){
-
-		boolean openedProject = projectService.findStudentProjectOpened(((Student)session.getAttribute("user")).getId()); 
+		Student student = (Student) session.getAttribute(USER);
+		vMap.put("openedProject", projectService.findStudentProjectOpened(student.getId()));
+		vMap.put("openReport", projectService.findFileTypeById(FileTypes.OPENINGREPORT));
+		vMap.put("openRecord", projectService.findFileTypeById(FileTypes.OPENDEFENSERECORD));
+		vMap.put("interimReport", projectService.findFileTypeById(FileTypes.INTERIMREPORT));
+		vMap.put("interimRecord", projectService.findFileTypeById(FileTypes.INTERIMDEFENSERECORD));
+		vMap.put("paperReport", projectService.findFileTypeById(FileTypes.PAPER));
+		vMap.put("paperRecord", projectService.findFileTypeById(FileTypes.PAPERDEFENSERECORD));
 		
-		ProjectFileType openReport = projectService.findFileTypeById(FileTypes.OPENINGREPORT);
-		ProjectFileType openRecord = projectService.findFileTypeById(FileTypes.OPENDEFENSERECORD);
-		ProjectFileType interimReport = projectService.findFileTypeById(FileTypes.INTERIMREPORT);
-		ProjectFileType interimRecord = projectService.findFileTypeById(FileTypes.INTERIMDEFENSERECORD);
-		ProjectFileType paperReport = projectService.findFileTypeById(FileTypes.PAPER);
-		ProjectFileType paperRecord = projectService.findFileTypeById(FileTypes.PAPERDEFENSERECORD);
-		vMap.put("openedProject", openedProject);
-		vMap.put("openReport", openReport);
-		vMap.put("openRecord", openRecord);
-		vMap.put("interimReport", interimReport);
-		vMap.put("interimRecord", interimRecord);
-		vMap.put("paperReport", paperReport);
-		vMap.put("paperRecord", paperRecord);
+		vMap.put("openEval", projectService.findByStudentIdTypeId(student.getId(), FileTypes.OPENINGREPORT));
+		vMap.put("interimEval", projectService.findByStudentIdTypeId(student.getId(), FileTypes.INTERIMREPORT));
 		return basePath + "projectmanagement";
 	}
 	

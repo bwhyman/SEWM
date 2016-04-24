@@ -39,5 +39,6 @@
   <mapping class="com.se.working.project.entity.SelectedTitleDetail"/>
   <mapping class="com.se.working.project.entity.ProjectFileDetail"/>
   <mapping class="com.se.working.project.entity.GuideRecord"/>
+  <mapping class="com.se.working.project.entity.Evaluation"/>
  </session-factory>
 </hibernate-configuration>

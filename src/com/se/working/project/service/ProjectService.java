@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.se.working.project.dao.EvaluationDao;
 import com.se.working.project.dao.GuideRecordDao;
 import com.se.working.project.dao.ProjectFileDetailDao;
 import com.se.working.project.dao.ProjectFileTypeDao;
@@ -18,6 +19,7 @@ import com.se.working.project.dao.ProjectTitleDao;
 import com.se.working.project.dao.SelectedTitleDetailDao;
 import com.se.working.project.dao.StudentProjectDao;
 import com.se.working.project.dao.TeacherProjectDao;
+import com.se.working.project.entity.Evaluation;
 import com.se.working.project.entity.GuideRecord;
 import com.se.working.project.entity.ProjectFileDetail;
 import com.se.working.project.entity.ProjectFileType;
@@ -50,6 +52,151 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	private StudentProjectDao studentProjectDao;
 	@Autowired
 	private GuideRecordDao guideRecordDao;
+	@Autowired
+	private EvaluationDao evalDao;
+	
+	/**
+	 * 教师评审
+	 * @param studentIds
+	 * @param typeId
+	 */
+	public void updateEvaluationByUser(long[] studentIds, long typeId){
+		//当前评审的学生
+		List<StudentProject> studentProjects = findEvalStudentByTypeId(typeId);
+		for (StudentProject studentProject : studentProjects) {
+			if (evalDao.getByStudentIdTypeId(studentProject.getId(), typeId)==null) {
+				Evaluation evaluation = new Evaluation(studentProject, projectFileTypeDao.get(typeId));
+				evaluation.setManagerEval(false);
+				evaluation.setTeacherEval(false);
+				evalDao.persist(evaluation);
+				evalDao.flush();
+			}
+		}
+		for (long l : studentIds) {
+			evalDao.getByStudentIdTypeId(l, typeId).setTeacherEval(true);
+		}
+	}
+	/**
+	 * 管理员评审
+	 * @param studentIds
+	 * @param typeId
+	 */
+	public void updateEvaluation(long[] studentIds, long typeId){
+		//当前评审的学生
+		List<StudentProject> studentProjects = findEvalStudentByTypeId(typeId);
+		for (StudentProject studentProject : studentProjects) {
+			if (evalDao.getByStudentIdTypeId(studentProject.getId(), typeId)==null) {
+				Evaluation evaluation = new Evaluation(studentProject, projectFileTypeDao.get(typeId));
+				evaluation.setManagerEval(false);
+				evaluation.setTeacherEval(false);
+				evalDao.persist(evaluation);
+				evalDao.flush();
+			}
+		}
+		for (long l : studentIds) {
+			evalDao.getByStudentIdTypeId(l, typeId).setManagerEval(true);
+		}
+	}
+	
+	/**
+	 * 查询教师评审的学生
+	 * @param teacherId
+	 * @param typeId
+	 * @return
+	 */
+	public List<StudentProject> findByTeatherIdTypeId(long teacherId, long typeId){
+		List<StudentProject> studentProjects = new ArrayList<>();
+		for (SelectedTitleDetail selectedTitleDetail : selectedTitleDetailDao.listByTeacherIdAndconfirmed(teacherId, true)) {
+			StudentProject studentProject = selectedTitleDetail.getStudent();
+			Evaluation evaluation = evalDao.getByStudentIdTypeId(studentProject.getId(), typeId);
+			if (evaluation == null || evaluation.isTeacherEval() == false) {
+				studentProjects.add(studentProject);
+				/*evaluation = new Evaluation(studentProject, projectFileTypeDao.get(typeId));
+				evaluation.setManagerEval(false);
+				evaluation.setTeacherEval(false);
+				evalDao.persist(evaluation);
+				evalDao.flush();*/
+				
+			}
+		}
+		return studentProjects;
+	}
+	
+	/**
+	 * 根据teacherid和typeId返回Evaluation
+	 * @param typeId
+	 * @return
+	 */
+	public List<Evaluation> findEvalByTeatherIdTypeId(long teacherId, long typeId){
+		List<Evaluation> evaluations = new ArrayList<>();
+		for (SelectedTitleDetail stDetail : selectedTitleDetailDao.listByTeacherIdAndconfirmed(teacherId, true)) {
+			evaluations.add(evalDao.getByStudentIdTypeId(stDetail.getStudent().getId(), typeId));
+		}
+		return evaluations;
+	}
+	
+	/**
+	 * 获取学生评审结果
+	 * @param studentId
+	 * @param typeId
+	 * @return
+	 */
+	public Evaluation findEvaluation(long studentId, long typeId){
+		return evalDao.getByStudentIdTypeId(studentId, typeId);
+	}
+	
+	/**
+	 * 根据typeId返回StudentProject
+	 * @param TypeId
+	 * @return
+	 */
+	public List<StudentProject> findEvalStudentByTypeId(long typeId){
+		//查询已开题学生信息
+		List<StudentProject> studentOpened = studentProjectDao.listOpened();
+		List<Evaluation> evaluations = evalDao.listByTypeId(typeId);
+		//若开题已评审的总数为0，说明第一次开题的学生未评审,对第一次开题的学生进行评审
+		if (evaluations.size()==0) {
+			return studentOpened;
+		}else {
+			//第二次评审，对象：第二次开题的学生，第一次开题未通过的，即除第一次开题已过的学生
+			List<StudentProject> studentPassEval = studentProjectDao.listPassByEval(typeId);
+			List<StudentProject> studentsAll = studentProjectDao.list();
+			//除第一次开题已过的学生
+			studentsAll.removeAll(studentPassEval);
+			return studentsAll;
+		}
+	}
+	/**
+	 * 根据typeId分页返回Evaluation
+	 * @param typeId
+	 * @return
+	 */
+	public List<Evaluation> findByTypeId(long typeId, int page){
+		return evalDao.listByTypeIdPage(typeId, page);
+	}
+	
+	/**
+	 * 获取指定类型的评审总数
+	 * @param typeId
+	 * @return
+	 */
+	public int getEvalCountByTypeId(long typeId){
+		return evalDao.listByTypeId(typeId).size();
+	}
+	
+	public List<Evaluation> findAllEvaluation(){
+		return new ArrayList<>(evalDao.list());
+	}
+	
+	/**
+	 * 根据student和typeId获取评审结果
+	 * @param studentId
+	 * @param typeId
+	 * @return
+	 */
+	public Evaluation findByStudentIdTypeId(long studentId, long typeId){
+		return evalDao.getByStudentIdTypeId(studentId, typeId);
+	}
 	
 	/**
 	 * 修改确认选题的学生

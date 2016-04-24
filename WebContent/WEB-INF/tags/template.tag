@@ -24,8 +24,7 @@
 <link href="resources/css/default.css" rel="stylesheet">
 <link href="resources/images/favicon.ico" rel="shortcut icon"  type="image/x-icon">
 
-<!-- Private -->
-<jsp:invoke fragment="header" />
+
 <!-- Flat-ui -->
 <link href="resources/css/flat-ui.min.css" rel="stylesheet">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -34,13 +33,13 @@
       <script src="resources/js/html5shiv.min.js"></script>
       <script src="resources/js/respond.min.js"></script>
     <![endif]-->
-
+<!-- Private -->
+<jsp:invoke fragment="header" />
 <title>专业工作管理平台</title>
 </head>
 <body>
 	<!-- 导航 -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container-fluid">
+	<nav class="navbar navbar-inverse">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
 					aria-expanded="false" aria-controls="navbar">
@@ -72,11 +71,11 @@
 					<input type="text" class="form-control" placeholder="Search...">
 				</form> -->
 			</div>
-		</div>
 	</nav>
 	<div class="container-fluid">
 		<div class="row">
 			<!-- 左导航 -->
+			
 			<c:if test="${user.userAuthority.level >=10 }">
 				<div class="col-sm-3 col-md-2 sidebar">
 					<ul class="nav nav-sidebar">

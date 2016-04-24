@@ -1,6 +1,7 @@
 package com.se.working.project.entity;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,6 +28,8 @@ public class StudentProject {
 	private boolean opened = false;
 	@OneToOne(mappedBy = "student")
 	private SelectedTitleDetail selectedTitleDetail;
+	@OneToMany(mappedBy = "student")
+	private Set<Evaluation> evaluations;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
@@ -78,6 +82,14 @@ public class StudentProject {
 
 	public void setOpened(boolean opened) {
 		this.opened = opened;
+	}
+
+	public Set<Evaluation> getEvaluations() {
+		return evaluations;
+	}
+
+	public void setEvaluations(Set<Evaluation> evaluations) {
+		this.evaluations = evaluations;
 	}
 
 }
