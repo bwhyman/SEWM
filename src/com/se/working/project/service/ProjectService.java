@@ -151,20 +151,28 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @return
 	 */
 	public List<StudentProject> findEvalStudentByTypeId(long typeId){
-		//查询已开题学生信息
-		List<StudentProject> studentOpened = studentProjectDao.listOpened();
-		List<Evaluation> evaluations = evalDao.listByTypeId(typeId);
-		//若开题已评审的总数为0，说明第一次开题的学生未评审,对第一次开题的学生进行评审
-		if (evaluations.size()==0) {
-			return studentOpened;
-		}else {
-			//第二次评审，对象：第二次开题的学生，第一次开题未通过的，即除第一次开题已过的学生
-			List<StudentProject> studentPassEval = studentProjectDao.listPassByEval(typeId);
-			List<StudentProject> studentsAll = studentProjectDao.list();
-			//除第一次开题已过的学生
-			studentsAll.removeAll(studentPassEval);
-			return studentsAll;
+		if (evalDao.listByTypeId(typeId).size() < studentProjectDao.list().size()) {
+			if (typeId == FileTypes.OPENINGREPORT) {
+				//查询已开题学生信息
+				List<StudentProject> studentOpened = studentProjectDao.listOpened();
+				List<Evaluation> evaluations = evalDao.listByTypeId(typeId);
+				//若开题已评审的总数为0，说明第一次开题的学生未评审,对第一次开题的学生进行评审
+				if (evaluations.size()==0) {
+					return studentOpened;
+				}else {
+					//第二次评审，对象：第二次开题的学生，第一次开题未通过的，即除第一次开题已过的学生
+					List<StudentProject> studentPassEval = studentProjectDao.listPassByEval(typeId);
+					List<StudentProject> studentsAll = studentProjectDao.list();
+					//除第一次开题已过的学生
+					studentsAll.removeAll(studentPassEval);
+					return studentsAll;
+				}
+			}else{
+				return studentProjectDao.list();
+			}
 		}
+		
+		return null;
 	}
 	/**
 	 * 根据typeId分页返回Evaluation

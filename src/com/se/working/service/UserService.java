@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.se.working.dao.StudentDao;
 import com.se.working.dao.TeacherTitleDao;
 import com.se.working.dao.UserDao;
-import com.se.working.entity.Student;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
 import com.se.working.invigilation.dao.CourseDao;
@@ -29,8 +27,7 @@ public class UserService extends GenericService<User, Long>{
 	private UserDao userDao;
 	@Autowired
 	private TeacherTitleDao teacherTitleDao;
-	@Autowired
-	private StudentDao studentDao;
+	
 	/**
 	 * 登录验证
 	 * @param userName
@@ -63,11 +60,6 @@ public class UserService extends GenericService<User, Long>{
 		user.setPhoneNumber(newUser.getPhoneNumber());
 		user.setTitle(newUser.getTitle());
 		user.setIntroduction(newUser.getIntroduction());
-	}
-	
-	public void updateStudentPassword(long studentId, String newPwd) {
-		Student student = studentDao.get(studentId);
-		student.setPassword(MD5.generateMD5(newPwd));
 	}
 	
 	public void updatePassword(long userId, String newPwd) {

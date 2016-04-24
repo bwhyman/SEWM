@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.se.working.entity.Student;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
-import com.se.working.entity.UserAuthority.UserAuthorityLevel;
 import com.se.working.exception.SEWMException;
 import com.se.working.service.UserService;
 import com.se.working.util.FileTaskUtils;
@@ -95,13 +93,7 @@ public class UserController {
 	 */
 	@RequestMapping(path = "/updatepassword", method = RequestMethod.POST)
 	public String updatePassword(String pwd, HttpSession session) {
-		int level = (int) session.getAttribute("level");
-		if (level == UserAuthorityLevel.STUDENT) {
-			userService.updateStudentPassword(((Student)session.getAttribute(USER)).getId(), pwd);
-		}else {
-			userService.updatePassword(((User)session.getAttribute("user")).getId(),pwd);
-		}
-		
+		userService.updatePassword(((User)session.getAttribute("user")).getId(),pwd);
 		return redirect + "updateusersetting";
 	}
 

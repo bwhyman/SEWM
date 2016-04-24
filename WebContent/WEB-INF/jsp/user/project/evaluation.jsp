@@ -21,18 +21,6 @@
 					}
 					
 				});
-				
-				/* $('.student').on('change.radiocheck', function() {
-					var flag = true;
-					$('.student').each(function(){
-						if(!$(this).prop('checked')){
-							flag = false;
-						}
-					});
-					if (flag) {
-						$('#allcheck').radiocheck('check');
-					}
-				}); */
 			})
 		</script>
 	</jsp:attribute>
@@ -71,7 +59,7 @@
 			</div>
 		</form>
 	</c:if>
-	<c:if test="${evaluations.size()!=0 }">
+	<c:if test="${evaluations.size()!=0 && evaluations[0]!=null}">
 	<hr>
 		<h6>评审结果</h6>
 		<div class="table-responsive">
@@ -87,27 +75,27 @@
 				</thead>
 				<tbody>
 					<c:forEach items="${evaluations }" var="i" varStatus="s">
-						<tr>
-							<td>${s.count }</td>
-							<td>${i.student.student.studentId }</td>
-							<td>${i.student.student.name }</td>
-							<td>
-								<c:if test="${i.teacherEval == true }">
-									<span class="label label-success">是</span>
-								</c:if>
-								<c:if test="${i.teacherEval == false }">
-									<span class="label label-danger">否</span>
-								</c:if>
-							</td>
-							<td>
-								<c:if test="${i.managerEval == true }">
-									<span class="label label-success">是</span>
-								</c:if>
-								<c:if test="${i.managerEval == false }">
-									<span class="label label-danger">否</span>
-								</c:if>
-							</td>
-						</tr>
+							<tr>
+								<td>${s.count }</td>
+								<td>${i.student.student.studentId }</td>
+								<td>${i.student.student.name }</td>
+								<td>
+									<c:if test="${i.teacherEval == true }">
+										<span class="label label-success">是</span>
+									</c:if>
+									<c:if test="${i.teacherEval == false }">
+										<span class="label label-danger">否</span>
+									</c:if>
+								</td>
+								<td>
+									<c:if test="${i.managerEval == true }">
+										<span class="label label-success">是</span>
+									</c:if>
+									<c:if test="${i.managerEval == false }">
+										<span class="label label-danger">否</span>
+									</c:if>
+								</td>
+							</tr>
 				</c:forEach>
 				</tbody>
 		</table>

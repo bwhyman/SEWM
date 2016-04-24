@@ -59,7 +59,12 @@
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="updateusersetting">个人设置</a></li>
+							<c:if test="${user.userAuthority.level==5 }">
+								<li><a href="student/updateusersetting">个人设置</a></li>
+							</c:if>
+							<c:if test="${user.userAuthority.level>5 }">
+								<li><a href="updateusersetting">个人设置</a></li>
+							</c:if>
 							<li class="divider"></li>
 							<li><a href="logout">退出</a></li>
 						</ul></li>

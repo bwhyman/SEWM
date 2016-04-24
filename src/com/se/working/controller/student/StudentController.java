@@ -1,5 +1,7 @@
 package com.se.working.controller.student;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.se.working.entity.Student;
+import com.se.working.entity.User;
+import com.se.working.entity.UserAuthority.UserAuthorityLevel;
 import com.se.working.service.StudentService;
 
 @Controller
@@ -22,6 +26,34 @@ public class StudentController {
 	
 	@Autowired
 	private StudentService studentService;
+	
+	/**
+	 * 加载用于基本信息
+	 * 
+	 * @param vMap
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/updateusersetting")
+	public String updateUserSetting(Map<String, Object> vMap, HttpSession session) {
+		Student student = (Student) session.getAttribute(USER);
+		vMap.put(USER, student);
+		return basePath + "updateusersetting";
+	}
+	
+	/**
+	 * 更新密码
+	 * 
+	 * @param pwd
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(path = "/updatepassword", method = RequestMethod.POST)
+	public String updatePassword(String pwd, HttpSession session) {
+		studentService.updateStudentPassword(((Student)session.getAttribute(USER)).getId(), pwd);
+		return redirect + "updateusersetting";
+	}
+	
 	
 	@RequestMapping(path = "/addPhoneNumber", method = RequestMethod.POST)
 	public String addPhoneNumber(String phoneNumber, HttpSession session){

@@ -59,7 +59,7 @@
 	  <li><a href="admin/project/projectmanagement">毕设管理</a></li>
 	  <li class="active">${typeZH }评审</li>
 	</ol>
-	<c:if test="${studentProjects.size()!=0 }">
+	<c:if test="${studentProjects!=null && studentProjects.size()!=0 }">
 		<form class="form-horizontal col-md-offset-1" action="admin/project/updateevaluation" method="POST">
 			<div class="form-group">
 				<label class="checkbox col-sm-5 col-md-1" id="allcheck">

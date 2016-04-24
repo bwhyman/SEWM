@@ -14,6 +14,11 @@ public class StudentService extends GenericService<Student, Long> {
 
 	@Autowired
 	private StudentDao studentDao;
+	
+	public void updateStudentPassword(long studentId, String newPwd) {
+		Student student = studentDao.get(studentId);
+		student.setPassword(MD5.generateMD5(newPwd));
+	}
 	/**
 	 * 学生登录验证
 	 * @param userName
