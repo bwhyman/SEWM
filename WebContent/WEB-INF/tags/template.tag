@@ -24,9 +24,6 @@
 <link href="resources/css/default.css" rel="stylesheet">
 <link href="resources/images/favicon.ico" rel="shortcut icon"  type="image/x-icon">
 
-
-<!-- Flat-ui -->
-<link href="resources/css/flat-ui.min.css" rel="stylesheet">
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -114,7 +111,7 @@
 				</c:if>
 			</div>
 			<!-- 主界面 -->
-			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div class="col-sm-9 col-md-10 main">
 				<jsp:doBody></jsp:doBody>
 			</div>
 		</div>

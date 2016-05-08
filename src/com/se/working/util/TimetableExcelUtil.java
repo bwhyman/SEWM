@@ -1,7 +1,6 @@
 package com.se.working.util;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -18,7 +17,11 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import com.se.working.exception.SEWMException;
 import com.se.working.invigilation.entity.Course;
 import com.se.working.invigilation.entity.CourseSection;
-
+/**
+ * 2016.05.08，修改资源操作
+ * @author BO
+ *
+ */
 public class TimetableExcelUtil {
 	// 获取教师姓名表达式
 	private static final String REGEX_TNAME = "大学(.*)教师";
@@ -44,33 +47,14 @@ public class TimetableExcelUtil {
 	 * @throws Exception
 	 * @throws Exception
 	 */
-	public static List<Course> getExcel(File excelFile) {
-		Workbook workbook = null;
+	public static List<Course> getExcel(InputStream is) {
 		try {
-			workbook = WorkbookFactory.create(excelFile);
-
+			Workbook workbook = WorkbookFactory.create(is);
 			return getRow(workbook.getSheetAt(0));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			if (excelFile.exists()) {
-				excelFile.delete();
-			}
 			throw new SEWMException("文件操作错误", e);
-		} finally {
-			if (workbook != null) {
-				try {
-					workbook.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					if (excelFile.exists()) {
-						excelFile.delete();
-					}
-					throw new SEWMException("文件操作错误", e);
-				}
-				workbook = null;
-			}
 		}
 	}
 
@@ -105,7 +89,7 @@ public class TimetableExcelUtil {
 					// 授课地点
 					String courseLocation = null;
 					String courseClass = null;
-					int i = 0;
+					
 					/**
 					 * 每次获取的片段
 					 */
@@ -178,10 +162,9 @@ public class TimetableExcelUtil {
 	 * @throws Exception
 	 * @throws SEWMException
 	 */
-	public static String getTimetableName(File excelFile) {
-		Workbook workbook = null;
+	public static String getTimetableName(InputStream is) {
 		try {
-			workbook = WorkbookFactory.create(excelFile);
+			Workbook workbook = WorkbookFactory.create(is);
 			Row row = workbook.getSheetAt(0).getRow(0);
 			Pattern pattern = Pattern.compile(REGEX_TNAME);
 			Matcher matcher = pattern.matcher(row.getCell(0).getStringCellValue());
@@ -194,24 +177,7 @@ public class TimetableExcelUtil {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			if (excelFile.exists()) {
-				excelFile.delete();
-			}
 			throw new SEWMException("文件操作错误", e);
-		} finally {
-			if (workbook != null) {
-				try {
-					workbook.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					if (excelFile.exists()) {
-						excelFile.delete();
-					}
-					throw new SEWMException("文件操作错误", e);
-				}
-				workbook = null;
-			}
 		}
 	}
 }

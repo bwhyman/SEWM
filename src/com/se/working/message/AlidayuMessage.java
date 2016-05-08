@@ -46,7 +46,8 @@ public class AlidayuMessage {
 	private static final String SIGN_NAME = "东林软件";
 	// 软件专业监考通知模板
 	private static final String SMS_INVI_NOTICE = "SMS_7480213";
-	private static final String SMS_INVI_REMIND = "SMS_5067627";
+	// 专业监考提醒模板
+	private static final String SMS_INVI_REMIND = "SMS_7816430";
 	// 专业通知模板
 	private static final String SMS_NOTICE = "SMS_6105454";
 
@@ -140,33 +141,43 @@ public class AlidayuMessage {
 		sendSMS(gson.toJson(aNotification), phoneNumberbuffer.toString(), SMS_NOTICE);
 	
 	}
-	
+	/**
+	 * 监考提醒:时间:${time};地点:${location};人员:${names}
+	 * @param info
+	 */
 	public void sendInviRemind(InvigilationInfo info) {
 		SimpleDateFormat sfDate = new SimpleDateFormat("HH:mm");
 		//时间
 		String time = sfDate.format(info.getStartTime().getTime());
 		time = "明日 " + time;
 		String location = info.getLocation();
-		// 获取本次监考全部人员
-		String ns = null;
+		// 获取本次监考全部人员姓名
+		String names = null;
+		// 获取本次监考全部人员手机号
+		String phoneNumbers = null;
 		int count = 0;
 		for (Invigilation i : info.getInvigilations()) {
 			if (count == 0) {
-				ns = i.getTeacher().getUser().getName();
+				names = i.getTeacher().getUser().getName();
+				phoneNumbers = i.getTeacher().getUser().getPhoneNumber();
 			} else {
-				ns = ns + "," + i.getTeacher().getUser().getName();
+				names = names + "," + i.getTeacher().getUser().getName();
+				phoneNumbers = phoneNumbers + "," + i.getTeacher().getUser().getPhoneNumber();
 			}
 			count++;
 		}
-		Gson gson = new Gson();
-		for (Invigilation i : info.getInvigilations()) {
-			AlidayuInviRemind r = new AlidayuInviRemind();
-			r.setT(time);
-			r.setL(location);
-			r.setNs(ns);
-			sendSMS(gson.toJson(r), i.getTeacher().getUser().getPhoneNumber(), SMS_INVI_REMIND);
+		// 在人员后追加备注
+		if (info.getComment() != null) {
+			names  = names + ";" + info.getComment();
 		}
+		Gson gson = new Gson();
+		AlidayuInviRemind r = new AlidayuInviRemind();
+		r.setTime(time);
+		r.setLocation(location);
+		r.setNames(names);
+		sendSMS(gson.toJson(r), phoneNumbers, SMS_INVI_REMIND);
 	}
+	
 
 	/**
 	 * 抽象发送SMS短信方法，recNum可以是多号码，以英文逗号分开，无空格

@@ -12,8 +12,7 @@
 <myTemplate:template>
 	<jsp:attribute name="header">
 		<!-- datetimepicker -->
-<link href="resources/css/bootstrap-datetimepicker.min.css"
-	rel="stylesheet">
+<link href="resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 	</jsp:attribute>
 	<jsp:attribute name="footer">
 	<script src="resources/js/moment-with-locales.js"></script>
@@ -115,16 +114,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">监考课程</label>
+						<label for="name" class="col-sm-2 col-md-1 control-label">课程/备注</label>
 						<div class="col-sm-10 col-md-3">
-							<input type="text" class="form-control" placeholder="监考课程" 
-							value="${info.course }" name="course">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">备注</label>
-						<div class="col-sm-10 col-md-3">
-							<textarea class="form-control" rows="5" placeholder="备注" name="comment">${info.comment }</textarea>
+							<textarea class="form-control" rows="5" placeholder="课程/备注" name="comment">${info.comment }</textarea>
 						</div>
 					</div>
 						

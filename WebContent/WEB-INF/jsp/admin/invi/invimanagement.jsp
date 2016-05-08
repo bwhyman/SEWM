@@ -39,6 +39,9 @@
 					<form action="admin/invi/sendinviremind" method="POST">
 						<button type="submit" class="btn btn-primary btn-wide">发送明日监考提醒</button>
 					</form>
+					<form action="admin/invi/setinviinfodone" method="POST">
+						<button type="submit" class="btn btn-primary btn-wide">设置完成监考</button>
+					</form>
 				</li>
 			</ul>
 		</div>

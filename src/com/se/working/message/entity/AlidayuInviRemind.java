@@ -2,47 +2,38 @@ package com.se.working.message.entity;
 
 
 /**
- * [监考提醒:时间:${t};地点:${l};人员:${ns};备注:${c};
+ * 监考提醒:时间:${time};地点:${location};人员:${names}
  * @author BO
  *
  */
 public class AlidayuInviRemind {
 
-	private String t = "";
-	private String l = "";
-	private String ns = "";
-	private String c = "";
+	private String time = "";
+	private String location = "";
+	private String names = "";
 	
-	public String getT() {
-		return t;
+	public String getTime() {
+		return time;
 	}
 
-	public void setT(String t) {
-		this.t = t;
+	public void setTime(String time) {
+		this.time = time;
 	}
 
-	public String getL() {
-		return l;
+	public String getLocation() {
+		return location;
 	}
 
-	public void setL(String l) {
-		this.l = l;
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
-	public String getNs() {
-		return ns;
+	public String getNames() {
+		return names;
 	}
 
-	public void setNs(String ns) {
-		this.ns = ns;
-	}
-
-	public String getC() {
-		return c;
-	}
-
-	public void setC(String c) {
-		this.c = c;
+	public void setNames(String names) {
+		this.names = names;
 	}
 
 	public AlidayuInviRemind() {

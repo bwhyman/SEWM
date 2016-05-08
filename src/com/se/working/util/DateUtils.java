@@ -77,6 +77,7 @@ public class DateUtils {
 	 * @return
 	 */
 	public static int getWeekRelativeBaseDate(Calendar date) {
+		date.setFirstDayOfWeek(Calendar.MONDAY);
 		int iWeek = 0;
 		// 判断是否跨年
 		if (date.getWeekYear() > DateUtils.getBaseCalender().getWeekYear()) {

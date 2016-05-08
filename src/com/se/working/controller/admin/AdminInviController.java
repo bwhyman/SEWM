@@ -56,11 +56,12 @@ public class AdminInviController {
 	 * @param uploadFile
 	 * @param request
 	 * @return
+	 * @throws IOException 
 	 * @throws SEWMException
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/importtimetable", method = RequestMethod.POST)
-	public String importTimetable(MultipartFile uploadFile, RedirectAttributes vMap) {
+	public String importTimetable(MultipartFile uploadFile, RedirectAttributes vMap) throws IOException {
 		if (uploadFile.isEmpty()) {
 			throw new SEWMException("上传文件为空");
 		}
@@ -318,7 +319,7 @@ public class AdminInviController {
 	@RequestMapping(path = "/delinviinfo", method = RequestMethod.POST)
 	public String delInviInfo(long infoinviid) {
 		inviService.deleteInviInfo(infoinviid);
-		return redirect + "/listinviinfo/unassinvi";
+		return redirect + "/invi/listinviinfo/unassinvi"; 
 	}
 
 	/**
@@ -356,19 +357,34 @@ public class AdminInviController {
 	 * @param filetaskId
 	 * @throws SEWMException 
 	 */
-	@RequestMapping(path = "/importtimetabletask", method = RequestMethod.POST)
+	/*@RequestMapping(path = "/importtimetabletask", method = RequestMethod.POST)
 	public String importTimetableTask(long filetaskId, RedirectAttributes vMap) {
 		inviService.importTimetableTask(filetaskId);
 		
 		vMap.addFlashAttribute("teachers", inviService.findTeacherInvigilations());
 		return redirect + basePath + "importtimetabletask";
-	}
+	}*/
 	
+	/**
+	 * 发送监考提醒
+	 * @return
+	 */
 	@RequestMapping(path = "/sendinviremind", method = RequestMethod.POST)
 	public String sendInviRemind() {
 		inviService.sendInviRemind();
 		return redirect + basePath + "invimanagement";
 	}
+	
+	/**
+	 * 将从学期初至今的已分配监考置为完成状态
+	 * @return
+	 */
+	@RequestMapping(path = "/setinviinfodone", method = RequestMethod.POST)
+	public String setInviInfoDone() {
+		inviService.setInviInfoDone();
+		return redirect + basePath + "invimanagement";
+	}
+	
 	
 	/**
 	 * ====================================
