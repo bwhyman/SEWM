@@ -52,8 +52,6 @@ public class InvigilationInfo {
 	private Calendar endTime;
 	// 监考地点
 	private String location;
-	// 监考课程
-	private String course;
 	// 备注
 	private String comment;
 	
@@ -140,13 +138,4 @@ public class InvigilationInfo {
 	public InvigilationInfo() {
 		// TODO Auto-generated constructor stub
 	}
-
-	public String getCourse() {
-		return course;
-	}
-
-	public void setCourse(String course) {
-		this.course = course;
-	}
-	
 }

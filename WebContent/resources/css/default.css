@@ -30,6 +30,9 @@ body {
 .navbar-fixed-top {
 	border: 0;
 }
+.navbar  {
+	margin-bottom: 20px;
+}
 
 /*
  * Sidebar
@@ -42,8 +45,8 @@ body {
 
 @media ( min-width : 768px) {
 	.sidebar {
-		position: fixed;
-		top: 75px;
+		/* position: fixed; */
+		top: 0px;
 		/* bottom: 0; */ /* 一直到底部 */
 		left: 0;
 		z-index: 1000;
@@ -86,7 +89,7 @@ body {
 @media ( min-width : 768px) {
 	.main {
 		padding-right: 40px;
-		padding-left: 40px;
+		padding-left: 20px;
 	}
 }
 

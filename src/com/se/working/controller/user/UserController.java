@@ -139,7 +139,7 @@ public class UserController {
 			throw new SEWMException("文件不存在");
 		}
 		// 文件转换
-		return FileTaskUtils.downloadFile(file);
+		return FileTaskUtils.toResponseEntity(file);
 	}
 	
 	

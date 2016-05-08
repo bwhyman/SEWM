@@ -9,6 +9,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import com.se.working.entity.User;
 import com.se.working.invigilation.entity.InvigilationInfo;
 import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
 import com.se.working.invigilation.service.InviService;
+import com.se.working.util.DateUtils;
 
 @Controller
 @RequestMapping("/invi")
@@ -50,9 +52,6 @@ public class UserInviController {
 			infos = inviService.findInviInfosByUserId(user.getId());
 			break;
 		}
-
-		// 反序
-		Collections.reverse(infos);
 		vMap.put("infos", infos);
 		vMap.put("type", invitype);
 		return basePath + "listmyinviinfo";
@@ -112,14 +111,24 @@ public class UserInviController {
 			// 指定监考状态的总页数
 			countpages =Math.ceil( (double)typeSize /  (double) maxResults);
 		}
-		vMap.put("firstresult", firstResult);
 		
+		List<Integer> weeks = new ArrayList<>(infos.size());
+		for (InvigilationInfo i : infos) {
+			weeks.add(DateUtils.getWeekRelativeBaseDate(i.getStartTime()));
+		}
+		vMap.put("weeks", weeks);
+		vMap.put("firstresult", firstResult);
 		vMap.put("typesize", typeSize);
 		vMap.put("countpages", countpages);
 		vMap.put("currentpage", currentpage);
 		vMap.put("infos", infos);
 		vMap.put("type", invitype);
 		return basePath + "listinviinfo";
+	}
+	
+	@RequestMapping("downloadinviinfoexcel")
+	public ResponseEntity<byte[]> downloadInviInfoExcel() {
+		return inviService.downloadInviInfoExcel();
 	}
 	
 	public UserInviController() {

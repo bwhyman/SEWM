@@ -76,14 +76,11 @@ public class AdminTaskController {
 		// 开始操作
 		fileTask.setEndTime(endTime);
 		User user = (User) session.getAttribute(USER);
-		// 单一文件处理
-		if (fileTask.isSingleFile()) {
-			
-		}
+		
 		// 创建文件任务，基于单文件、普通文件有不同实现
 		long fileTaskId = taskService.addFileTask(fileTask, filetypeid, teachers, uploadFile, user.getId());
 			
-		if (mytask) {
+		if (mytask != null) {
 			taskService.implementFileTask(user.getId(), fileTaskId, uploadFile);
 		}
 		uploadFile = null;

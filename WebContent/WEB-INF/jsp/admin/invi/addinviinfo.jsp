@@ -110,9 +110,9 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-2 control-label">备注</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">课程/备注</label>
 						<div class="col-sm-10 col-md-4">
-							<textarea class="form-control" rows="5" placeholder="课程；备注" name="comment"></textarea>
+							<textarea class="form-control" rows="5" placeholder="课程/备注" name="comment"></textarea>
 						</div>
 					</div>
 						

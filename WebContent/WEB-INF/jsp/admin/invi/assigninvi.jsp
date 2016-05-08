@@ -55,6 +55,7 @@
 			<tr>
                   <th>日期</th>
                   <th>时间</th>
+                  <th>课程/备注</th>
                   <th>地点</th>
                   <th>人数</th>
                   <th>操作</th>
@@ -63,13 +64,14 @@
 			<tbody>	
 				<tr>
 				<td>
-						第${week }周 / 
-						<fmt:formatDate pattern="E yyyy-MM-dd" value="${inviInfo.startTime.getTime() }" />
+						第${week }周 
+						<fmt:formatDate pattern="yyyy-MM-dd E" value="${inviInfo.startTime.getTime() }" />
 					</td>
 				<td>
 						<fmt:formatDate pattern="HH:mm" value="${inviInfo.startTime.getTime() }" />
 					- <fmt:formatDate pattern="HH:mm" value="${inviInfo.endTime.getTime() }" />
 					</td>
+				<td>${inviInfo.comment }</td>
 				<td>${inviInfo.location }</td>
 				<td><span class="badge bg-primary checkboxspan">${inviInfo.requiredNumber }</span></td>
 				<td>

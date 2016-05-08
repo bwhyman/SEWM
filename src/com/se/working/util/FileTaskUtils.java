@@ -1,8 +1,8 @@
 package com.se.working.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -26,27 +26,31 @@ public class FileTaskUtils {
 	private static String ROOT = setUploadDirectory();
 	private static String TIMETABLE = setTimetableDirectory();
 	private static String INVIGILATION = setInviDirectory();
-	
+
 	/**
 	 * 空文件，在课表文件夹下创建课表文件
+	 * 
 	 * @param fileName
 	 * @return
 	 */
 	public static File getTimetableFile(String fileName) {
-	
+
 		return new File(TIMETABLE + "\\" + fileName);
 	}
-	
+
 	/**
 	 * 空文件，在监考信息文件夹下创建监考文件
+	 * 
 	 * @param fileName
 	 * @return
 	 */
 	public static File getInviFile(String fileName) {
 		return new File(INVIGILATION + "\\" + fileName);
 	}
+
 	/**
 	 * 创建课表文件夹
+	 * 
 	 * @return
 	 */
 	private static String setTimetableDirectory() {
@@ -57,8 +61,10 @@ public class FileTaskUtils {
 		}
 		return timetableDirectory;
 	}
+
 	/**
 	 * 创建监考信息文件夹
+	 * 
 	 * @return
 	 */
 	private static String setInviDirectory() {
@@ -69,11 +75,11 @@ public class FileTaskUtils {
 		}
 		return inviDirectory;
 	}
-	
-	
+
 	/**
 	 * 1-课表 <br>
 	 * 创建任务文件夹，返回任务文件夹名称，及相对路径
+	 * 
 	 * @param id
 	 * @param name
 	 * @return
@@ -87,7 +93,7 @@ public class FileTaskUtils {
 		}
 		return taskName;
 	}
-	
+
 	/**
 	 * 课表_王波.xls<br>
 	 * 基于任务名称，用户名，扩展名，返回文件名称，无路径
@@ -113,23 +119,25 @@ public class FileTaskUtils {
 	public static String getFileTaskTemplateName(String taskName, String Extension) {
 		return taskName + "_" + "模板" + "." + Extension;
 	}
-	
+
 	/**
 	 * 课表_模板_20160301215846761.xls<br>
 	 * 用于单一文件任务模板文件命名，3位毫秒，用于版本控制
+	 * 
 	 * @param taskName
 	 * @param Extension
 	 * @return
 	 */
 	public static String getSingalFileTaskTemplateName(String taskName, String Extension) {
 		String patten = "yyyyMMddHHmmssSSS";
-		SimpleDateFormat sf  =  new SimpleDateFormat(patten);
-		return taskName + "_" + "模板" + "_" + sf.format(new Date())  + "." + Extension;
+		SimpleDateFormat sf = new SimpleDateFormat(patten);
+		return taskName + "_" + "模板" + "_" + sf.format(new Date()) + "." + Extension;
 	}
-	
+
 	/**
 	 * 需修改，分离创建与获取<br>
 	 * 基于任务文件夹创建或返回文件，可以创建模板文件和上传文件
+	 * 
 	 * @param directory
 	 * @param fileName
 	 * @return
@@ -163,39 +171,40 @@ public class FileTaskUtils {
 			throw new SEWMException("文件删除错误");
 		}
 	}
-	
+
 	/**
 	 * 基于文件目录，文件名称，删除文件
+	 * 
 	 * @param directory
 	 * @param FileName
 	 */
 	public static void deleteFileTaskFile(String directory, String FileName) {
-		File file = new File(ROOT +directory + "\\" + FileName);
+		File file = new File(ROOT + directory + "\\" + FileName);
 		if (file.exists() && file.isFile()) {
 			file.delete();
-		}else {
+		} else {
 			throw new SEWMException("文件已不存在");
 		}
 	}
-	
+
 	/**
 	 * 20-课表.zip<br>
 	 * 基于文件任务文件夹压缩全部文件，并在文件夹下生成压缩文件<br>
 	 * 返回以文件夹名命名的压缩文件
+	 * 
 	 * @param directoryPath
 	 * @return
 	 */
-	public static File zipDirectory(String directoryPath) {
+	/*public static File zipDirectory(String directoryPath) {
 		File directory = new File(ROOT + directoryPath);
 		File[] files = directory.listFiles();
 		if (files == null || files.length == 0) {
 			throw new SEWMException("没有任务文件，无法打包下载");
 		}
 		File zipFile = new File(ROOT + directoryPath + "\\" + directoryPath + ".zip");
-		InputStream input = null;
-		ZipOutputStream zipOut = null;
 		try {
-			zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+			InputStream input = null;
+			ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
 			for (int i = 0; i < files.length; ++i) {
 				input = new FileInputStream(files[i]);
 				zipOut.putNextEntry(new ZipEntry(files[i].getName()));
@@ -204,17 +213,51 @@ public class FileTaskUtils {
 					zipOut.write(temp);
 				}
 			}
-			input.close();
 			zipOut.closeEntry();
 			zipOut.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
+		}
+
 		return zipFile;
-	}
+	}*/
 	
+	/**
+	 * 20-课表.zip<br>
+	 * 基于文件任务文件夹压缩全部文件<br>
+	 * 返回z压缩文件字节数组
+	 * @param directoryPath
+	 * @return
+	 */
+	public static byte[] zipDirectory(String directoryPath) {
+		File directory = new File(ROOT + directoryPath);
+		File[] files = directory.listFiles();
+		if (files == null || files.length == 0) {
+			throw new SEWMException("没有任务文件，无法打包下载");
+		}
+		ByteArrayOutputStream os = null;
+		try {
+			os = new ByteArrayOutputStream();
+			InputStream input = null;
+			ZipOutputStream zipOut = new ZipOutputStream(os);
+			for (int i = 0; i < files.length; ++i) {
+				input = new FileInputStream(files[i]);
+				zipOut.putNextEntry(new ZipEntry(files[i].getName()));
+				int temp = 0;
+				while ((temp = input.read()) != -1) {
+					zipOut.write(temp);
+				}
+			}
+			zipOut.closeEntry();
+			zipOut.close();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return os.toByteArray();
+	}
 
 	/**
 	 * 获取工程upload绝对路径地址
@@ -222,7 +265,7 @@ public class FileTaskUtils {
 	 * @return
 	 */
 	private static String setUploadDirectory() {
-		String webapp = System.getProperty("webapp.root");
+		String webapp = System.getProperty("SEWM.root");
 		String uploadDirectory = webapp + "\\WEB-INF\\jsp\\upload\\";
 		File directory = new File(uploadDirectory);
 		if (!directory.exists() && !directory.isDirectory()) {
@@ -230,9 +273,10 @@ public class FileTaskUtils {
 		}
 		return uploadDirectory;
 	}
-	
+
 	/**
 	 * 抽象上传文件保存至本地，用于同一异常处理即简化开发
+	 * 
 	 * @param uploadFile
 	 * @param file
 	 */
@@ -249,12 +293,11 @@ public class FileTaskUtils {
 	}
 
 	/**
-	 * 全局文件转换为ResponseEntity<byte[]>，抽象下载实现
+	 * 全局File封装为ResponseEntity<byte[]>，抽象下载实现
 	 * @param file
 	 * @return
-	 * @throws SEWMException
 	 */
-	public static ResponseEntity<byte[]> downloadFile(File file) {
+	public static ResponseEntity<byte[]> toResponseEntity(File file) {
 		ResponseEntity<byte[]> entity = null;
 		String fileName = null;
 		try {
@@ -268,13 +311,34 @@ public class FileTaskUtils {
 		headers.setContentDispositionFormData("attachment", fileName);
 		try {
 			entity = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.OK);
+			return entity;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			throw new SEWMException("文件加载失败；"+ e.getMessage());
+			throw new SEWMException("文件加载失败；" + e.getMessage());
+		}
+	}
+
+	/**
+	 * 全局基于文件名称封装为ResponseEntity<byte[]>，抽象下载实现
+	 * @param fileName
+	 * @param datas
+	 * @return
+	 */
+	public static ResponseEntity<byte[]> toResponseEntity(String fileName, byte[] datas) {
+		ResponseEntity<byte[]> entity = null;
+		try {
+			fileName = URLEncoder.encode(fileName, "UTF-8");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			headers.setContentDispositionFormData("attachment", fileName);
+			entity = new ResponseEntity<byte[]>(datas, headers, HttpStatus.OK);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw new SEWMException("文件下载失败；" + e.getMessage());
 		}
 		return entity;
 	}
-	
+
 	public FileTaskUtils() {
 		// TODO Auto-generated constructor stub
 	}

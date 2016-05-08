@@ -1,6 +1,5 @@
 package com.se.working.controller.user;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -143,16 +142,12 @@ public class UserTaskController {
 	 * 
 	 * @param directory
 	 * @return
-	 * @throws SEWMException
 	 */
 	@RequestMapping(path = "/downloadzip/{directory}/", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> getFileZip(@PathVariable String directory) {
-		// 基于任务文件夹相对路径，生成相同名称的zip压缩文件
-		File file = FileTaskUtils.zipDirectory(directory);
-		// 以字节流返回
-		ResponseEntity<byte[]> entity = FileTaskUtils.downloadFile(file);
-		// 压缩文件已转为字节数组，可以删除压缩文件
-		file.delete();
+		
+		ResponseEntity<byte[]> entity = FileTaskUtils.toResponseEntity(directory, FileTaskUtils.zipDirectory(directory));
+	
 		return entity;
 	}
 

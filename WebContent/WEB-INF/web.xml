@@ -7,9 +7,10 @@
 	<welcome-file-list>
 		<welcome-file></welcome-file>
 	</welcome-file-list>
+	<!-- 当不同工程均使用webAppRootKey获取根目录时，使用不同的value避免冲突 -->
 	<context-param>
 		<param-name>webAppRootKey</param-name>
-		<param-value>webapp.root</param-value>
+		<param-value>SEWM.root</param-value>
 	</context-param>
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
