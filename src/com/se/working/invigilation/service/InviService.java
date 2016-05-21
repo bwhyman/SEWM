@@ -79,19 +79,16 @@ public class InviService extends GenericService<Invigilation, Long> {
 	}
 
 	/**
-	 * 单独导入课表文件，如果数据库中已有则清空原课表。返回课表集合
-	 * 
+	 * 单独导入课表文件，如果数据库中已有则清空原课表。返回课表集合<br>
+	 * 多次使用流，流默认不能反复使用
 	 * @param uploadFile
 	 * @return
-	 * @throws IOException
-	 * @throws SEWMException
 	 */
 	public List<Course> importTimetable(MultipartFile uploadFile) {
 		String name = null;
 		List<Course> courses = null;
 		try {
-			InputStream is = uploadFile.getInputStream();
-			name = TimetableExcelUtil.getTimetableName(is);
+			name = TimetableExcelUtil.getTimetableName(uploadFile.getInputStream());
 			if (name == null) {
 				throw new SEWMException("不是课表文件，" + uploadFile.getOriginalFilename());
 			}
@@ -111,7 +108,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 					courseDao.delete(course);
 				}
 			}
-			courses = TimetableExcelUtil.getExcel(is);
+			courses = TimetableExcelUtil.getExcel(uploadFile.getInputStream());
 			for (Course course : courses) {
 				course.setTeacher(teacher);
 				// 有级联，但是关系由many维护，因此在保存时需在session中使many重新set one端
@@ -159,16 +156,12 @@ public class InviService extends GenericService<Invigilation, Long> {
 
 	/**
 	 * 导入监考信息
-	 * 
-	 * @param excelFile
+	 * @param uploadFile
 	 * @return
-	 * @throws SEWMException
-	 * @throws Exception
 	 */
 	public List<InvigilationInfo> importInvi(MultipartFile uploadFile) {
 		List<InvigilationInfo> newInfos = new ArrayList<>();
-		try {
-			InputStream is = uploadFile.getInputStream();
+		try(InputStream is = uploadFile.getInputStream()) {
 			// 封装监考人数，地点，起止时间
 			List<InvigilationInfo> infos = InviExcelUtil.getExcel(is);
 			if (infos == null) {

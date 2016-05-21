@@ -24,7 +24,7 @@
 </ol>
 <div class="row-fluid">
 <div class="pull-right">
-	<a id="all" class="btn btn-primary" href="invi/downloadinviinfoexcel" role="button">下载监考记录</a>
+	<a class="btn btn-primary" href="invi/downloadinviinfoexcel" role="button">下载监考记录</a>
 	</div>
 <div>
 	<a id="unassinvi" class="btn btn-primary" href="invi/listinviinfo/unassinvi" role="button">未分配</a>
@@ -55,6 +55,7 @@
                   <th>人数</th>
                   <th>分配</th>
                   <th>状态</th>
+                  <th>分配时间</th>
                   <th>导入时间</th>
                   <c:if test="${user.userAuthority.level>=15 }"></c:if>
                   <th>操作</th>
@@ -90,8 +91,15 @@
 						<span class="label label-info checkboxspan">
 				</c:if>
 				${i.currentStatusType.name }</span></td>
-				<c:if test="${user.userAuthority.level>=15 }">
+				<%-- <td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.invigilations.size}" /></td> --%>
+				<td>
+				<c:if test="${i.invigilations.size() > 0}">
+				<fmt:formatDate pattern="MM-dd HH:mm" value="${i.invigilations.iterator().next().assignTime}" />
+				</c:if>
+				</td>
+				
 				<td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.insertTime }" /></td>
+				<c:if test="${user.userAuthority.level>=15 }">
 				<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>  
 						<a class="btn btn-primary"  href="admin/invi/assigninvi/${i.id }" role="button">分配</a></td>
 				</c:if>

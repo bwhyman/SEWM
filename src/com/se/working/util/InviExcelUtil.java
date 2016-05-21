@@ -29,11 +29,19 @@ import com.se.working.invigilation.entity.InvigilationInfo;
 import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
 import com.se.working.invigilation.entity.TeacherInvigilation;
 
+/**
+ * 监考表格分析 2016.05.11，添加监考起止时间在2个不同段的匹配方法
+ * 
+ * @author BO
+ *
+ */
 public class InviExcelUtil {
 
 	private static String REGEX_NUMBER = "软件(.+)人";
 	// 匹配地址
-	private static String REGEX_LOCATION = "(丹青|锦绣|成栋)";
+	private static String REGEX_LOCATION = "(丹青楼.\\d+|锦绣楼.\\d+|成栋楼.\\d+|研究生楼.\\d+)";
+	// 独立的监考开始结束时间，日期与时间分别获取
+	private static String REGEX_IND_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2}).*(\\d{2}:\\d{2})";
 	// 仅匹配日期，不会匹配班级
 	private static String REGEX_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})";
 	// 匹配时间，较模糊，有待修正
@@ -100,22 +108,34 @@ public class InviExcelUtil {
 		Pattern pLocation = Pattern.compile(REGEX_LOCATION);
 		Pattern pDate = Pattern.compile(REGEX_DATE);
 		Pattern pTime = Pattern.compile(REGEX_TIME);
+		Pattern pDtime = Pattern.compile(REGEX_IND_DATE);
 		Matcher mNum = null;
 		Matcher mLocation = null;
 		Matcher mDate = null;
 		Matcher mTime = null;
+		
+		Matcher mDTime = null;
+		boolean indTime = false;
 
 		String sNumber = null;
 		String sLocation = null;
 		String sDate = null;
 		String sStartTime = null;
 		String sEndTime = null;
-		for (int cellIndex = row.getLastCellNum(); cellIndex >= 0; cellIndex--) {
+		String sCourse = null;
+		for (int cellIndex = 0; cellIndex < row.getLastCellNum(); cellIndex++) {
 			Cell cell = row.getCell(cellIndex);
 			if (cell == null) {
 				continue;
 			}
+			// 强制设置全局cell类型为string
 			cell.setCellType(Cell.CELL_TYPE_STRING);
+
+			// 默认第1列为考试课程
+			if (cellIndex == 0) {
+				sCourse = cell.getStringCellValue();
+				continue;
+			}
 			if (!StringUtils.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
 
 				String cellInfo = cell.getStringCellValue().trim();
@@ -133,24 +153,40 @@ public class InviExcelUtil {
 				}
 				// 获取监考地点
 				mLocation = pLocation.matcher(cellInfo);
-				// 无需完整匹配，包含即可
 				if (mLocation.find()) {
-					sLocation = cellInfo;
+					sLocation = mLocation.group(1);
 					continue;
 				}
 
 				// 获取监考日期，先不处理，与监考时间整合后封装
 				cellInfo = cellInfo.replace(".", "-");
+				// 获取监考时间
+				// 如果是中文，转换
+				cellInfo = cellInfo.replace("～", "~");
+				cellInfo = cellInfo.replace("：", ":");
+				
+				/**
+				 * 开始起止时间分别在2个段的获取方法，在日期，时间段前必配
+				 */
+				mDTime = pDtime.matcher(cellInfo);
+				if (mDTime.find()) {
+					if (!indTime) {
+						sDate = mDTime.group(1);
+						sStartTime = mDTime.group(2);
+					} else {
+						sEndTime = mDTime.group(2);
+					}
+					indTime = true;
+					continue;
+				}
+				
+				// 监考日期
 				mDate = pDate.matcher(cellInfo);
 				if (mDate.find()) {
 					sDate = mDate.group(1);
 					continue;
 				}
-
-				// 获取监考时间
-				// 如果是中文，转换
-				cellInfo = cellInfo.replace("～", "~");
-				cellInfo = cellInfo.replace("：", ":");
+				// 监考时间
 				mTime = pTime.matcher(cellInfo);
 				if (mTime.find()) {
 					sStartTime = mTime.group(1);
@@ -165,10 +201,19 @@ public class InviExcelUtil {
 		sEndTime = sDate + " " + sEndTime;
 		start = DateUtils.getCalendar(sStartTime);
 		end = DateUtils.getCalendar(sEndTime);
+
+		if (start.after(end)) {
+			Calendar temp = Calendar.getInstance();
+			temp = start;
+			start = end;
+			end = temp;
+		}
+
 		info.setRequiredNumber(Integer.valueOf(sNumber));
 		info.setLocation(sLocation);
 		info.setStartTime(start);
 		info.setEndTime(end);
+		info.setComment(sCourse);
 		return info;
 	}
 
@@ -205,7 +250,7 @@ public class InviExcelUtil {
 			createCount(workbook, teachers);
 			// 创建文档属性
 			createProperties(workbook);
-			datas =  toFile(workbook);
+			datas = toFile(workbook);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -369,6 +414,7 @@ public class InviExcelUtil {
 
 	/**
 	 * 将workbook转为excel文档
+	 * 
 	 * @param workbook
 	 * @return 字节数组流
 	 */
