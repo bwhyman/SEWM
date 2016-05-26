@@ -1,13 +1,17 @@
-package com.se.working.message;
+package com.se.working.message.entity;
 
 public class AlidayuNotification {
 
 	// 内容
-	private String c;
+	private String c = "";
 	// 时间
-	private String d;
+	private String d = "";
 	// 地点
-	private String l;
+	private String l = "";
+	/**
+	 * 发布人
+	 */
+	private String n = "";
 	
 	public String getC() {
 		return c;
@@ -35,6 +39,14 @@ public class AlidayuNotification {
 
 	public AlidayuNotification() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getN() {
+		return n;
+	}
+
+	public void setN(String n) {
+		this.n = n;
 	}
 
 }

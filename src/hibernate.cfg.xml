@@ -30,8 +30,9 @@
   <mapping class="com.se.working.task.entity.FileType"/>
   <mapping class="com.se.working.task.entity.TeacherTask"/>
   <mapping class="com.se.working.task.entity.FileTaskStatus"/>
-  <mapping class="com.se.working.task.entity.Notification"/>
-  <!--  -->
+   <mapping class="com.se.working.task.entity.Notification"/>
+   
+   <!--  -->
   <mapping class="com.se.working.project.entity.ProjectTitle"/>
   <mapping class="com.se.working.project.entity.ProjectFileType"/>
   <mapping class="com.se.working.project.entity.StudentProject"/>

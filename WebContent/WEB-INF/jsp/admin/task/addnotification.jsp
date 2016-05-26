@@ -41,7 +41,7 @@
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>
-  <li><a href="admin/task/taskmanagement">任务管理</a></li>
+  <li><a href="admin/usersetting">任务管理</a></li>
   <li class="active">创建通知信息</li>
 </ol>
 <c:if test="${exception != null}">
@@ -55,8 +55,8 @@
 </c:if>
 	<form class="form-horizontal" action="admin/task/addnotification" enctype="multipart/form-data" method="POST">
 		<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-2 control-label">截止时间</label>
-			<div class="col-sm-10 col-md-4">
+			<label for="name" class="col-sm-2 col-md-1 control-label">截止时间</label>
+			<div class="col-sm-10 col-md-3">
 				<div class='input-group date' id="date">
 					<input type='text' class="form-control" name="datetime" />
 					<span class="input-group-addon">
@@ -66,22 +66,22 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-2 control-label">通知内容</label>
-			<div class="col-sm-10 col-md-4">
+			<label for="name" class="col-sm-2 col-md-1 control-label">通知内容</label>
+			<div class="col-sm-10 col-md-3">
 				<textarea class="form-control" rows="5" placeholder="通知内容" name="comment" required></textarea>
 			</div>
 			</div>
 			<div class="form-group">
-				<label for="name" class="col-sm-2 col-md-2 control-label">高级</label>
-			<div class="col-sm-10 col-md-4">
+				<label for="name" class="col-sm-2 col-md-1 control-label">高级</label>
+			<div class="col-sm-10 col-md-3">
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
 							 value="true" name="advanced" id="advanced" />
 			</div>
 			</div>
 		
 		<div class="form-group" hidden id="pointdiv">
-			<label for="title" class="col-sm-2 col-md-2 control-label">分值</label>
-			<div class="col-sm-10 col-md-4">
+			<label for="title" class="col-sm-2 col-md-1 control-label">分值</label>
+			<div class="col-sm-10 col-md-3">
 				<select data-toggle="select" class="select select-primary mrs mbm" name="point">
 					<option value="1">1
 					<option value="2">2
@@ -93,8 +93,8 @@
 		</div>
 
 		<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-2 control-label">教师</label>
-			<div class="col-sm-10 col-md-4">
+			<label for="name" class="col-sm-2 col-md-1 control-label">教师</label>
+			<div class="col-sm-10 col-md-3">
 				<select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info" name="teachers"
 					required>
 					<c:forEach items="${users }" var="t">
@@ -105,11 +105,9 @@
 		</div>
 		
 		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label"></div>
-			<div class="col-sm-10 col-md-2">
+			<div class="col-sm-2 col-md-1 control-label"></div>
+			<div class="col-sm-10 col-md-3">
 				<button type="submit" class="btn btn-primary btn-wide">提交</button>
-			</div>
-			<div class="col-sm-10 col-md-2">
 				<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>
 			</div>
 		</div>

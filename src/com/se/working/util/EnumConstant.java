@@ -2,7 +2,7 @@ package com.se.working.util;
 
 public enum EnumConstant {
 
-	PAGECOUNT(15);
+	PAGECOUNT(20);
 	private int pageCount;
 
 	private EnumConstant(int pageCount) {

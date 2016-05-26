@@ -1,13 +1,14 @@
 package com.se.working.controller.user;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +18,13 @@ import com.se.working.entity.User;
 import com.se.working.invigilation.entity.InvigilationInfo;
 import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
 import com.se.working.invigilation.service.InviService;
-import com.se.working.util.EnumConstant;
+import com.se.working.util.DateUtils;
 
 @Controller
 @RequestMapping("/invi")
 public class UserInviController {
 	private String USER = "user";
-	private String redirect = "redirect:";
+	//private String redirect = "redirect:";
 	private String basePath = "/user/invi/";
 	@Autowired
 	private InviService inviService;
@@ -35,34 +36,23 @@ public class UserInviController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(path = "listmyinviinfo/{invitype}/{page}", method = RequestMethod.GET)
-	public String listMyInviInfos(@PathVariable String invitype, @PathVariable int page, Map<String, Object> vMap, HttpSession session){
+	@RequestMapping(path = "listmyinviinfo/{invitype}", method = RequestMethod.GET)
+	public String listMyInviInfos(@PathVariable String invitype, Map<String, Object> vMap, HttpSession session){
 		List<InvigilationInfo> infos = new ArrayList<>();
 		User user = (User) session.getAttribute(USER);
-		long count = 0;
 		switch (invitype) {
 		case "undone":
-			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED, page);
-			count = inviService.getCountByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED);
+			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED);
 			break;
 		case "done":
-			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.DONE, page);
-			count = inviService.getCountByUserIdAndTypeId(user.getId(), InviStatusType.DONE);
+			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.DONE);
 			break;
 		case "all":
-			infos = inviService.findInviInfosByUserId(user.getId(), page);
-			count = inviService.getCountInviInfosByUserId(user.getId());
+			infos = inviService.findInviInfosByUserId(user.getId());
 			break;
 		}
-
-		// 反序
-		Collections.reverse(infos);
 		vMap.put("infos", infos);
 		vMap.put("type", invitype);
-		vMap.put("count", count);
-		vMap.put("currentPage", page);
-		vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
-				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		return basePath + "listmyinviinfo";
 	}
 	
@@ -71,39 +61,73 @@ public class UserInviController {
 	 * 
 	 * @param vMap
 	 */
-	@RequestMapping(path = "listinviinfo/{invitype}/{page}", method = RequestMethod.GET)
-	public String listInviInfos(@PathVariable String invitype, @PathVariable int page, Map<String, Object> vMap) {
+	@RequestMapping(path = { "listinviinfo/{invitype}/{max}", "listinviinfo/{invitype}" }, method = RequestMethod.GET)
+	public String listInviInfos(@PathVariable String invitype, @PathVariable Optional<Integer> max,
+			Map<String, Object> vMap) {
 		List<InvigilationInfo> infos = new ArrayList<>();
-		long count = 0;
+		// 总页数
+		double countpages = 1;
+		// 当前页
+		int currentpage = 1;
+		// 如果有当前页参数参数传入
+		if (max.isPresent()) {
+			currentpage = max.get();
+		}
+		// 最大显示数据条目
+		int maxResults = 20;
+		// 起始条目，0为第一条记录
+		int firstResult = (currentpage - 1) * maxResults;
+		// 当前监考状态总条目
+		int typeSize = 0;
+		// 当前监考状态类型
+		long inviTypeId = 0;
+		
 		switch (invitype) {
 		case "unassinvi":
-			infos = inviService.findInviInfosByTypeId(InviStatusType.UNASSIGNED, page);
-			count = inviService.getCountInviInfosByTypeId(InviStatusType.UNASSIGNED);
+			inviTypeId = InviStatusType.UNASSIGNED;
 			break;
 		case "assinvi":
-			infos = inviService.findInviInfosByTypeId(InviStatusType.ASSIGNED, page);
-			count = inviService.getCountInviInfosByTypeId(InviStatusType.ASSIGNED);
+			inviTypeId = InviStatusType.ASSIGNED;
 			break;
 		case "done":
-			infos = inviService.findInviInfosByTypeId(InviStatusType.DONE, page);
-			count = inviService.getCountInviInfosByTypeId(InviStatusType.DONE);
+			inviTypeId = InviStatusType.DONE;
 			break;
 		case "all":
-			infos = inviService.findAllInviInfosByPage(page);
-			count = inviService.findAllInviInfosCount();
+			inviTypeId = 0;
 			break;
-			default:
-				return basePath + "error";
+		default:
+			return basePath + "error";
 		}
-		// 反序
-		Collections.reverse(infos);
+		if (inviTypeId == 0) {
+			infos =  inviService.findAllInviInfos(firstResult, maxResults);
+			typeSize = inviService.findAllInviInfos().size();
+			// 指定监考状态的总页数
+			countpages =Math.ceil( (double) typeSize /  (double) maxResults);
+		} else {
+			
+			infos =  inviService.findInviInfosByTypeId(inviTypeId, firstResult, maxResults);
+			typeSize = inviService.findInviInfosByTypeId(inviTypeId).size();
+			// 指定监考状态的总页数
+			countpages =Math.ceil( (double)typeSize /  (double) maxResults);
+		}
+		
+		List<Integer> weeks = new ArrayList<>(infos.size());
+		for (InvigilationInfo i : infos) {
+			weeks.add(DateUtils.getWeekRelativeBaseDate(i.getStartTime()));
+		}
+		vMap.put("weeks", weeks);
+		vMap.put("firstresult", firstResult);
+		vMap.put("typesize", typeSize);
+		vMap.put("countpages", countpages);
+		vMap.put("currentpage", currentpage);
 		vMap.put("infos", infos);
 		vMap.put("type", invitype);
-		vMap.put("count", count);
-		vMap.put("currentPage", page);
-		vMap.put("countPage", count%(EnumConstant.values()[0].getPageCount())==0
-				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		return basePath + "listinviinfo";
+	}
+	
+	@RequestMapping("downloadinviinfoexcel")
+	public ResponseEntity<byte[]> downloadInviInfoExcel() {
+		return inviService.downloadInviInfoExcel();
 	}
 	
 	public UserInviController() {

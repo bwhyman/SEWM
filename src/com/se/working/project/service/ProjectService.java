@@ -60,7 +60,7 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param studentIds
 	 * @param typeId
 	 */
-	public void updateEvaluationByUser(long[] studentIds, long typeId){
+	public boolean updateEvaluationByUser(long[] studentIds, long typeId){
 		//当前评审的学生
 		List<StudentProject> studentProjects = findEvalStudentByTypeId(typeId);
 		for (StudentProject studentProject : studentProjects) {
@@ -72,9 +72,16 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 				evalDao.flush();
 			}
 		}
+		boolean isAll = true;
 		for (long l : studentIds) {
-			evalDao.getByStudentIdTypeId(l, typeId).setTeacherEval(true);
+			Evaluation evaluation = evalDao.getByStudentIdTypeId(l, typeId);
+			if (evaluation!=null) {
+				evaluation.setTeacherEval(true);
+			}else {
+				isAll = false;
+			}
 		}
+		return isAll;
 	}
 	/**
 	 * 管理员评审
@@ -96,6 +103,14 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 		for (long l : studentIds) {
 			evalDao.getByStudentIdTypeId(l, typeId).setManagerEval(true);
 		}
+	}
+	
+	/**
+	 * 判断管理员是否已评审
+	 * @return
+	 */
+	public boolean isManageEval(long typeId){
+		return evalDao.getCountManagerEval(typeId)>0?true:false;
 	}
 	
 	/**
@@ -130,7 +145,9 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	public List<Evaluation> findEvalByTeatherIdTypeId(long teacherId, long typeId){
 		List<Evaluation> evaluations = new ArrayList<>();
 		for (SelectedTitleDetail stDetail : selectedTitleDetailDao.listByTeacherIdAndconfirmed(teacherId, true)) {
-			evaluations.add(evalDao.getByStudentIdTypeId(stDetail.getStudent().getId(), typeId));
+			if (stDetail.getStudent().isOpened()) {
+				evaluations.add(evalDao.getByStudentIdTypeId(stDetail.getStudent().getId(), typeId));
+			}
 		}
 		return evaluations;
 	}
@@ -439,7 +456,11 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @return
 	 */
 	public List<GuideRecord> findByStudentIdAndTypeId(long studentId, long typeId){
-		return findByTypeIdAndTitleId(studentProjectDao.get(studentId).getSelectedTitleDetail().getTitle().getId(), typeId);
+		SelectedTitleDetail seTitleDetail = studentProjectDao.get(studentId).getSelectedTitleDetail();
+		if (seTitleDetail!=null) {
+			return findByTypeIdAndTitleId(seTitleDetail.getTitle().getId(), typeId);
+		}
+		return null;
 	}
 	
 	/**
@@ -451,8 +472,10 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	public List<GuideRecord> findByTypeIdAndTitleId(long titleId, long typeId){
 		List<GuideRecord> guideRecords = new ArrayList<>();
 		ProjectFileDetail fileDetail = projectFileDetailDao.getByTitleIdAndTypeId(titleId, typeId);
-		for (GuideRecord guideRecord : fileDetail.getGuideRecords()) {
-			guideRecords.add(guideRecord);
+		if (fileDetail!=null) {
+			for (GuideRecord guideRecord : fileDetail.getGuideRecords()) {
+				guideRecords.add(guideRecord);
+			}
 		}
 		return guideRecords;
 	}
@@ -605,8 +628,9 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param typeId
 	 * @param opened
 	 * @param uploadFile
+	 * @return
 	 */
-	public void openProjectType(long typeId,boolean opened, MultipartFile uploadFile){
+	public boolean openProjectType(long typeId,boolean opened, MultipartFile uploadFile){
 		ProjectFileType projectFileType = projectFileTypeDao.get(typeId);
 		if (opened!=false && !uploadFile.isEmpty()) {
 			// 创建论证报告文件夹，同时返回文件夹名称
@@ -621,6 +645,16 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 			ProjectFileUtil.transferTo(uploadFile, file);
 			projectFileTypeDao.update(projectFileType);
 		}
+		return true;
+	}
+	
+	/**
+	 * 根据阶段id判断题目已开启
+	 * @param typeId
+	 * @return
+	 */
+	public boolean stageIsOpenedBy(long typeId){
+		return projectFileTypeDao.get(typeId).isOpened();
 	}
 	
 	/**

@@ -48,4 +48,14 @@ public class EvaluationDao extends GenericDao<Evaluation, Long> {
 				.setLong("studentId", studentId)
 				.setLong("typeId", typeId).uniqueResult();
 	}
+	
+	/**
+	 * 查询管理员评审已通过的人数
+	 * @return
+	 */
+	public long getCountManagerEval(long typeId){
+		String HQL = "SELECT COUNT(*) FROM Evaluation e WHERE e.managerEval =true AND e.fileType.id =:typeId";
+		return (long) getSessionFactory().getCurrentSession().createQuery(HQL)
+				.setLong("typeId", typeId).uniqueResult();
+	}
 }

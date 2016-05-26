@@ -353,28 +353,6 @@ public class SuperAdminService extends GenericService<User, Long>{
 			teacherProjectDao.persist(tpbian);
 			
 		}
-		
-		/*if (userAuthorityDao.get(UserAuthorityType.STUDENT).getUsers().size() == 0) {
-			User xuqingqing = new User();
-			xuqingqing.setName("胥清清");
-			xuqingqing.setEmployeeNumber("20124628");
-			xuqingqing.setPassword(MD5.generateMD5(xuqingqing.getEmployeeNumber()));
-			xuqingqing.setUserAuthority(new UserAuthority(UserAuthorityType.STUDENT));
-			userDao.persist(xuqingqing);
-			StudentProject spxuqingqing = new StudentProject();
-			spxuqingqing.setUser(xuqingqing);
-			studentProjectDao.persist(spxuqingqing);
-			
-			User dengqianwen = new User();
-			dengqianwen.setName("邓茜文");
-			dengqianwen.setEmployeeNumber("20124593");
-			dengqianwen.setPassword(MD5.generateMD5(dengqianwen.getEmployeeNumber()));
-			dengqianwen.setUserAuthority(new UserAuthority(UserAuthorityType.STUDENT));
-			userDao.persist(dengqianwen);
-			StudentProject spdengqianwen = new StudentProject();
-			spdengqianwen.setUser(dengqianwen);
-			studentProjectDao.persist(spdengqianwen);
-		}*/
 	}
 	
 	public void initSpecInviType() {

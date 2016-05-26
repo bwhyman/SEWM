@@ -57,7 +57,7 @@
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>
-  <li><a href="project/projectmanagement">毕设管理</a></li>
+  <li><a href="project/projectmanagement/titleinfo">题目信息</a></li>
   <li class="active">添加题目信息</li>
 </ol>
 	<c:if test="${exception != null}">
@@ -107,7 +107,7 @@
 	
 	<form class="form-horizontal" action="project/addtitle" method="POST" enctype="multipart/form-data">
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-2 control-label">题目</label>
+						<label for="name" class="col-sm-2 col-md-1 control-label">题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;目</label>
 						<div class="col-sm-10 col-md-5">
 							<input type="text" class="form-control" placeholder="题目" required name="name" id="title">
 						</div>
@@ -122,32 +122,32 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="major" class="col-sm-2 col-md-2 control-label">专业</label>
+						<label for="major" class="col-sm-2 col-md-1 control-label">专&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;业</label>
 						<div class="col-sm-10 col-md-5">
 							<input type="text" class="form-control" placeholder="专业" required name="major" value="软件工程">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="property" class="col-sm-2 col-md-2 control-label">题目性质</label>
+						<label for="property" class="col-sm-2 col-md-1 control-label">题目性质</label>
 						<div class="col-sm-10 col-md-5">
 							<input type="text" class="form-control" placeholder="题目性质" name="property" value="软件设计">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="objective" class="col-sm-2 col-md-2 control-label">立题依据</label>
+						<label for="objective" class="col-sm-2 col-md-1 control-label">题目内容</label>
 						<div class="col-sm-10 col-md-8">
-							<textarea class="form-control" rows="15" placeholder="立题依据" name="objective" id="editor_id"></textarea>
+							<textarea class="form-control" rows="15" placeholder="题目内容" name="objective" id="editor_id"></textarea>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="objective" class="col-sm-2 col-md-2 control-label">论证报告</label>
+						<label for="objective" class="col-sm-2 col-md-1 control-label">论证报告</label>
 						<div class="col-sm-10 col-md-8">
 							<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="1" accept=".doc,.docx">
 						</div>
 					</div>
 						
 					<div class="form-group">
-						<div class="col-sm-2 col-md-2 control-label"></div>
+						<div class="col-sm-2 col-md-1 control-label"></div>
 						<div class="col-sm-10 col-md-2">
 							<button type="submit" class="btn btn-primary btn-wide">提交</button>
 						</div>

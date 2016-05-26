@@ -1,7 +1,7 @@
 package com.se.working.controller.admin;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -149,16 +149,9 @@ public class AdminProjectController {
 				|| StringUtils.getFilenameExtension(fileName).equals("xlsx"))) {
 			throw new SEWMException("不是Excel表格文件");
 		}
-		String path = request.getServletContext().getRealPath("/");
-		path = path + "\\WEB-INF\\JSP\\upload\\invi\\";
-		File directory = new File(path);
-		if (!directory.exists() && !directory.isDirectory()) {
-			directory.mkdirs();
-		}
 		try {
-			File file = new File(path + fileName);
-			uploadFile.transferTo(file);
-			adminService.importStudent(file);
+			InputStream is = uploadFile.getInputStream(); 
+			adminService.importStudent(is);
 			
 			vMap.addFlashAttribute("students", adminService.findByPage(1));
 			long count = adminService.findStudents().size();
@@ -167,7 +160,6 @@ public class AdminProjectController {
 			vMap.addFlashAttribute("location", "importstuinfo");
 			vMap.addFlashAttribute("countPage", count%EnumConstant.values()[0].getPageCount()==0
 					?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
-			file.delete();
 		} finally {
 			uploadFile = null;
 		}
@@ -208,11 +200,8 @@ public class AdminProjectController {
 	@RequestMapping(path = "/downloadzip/{directory}/")
 	public ResponseEntity<byte[]> getFileZip(@PathVariable String directory) {
 		// 基于任务文件夹相对路径，生成相同名称的zip压缩文件
-		File file = FileTaskUtils.zipDirectory(directory);
-		// 以字节流返回
-		ResponseEntity<byte[]> entity = FileTaskUtils.downloadFile(file);
+		ResponseEntity<byte[]> entity = FileTaskUtils.toResponseEntity(directory, FileTaskUtils.zipDirectory(directory));
 		// 压缩文件已转为字节数组，可以删除压缩文件
-		file.delete();
 		return entity;
 	}
 	
@@ -223,8 +212,18 @@ public class AdminProjectController {
 		return basePath + "downloadzip";
 	}
 	
+	/**
+	 * 修改各阶段开启、关闭状态
+	 * @param type
+	 * @param reportid
+	 * @param recordid
+	 * @param opened
+	 * @param uploadFiles
+	 * @param vMap
+	 * @return
+	 */
 	@RequestMapping(path = "/uploadfile/{type}", method = RequestMethod.POST)
-	public String openProjected(@PathVariable String type, long reportid, long recordid, boolean opened,@RequestParam MultipartFile[] uploadFiles){
+	public String openProjected(@PathVariable String type, long reportid, long recordid, boolean opened,@RequestParam MultipartFile[] uploadFiles, RedirectAttributes vMap){
 		projectService.updateFileTypeOpened(reportid, opened);
 		projectService.updateFileTypeOpened(recordid, opened);
 		
@@ -241,11 +240,13 @@ public class AdminProjectController {
 				}
 			}
 			
-			projectService.openProjectType(reportid, opened, uploadFiles[0]);
-			projectService.openProjectType(recordid, opened, uploadFiles[1]);
+			if (!projectService.openProjectType(reportid, opened, uploadFiles[0])
+					||!projectService.openProjectType(recordid, opened, uploadFiles[1])) {
+				vMap.addFlashAttribute("exception", "操作失败！");
+			}
 		}
 		
-		return redirect + basePath + "projectmanagement";
+		return redirect + basePath + "uploadfile/" + type;
 		
 	}
 	
@@ -299,7 +300,7 @@ public class AdminProjectController {
 	 * @param vMap
 	 * @return
 	 */
-	@RequestMapping(path = "/startproject", method = RequestMethod.POST)
+	@RequestMapping(path = "/openaddtitle", method = RequestMethod.POST)
 	public String startProjected(long id, boolean opened, MultipartFile uploadFile, RedirectAttributes vMap){
 		projectService.updateFileTypeOpened(id, opened);
 		if (opened) {
@@ -307,15 +308,17 @@ public class AdminProjectController {
 				throw new SEWMException("文件错误");
 			}
 			String fileName = uploadFile.getOriginalFilename();
-			// 前端已经通过属性控制上传文件类型，再一次判断文件扩展名，但并不保证文件一定为可读excel文件
+			// 前端已经通过属性控制上传文件类型，再一次判断文件扩展名，但并不保证文件一定为可读文件
 			if (!(StringUtils.getFilenameExtension(fileName).equals("doc")
 					|| StringUtils.getFilenameExtension(fileName).equals("docx"))) {
 				throw new SEWMException("不是Word文件");
 			}
-			projectService.openProjectType(id, opened, uploadFile);
+			if (!projectService.openProjectType(id, opened, uploadFile)) {
+				vMap.addFlashAttribute("exception", "操作失败！");
+			}
 		}
 		
-		return redirect + "projectmanagement";
+		return redirect + basePath + "openaddtitle";
 	}
 	
 	/**
@@ -323,11 +326,11 @@ public class AdminProjectController {
 	 * @param vMap
 	 * @return
 	 */
-	@RequestMapping(path = "/startproject")
-	public String startProject(Map<String, Object> vMap){
+	@RequestMapping(path = "/openaddtitle")
+	public String openAddTitle(Map<String, Object> vMap){
 		ProjectFileType startProject = projectService.findFileTypeById(FileTypes.DEMONSTRATIONREPORT);
 		vMap.put("startProject", startProject);
-		return basePath + "startproject";
+		return basePath + "openaddtitle";
 	}
 	
 	/**

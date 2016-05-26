@@ -27,7 +27,6 @@ public class UserService extends GenericService<User, Long>{
 	private UserDao userDao;
 	@Autowired
 	private TeacherTitleDao teacherTitleDao;
-	
 	/**
 	 * 登录验证
 	 * @param userName
@@ -35,11 +34,9 @@ public class UserService extends GenericService<User, Long>{
 	 * @return
 	 */
 	public User findByPassword(String employeeNumber, String password) {
+		
 		return userDao.getBypassword(employeeNumber, MD5.generateMD5(password));
 	}
-	
-	
-	
 	
 	/**
 	 * 

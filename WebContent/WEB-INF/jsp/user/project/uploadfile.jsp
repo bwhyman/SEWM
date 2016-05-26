@@ -31,7 +31,7 @@
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>
-  <li><a href="project/projectmanagement">毕设管理</a></li>
+  <li><a href="project/projectmanagement/titleinfo">题目信息</a></li>
   <li class="active">上传论证报告</li>
 </ol>
 	

@@ -53,6 +53,26 @@ public class TaskService extends GenericService<FileTask, Long> {
 	private AlidayuMessage alidayuMessage;
 
 	/**
+	 * 根据用户id，任务状态，结果数查询文件任务详细信息
+	 * @param userId
+	 * @param statusId
+	 * @param maxResult
+	 * @return
+	 */
+	public List<FileTaskDetail> findByUserId(long userId, long statusId, int maxResult){
+		return fileTaskDetailDao.listByUserId(userId, statusId, maxResult);
+	}
+	
+	/**
+	 * 根据id查教师任务信息
+	 * @param userId
+	 * @return
+	 */
+	public TeacherTask findTeacherTaskById(long userId){
+		return teacherTaskDao.get(userId);
+	}
+	
+	/**
 	 * 全部教师任务信息
 	 * 
 	 * @return
@@ -73,7 +93,7 @@ public class TaskService extends GenericService<FileTask, Long> {
 	 */
 	public long addFileTask(FileTask fileTask, long filetypeid, long[] teachers, MultipartFile uploadFile, long userId) {
 		// TODO Auto-generated method stub
-
+		
 		fileTask.setCreateUser(new TeacherTask(userId));
 		fileTask.setFileType(new FileType(filetypeid));
 		fileTask.setCurrentStatus(new FileTaskStatus(FileTaskStatusType.STARTED));
@@ -111,43 +131,22 @@ public class TaskService extends GenericService<FileTask, Long> {
 	}
 
 	/**
-	 * 查询所有已关闭的任务
+	 * 返回相应状态的全部文件任务
+	 * 
 	 * @param statusId
 	 * @return
 	 */
-	public List<FileTask> findFileTasksByStatusId(long statusId){
+	public List<FileTask> findFileTasksByStatusId(long statusId) {
 		return new ArrayList<>(fileTaskStatusDao.get(statusId).getFileTasks());
-	}
-	
-	/**
-	 * 分页返回相应状态的全部文件任务
-	 * @param statusId
-	 * @param page
-	 * @return
-	 */
-	public List<FileTask> findFileTasksByStatusId(long statusId, int page) {
-		return fileTaskDao.listByStatusIdPage(statusId, page);
-	}
-	
-	/**
-	 * 根据状态信息获取当前状态下任务总数
-	 * @param statusId
-	 * @return
-	 */
-	public long getCountTaskByStatusId(long statusId){
-		if (statusId == -1) {
-			return fileTaskDao.list().size();
-		}
-		return fileTaskStatusDao.get(statusId).getFileTasks().size();
 	}
 
 	/**
-	 * 分页返回全部文件任务
-	 * @param page
+	 * 返回全部文件任务
+	 * 
 	 * @return
 	 */
-	public List<FileTask> findFileTasks(int page) {
-		return fileTaskDao.listByPage(page);
+	public List<FileTask> findFileTasks() {
+		return fileTaskDao.list();
 	}
 
 	/**
@@ -191,20 +190,10 @@ public class TaskService extends GenericService<FileTask, Long> {
 	 * @param done
 	 * @return
 	 */
-	public List<FileTaskDetail> findFileTaskDetails(long userId, boolean done, int page) {
-		return fileTaskDetailDao.listByUserId(userId, done, page);
+	public List<FileTaskDetail> findFileTaskDetails(long userId, boolean done) {
+		return fileTaskDetailDao.listByUserId(userId, done);
 	}
 
-	/**
-	 * 查找指定用户，指定任务详细状态，的所有任务详细信息总数
-	 * @param userId
-	 * @param done
-	 * @return
-	 */
-	public long getCountByUserId(long userId, boolean done){
-		return fileTaskDetailDao.getCountByUserId(userId, done);
-	}
-	
 	/**
 	 * 基于用户ID及任务ID查找任务细节，没有为空
 	 * 
@@ -368,7 +357,7 @@ public class TaskService extends GenericService<FileTask, Long> {
 	 * @param notification
 	 * @param teacherIds
 	 */
-	public void addNotification(Notification notification, long[] teacherIds) {
+	public Notification addNotification(Notification notification, long[] teacherIds) {
 		Set<TeacherTask> teachers = new LinkedHashSet<>();
 		for (int i = 0; i < teacherIds.length; i++) {
 			teachers.add(new TeacherTask(teacherIds[i]));
@@ -378,5 +367,11 @@ public class TaskService extends GenericService<FileTask, Long> {
 		notificationDao.flush();
 		notificationDao.refresh(notification);
 		alidayuMessage.sendNotification(notification);
+		// 同步至数据库
+		notificationDao.flush();
+		// 更新
+		notificationDao.refresh(notification);
+		alidayuMessage.sendNotification(notification);
+		return notification;
 	}
 }

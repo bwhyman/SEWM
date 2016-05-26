@@ -15,9 +15,14 @@
 	<jsp:body>
 	<ol class="breadcrumb">
 	  <li><a href="">主页</a></li>
-	  <li><a href="project/projectmanagement">毕设管理</a></li>
+	  <li><a href="student/project/projectmanagement/${type }">${typeZH }信息</a></li>
 	  <li class="active">${typeZH }评审结果</li>
 	</ol>
+	<c:if test="${evaluation==null }">
+		<div class="alert alert-warning" role="alert">
+			<strong>当前无任何记录！</strong>
+		</div>
+	</c:if>
 	<c:if test="${evaluation!=null }">
 		<div class="table-responsive">
 			<table class="table table-striped table-condensed table-hover">

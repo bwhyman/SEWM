@@ -32,22 +32,6 @@
 				$(this).parent('td').children('a').hide()
 			})
 			$('.selecttitle').next('a').hide();
-			if('${currentPage}'=='1'){
-				$('#previous').addClass('disabled');
-				$('#previous').click(function(){
-					return false;
-				})
-			}else{
-				$('#previous').removeClass('disabled');
-			}
-			if('${currentPage}'=='${countPage}'){
-				$('#next').addClass('disabled');
-				$('#next').click(function(){
-					return false;
-				})
-			}else{
-				$('#next').removeClass('disabled');
-			}
 			
 			$(".telphone").mouseenter(function(){
 				$(this).popover('show');
@@ -55,45 +39,19 @@
 			$(".telphone").mouseleave(function(){
 				$(this).popover('hide');
 			})
-			/* $(".telphone").mouseout(function(){
-				$(this).children('a').popover('toggle');
-			}) */
 		})
 	</script>
 </jsp:attribute>
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>
-  <li><a href="student/project/projectmanagement">毕设管理</a></li>
   <li class="active">题目信息</li>
 </ol>
-	<c:if test="${fileDetail!=null }">
-		<div class="form-horizontal">
-		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label">题目</div>
-			<div class="col-sm-2 col-md-4">${fileDetail.title.name }</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label">题目性质</div>
-			<div class="col-sm-2 col-md-4">${fileDetail.title.property }</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label">指导教师</div>
-			<div class="col-sm-2 col-md-4">${fileDetail.title.teacher.user.name }</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label">论证报告</div>
-			<div class="col-sm-10 col-md-9">
-				<a href="download/${fileDetail.directory }/${fileDetail.fileName }/">${fileDetail.fileName }</a>
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label">题目内容</div>
-			<div class="col-sm-10 col-md-10">${fileDetail.title.objective }</div>
-		</div>
-	</div>	
-	</c:if>
-	<c:if test="${fileDetail==null }">
+		<!-- <ul class="text-danger">
+			<li>教师后面的数字是<span class="label label-danger">教师最多还能带学生人数</span></li>
+			<li>若多人选择同一题目，导师将根据学生实际情况进行确认学生选题是否成功</li>
+			<li>重新选择题目后，之前选择的自动无效</li>
+		</ul> -->
 		<c:if test="${selectedTitleDetail != null}">
 			<div class="alert alert-success alert-dismissable" role="alert">
 				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -123,14 +81,18 @@
 	                  <th>指导教师</th>
 	                  <th>论证报告</th>
 	                  <th>已选学生</th>
-	                  <th>已确认学生/操作</th>
+	                  <th>已确认学生
+	                  	<c:if test="${!selectedTitleDetail.confirmed }">
+	                  		/操作
+	                  	</c:if>
+	                  </th>
 				</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${fileDetails }" var="p" varStatus="s">
 							<tr>
 								<td>${s.count+(currentPage-1)*15 }</td>
-								<td><a href="project/projecttitle/${p.id }">${p.title.name }</a></td>
+								<td><a href="project/title/${p.id }">${p.title.name }</a></td>
 								<td >
 									 <a class="telphone" tabindex="0" data-toggle="popover" data-trigger="focus" data-placement="top" title="联系方式" data-content="${p.title.teacher.user.phoneNumber }">${p.title.teacher.user.name }</a>
 								</td>
@@ -139,47 +101,35 @@
 								</td>
 								<td><c:forEach items="${p.title.selectedTitleDetails }" var="t">${t.student.student.name }<br></c:forEach></td>
 								<td>
-										<c:forEach items="${p.title.selectedTitleDetails }" var="st">
-											<c:if test="${st.confirmed == true }">
-												<span class="label label-success myspan">${st.student.student.name }</span>
-											</c:if>
-											<c:if test="${st.confirmed == false }">
-												<a href="${p.title.id },${p.title.teacher.user.id}" class="selecttitle" id="${p.title.teacher.user.id}">选择</a>
-											</c:if>
-										</c:forEach>
-										<c:if test="${p.title.selectedTitleDetails.size()==0 }">
-											<a href="${p.title.id },${p.title.teacher.user.id}" class="selecttitle" id="${p.title.teacher.user.id}">选择</a>
+									<c:if test="${!selectedTitleDetail.confirmed }">
+				                  		<a href="${p.title.id },${p.title.teacher.user.id}" class="selecttitle" id="${p.title.teacher.user.id}">选择</a>
+				                  	</c:if>
+									<c:forEach items="${p.title.selectedTitleDetails }" var="st">
+										<c:if test="${st.confirmed }">
+											<span class="label label-success myspan">${st.student.student.name }</span>
 										</c:if>
+									</c:forEach>
 								</td>
 							</tr>
 				</c:forEach>
 				</tbody>
 		</table>
 		</div>
-		<c:if test="${type==-1 }">
-			<nav>
-			  <ul class="pagination pagination-lg">
-			    <li id="previous">
-			      <a href="student/project/listtitles/-1/${currentPage-1 }" aria-label="Previous">
-			        <span aria-hidden="true">&laquo;</span>
-			      </a>
-			    </li>
-			    <c:forEach begin="1" end="${countPage }" var="c">
-			    	<c:if test="${c==currentPage }">
-			    		<li class="active"><a href="student/project/listtitles/-1/${c }">${c }</a></li>
-			    	</c:if>
-			    	<c:if test="${c!=currentPage }">
-			    		<li><a href="student/project/listtitles/-1/${c }">${c }</a></li>
-			    	</c:if>
-			    </c:forEach>
-			    <li id="next">
-			      <a href="student/project/listtitles/-1/${currentPage+1 }" aria-label="Next">
-			        <span aria-hidden="true">&raquo;</span>
-			      </a>
-			    </li>
-			  </ul>
-			</nav>
-		</c:if>
-	</c:if>
+		<c:if test="${type==-1 && fileDetails.size()>0 }">
+			<div>
+	            <ul class="pagination">
+		            <c:if test="${currentPage > 1 }">
+		            	<li class="previous"><a href="student/project/listtitles/-1/${currentPage-1 }" class="fui-arrow-left"></a></li>
+		            </c:if>
+		              <c:forEach var="x" begin="1" end="${countPage }" step="1">
+		              	<li <c:if test="${x == currentPage }">class="active"</c:if>>
+		              	<a href="student/project/listtitles/-1/${x }">${x }</a></li>
+		              </c:forEach>
+		              <c:if test="${currentPage < countPage }">
+		            	<li class="next"><a href="student/project/listtitles/-1/${currentPage+1 }" class="fui-arrow-right"></a></li>
+		            </c:if>   
+	            </ul>
+	         </div>
+         </c:if>
     </jsp:body>
 </myTemplate:template>

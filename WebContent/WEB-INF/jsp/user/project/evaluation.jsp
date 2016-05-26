@@ -27,79 +27,87 @@
 	<jsp:body>
 	<ol class="breadcrumb">
 	  <li><a href="">主页</a></li>
-	  <li><a href="project/projectmanagement">毕设管理</a></li>
+	  <li><a href="project/projectmanagement/stage">阶段管理</a></li>
 	  <li class="active">${typeZH }评审</li>
 	</ol>
-
-	<c:if test="${studentProjects.size()!=0 }">
-		<form class="form-horizontal col-md-offset-1" action="project/updateevaluation" method="POST">
-			<div class="form-group ">
-				<label class="checkbox col-sm-5 col-md-1" id="allcheck">
-					<input type="checkbox" data-toggle="checkbox" id="allchecked">
-						<span class="label label-danger checkboxspan">
-							全选
-						</span>
-				</label>
-			</div>
-			<div class="form-group">
-				<c:forEach items="${studentProjects }" var="i" varStatus="s">
-					<div class="form-group col-sm-5 col-md-3">
-						<label class="checkbox">
-							<input type="checkbox" class="student" data-toggle="checkbox" name="studentIds"  value="${i.student.id }">
-								<span class="label label-success checkboxspan col-md-10">${i.student.name };${i.student.studentId }</span>
-						</label>
-					</div>
-				</c:forEach>
-			</div>
-			<input type="hidden" name="type" value="${type }">
-			<div class="form-group">
-				<div class="col-md-1">
-					<button type="submit" class="btn btn-primary btn-wide">提交</button>
+	<c:if test="${message!=null }">
+		<div class="alert alert-warning" role="alert"><strong>${message }</strong></div>
+	</c:if>
+	<c:if test="${message==null }">
+		<c:if test="${type=='opening' }">
+			<p class="text-danger col-md-offset-1">说明：第一次未开题的学生无法进行评审</p>
+		</c:if>
+		<c:if test="${studentProjects.size()!=0 }">
+			<form class="form-horizontal col-md-offset-1" action="project/updateevaluation" method="POST">
+				<div class="form-group ">
+					<label class="checkbox col-sm-5 col-md-1" id="allcheck">
+						<input type="checkbox" data-toggle="checkbox" id="allchecked">
+							<span class="label label-danger checkboxspan">
+								全选
+							</span>
+					</label>
 				</div>
+				<div class="form-group">
+					<c:forEach items="${studentProjects }" var="i" varStatus="s">
+						<div class="form-group col-sm-5 col-md-3">
+							<label class="checkbox">
+								<input type="checkbox" class="student" data-toggle="checkbox" name="studentIds"  value="${i.student.id }">
+									<span class="label label-success checkboxspan col-md-10">${i.student.name };${i.student.studentId }</span>
+							</label>
+						</div>
+					</c:forEach>
+				</div>
+				<input type="hidden" name="type" value="${type }">
+				<div class="form-group">
+					<div class="col-md-1">
+						<button type="submit" class="btn btn-primary btn-wide">提交</button>
+					</div>
+				</div>
+			</form>
+		</c:if>
+		<c:if test="${evaluations.size()!=0}">
+		<hr>
+			<h6 class="col-md-offset-1">评审结果</h6>
+			<div class="table-responsive col-md-offset-1">
+				<table class="table table-striped table-condensed table-hover">
+				<thead>
+					<tr>
+						 <th>#</th>
+		                 <th>学号</th>
+		                 <th>姓名</th>
+	                     <th>导师评审</th>
+	                     <th>专业评审</th>
+					</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${evaluations }" var="i" varStatus="s">
+								<tr>
+									<td>${s.count }</td>
+									<td>${i.student.student.studentId }</td>
+									<td>${i.student.student.name }</td>
+									<td>
+										<c:if test="${i.teacherEval == true }">
+											<span class="label label-success">是</span>
+										</c:if>
+										<c:if test="${i.teacherEval == false }">
+											<span class="label label-danger">否</span>
+										</c:if>
+									</td>
+									<td>
+										<c:if test="${i.managerEval == true }">
+											<span class="label label-success">是</span>
+										</c:if>
+										<c:if test="${i.managerEval == false }">
+											<span class="label label-danger">否</span>
+										</c:if>
+									</td>
+								</tr>
+					</c:forEach>
+					</tbody>
+			</table>
 			</div>
-		</form>
+		</c:if>
 	</c:if>
-	<c:if test="${evaluations.size()!=0 && evaluations[0]!=null}">
-	<hr>
-		<h6>评审结果</h6>
-		<div class="table-responsive">
-			<table class="table table-striped table-condensed table-hover">
-			<thead>
-				<tr>
-					 <th>#</th>
-	                 <th>学号</th>
-	                 <th>姓名</th>
-                     <th>导师评审</th>
-                     <th>专业评审</th>
-				</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${evaluations }" var="i" varStatus="s">
-							<tr>
-								<td>${s.count }</td>
-								<td>${i.student.student.studentId }</td>
-								<td>${i.student.student.name }</td>
-								<td>
-									<c:if test="${i.teacherEval == true }">
-										<span class="label label-success">是</span>
-									</c:if>
-									<c:if test="${i.teacherEval == false }">
-										<span class="label label-danger">否</span>
-									</c:if>
-								</td>
-								<td>
-									<c:if test="${i.managerEval == true }">
-										<span class="label label-success">是</span>
-									</c:if>
-									<c:if test="${i.managerEval == false }">
-										<span class="label label-danger">否</span>
-									</c:if>
-								</td>
-							</tr>
-				</c:forEach>
-				</tbody>
-		</table>
-		</div>
-	</c:if>
+	
     </jsp:body>
 </myTemplate:template>

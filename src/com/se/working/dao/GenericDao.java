@@ -59,6 +59,12 @@ public abstract class GenericDao<T, ID extends Serializable> {
 		// TODO Auto-generated method stub
 		return sessionFactory.getCurrentSession().createCriteria(clazz).addOrder(org.hibernate.criterion.Order.asc("id")).list();
 	}
+	@SuppressWarnings("unchecked")
+	public List<T> list(int firstResult, int maxResults) {
+		return sessionFactory.getCurrentSession().createCriteria(clazz)
+				.addOrder(org.hibernate.criterion.Order.asc("id")).setFirstResult(firstResult).setMaxResults(maxResults)
+				.list();
+	}
 	
 	/**
 	 * 批量添加信息

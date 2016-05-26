@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,7 +26,11 @@ public class Notification {
 	private String comment;
 	// 地点
 	private String location;
+	// 分数
 	private int point;
+	// 发布者
+	@ManyToOne
+	private TeacherTask createUser;
 	// 结束时间
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar endTime;
@@ -102,6 +107,14 @@ public class Notification {
 
 	public void setPoint(int point) {
 		this.point = point;
+	}
+
+	public TeacherTask getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(TeacherTask createUser) {
+		this.createUser = createUser;
 	}
 
 }

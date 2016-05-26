@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.se.working.entity.Student;
-import com.se.working.entity.User;
-import com.se.working.entity.UserAuthority.UserAuthorityLevel;
 import com.se.working.service.StudentService;
 
 @Controller
@@ -60,7 +58,7 @@ public class StudentController {
 		Student student = (Student) session.getAttribute(USER);
 		student.setPhoneNumber(phoneNumber);
 		studentService.update(student);
-		return redirect + "main";
+		return redirect + "/student/main";
 	}
 	
 	/**
@@ -79,11 +77,10 @@ public class StudentController {
 		if (student != null) {
 			session.setAttribute("level", student.getUserAuthority().getLevel());
 			session.setAttribute(USER, student);
-			return redirect + "main";
+			return redirect + "/student/main";
 		}
-		
 		errorMap.addFlashAttribute("studentexception", "学号或密码错误！");
-		return redirect + "login";
+		return redirect + "/login";
 	}
 	
 	/*
@@ -97,18 +94,11 @@ public class StudentController {
 	 */
 	@RequestMapping(path = "/{viewpath}", method = RequestMethod.GET)
 	public String getView(@PathVariable String viewpath) {
-		if (viewpath.endsWith("login")||viewpath.endsWith("main")) {
-			return redirect + "/" + viewpath;
-		}
 		return basePath + viewpath;
 	}
 
 	@RequestMapping(path = "/{root}/{viewpath}", method = RequestMethod.GET)
 	public String getView(@PathVariable String root, @PathVariable String viewpath) {
-		
-		if (viewpath.endsWith("login")||viewpath.endsWith("main")) {
-			return viewpath;
-		}
 		return basePath + root + "/" + viewpath;
 	}
 }

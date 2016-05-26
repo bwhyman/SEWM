@@ -21,35 +21,6 @@
 					}
 					
 				});
-				
-				/* $('.student').on('change.radiocheck', function() {
-					var flag = true;
-					$('.student').each(function(){
-						if(!$(this).prop('checked')){
-							flag = false;
-						}
-					});
-					if (flag) {
-						$('#allcheck').radiocheck('check');
-					}
-				}); */
-				
-				if('${currentPage}'=='1'){
-					$('#previous').addClass('disabled');
-					$('#previous').click(function(){
-						return false;
-					})
-				}else{
-					$('#previous').removeClass('disabled');
-				}
-				if('${currentPage}'=='${countPage}'){
-					$('#next').addClass('disabled');
-					$('#next').click(function(){
-						return false;
-					})
-				}else{
-					$('#next').removeClass('disabled');
-				}
 			})
 		</script>
 	</jsp:attribute>
@@ -92,10 +63,10 @@
 	<c:if test="${evaluations.size()!=0 }">
 		<h3>评审结果</h3>
 		<c:if test="${currentPage*15>=count }">
-			(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
+			<div>(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })</div>
 		</c:if>
 		<c:if test="${currentPage*15<count }">
-			(${(currentPage-1)*15+1 }&nbsp;-&nbsp;${currentPage*15 }&nbsp;/&nbsp;${count })
+			<div>(${(currentPage-1)*15+1 }&nbsp;-&nbsp;${currentPage*15 }&nbsp;/&nbsp;${count })</div>
 		</c:if>
 		<div class="table-responsive">
 			<table class="table table-striped table-condensed table-hover">
@@ -136,28 +107,20 @@
 		</table>
 		</div>
 		<c:if test="${evaluations.size()!=0 }">
-			<nav>
-			  <ul class="pagination pagination-lg">
-			    <li id="previous">
-			      <a href="admin/project/listevaluation/${type }/${currentPage-1 }" aria-label="Previous">
-			        <span aria-hidden="true">&laquo;</span>
-			      </a>
-			    </li>
-			    <c:forEach begin="1" end="${countPage }" var="c">
-			    	<c:if test="${c==currentPage }">
-			    		<li class="active"><a href="admin/project/listevaluation/${type }/${c }">${c }</a></li>
-			    	</c:if>
-			    	<c:if test="${c!=currentPage }">
-			    		<li><a href="admin/project/listevaluation/${type }/${c }">${c }</a></li>
-			    	</c:if>
-			    </c:forEach>
-			    <li id="next">
-			      <a href="admin/project/listevaluation/${type }/${currentPage+1 }" aria-label="Next">
-			        <span aria-hidden="true">&raquo;</span>
-			      </a>
-			    </li>
-			  </ul>
-		</nav>
+			<div>
+            <ul class="pagination">
+            <c:if test="${currentPage > 1 }">
+            	<li class="previous"><a href="admin/project/listevaluation/${type }/${currentPage-1}" class="fui-arrow-left"></a></li>
+            </c:if>
+              <c:forEach var="x" begin="1" end="${countPage }" step="1">
+              	<li <c:if test="${x == currentPage }">class="active"</c:if>>
+              	<a href="admin/project/listevaluation/${type }/${x }">${x }</a></li>
+              </c:forEach>
+              <c:if test="${currentPage < countPage }">
+            	<li class="next"><a href="admin/project/listevaluation/${type }/${currentPage+1 }" class="fui-arrow-right"></a></li>
+            </c:if>   
+            </ul>
+          </div>
 		</c:if>
 	</c:if>
     </jsp:body>

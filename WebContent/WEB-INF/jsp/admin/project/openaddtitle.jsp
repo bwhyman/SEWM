@@ -48,15 +48,16 @@
 	
 	<c:if test="${exception != null}">
 		&nbsp;&nbsp;
-		<div class="alert alert-danger alert-dismissable" role="alert">
+		<div class="alert alert-danger alert-dismissable col-md-9 col-md-offset-1" role="alert">
   			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 			</button><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <strong>错误！</strong> ${exception }
-</div>
+		  <strong>错误！</strong> ${exception }
+		</div>
+<br><br><br>
 </c:if>     
 	
- 	<form class="form-horizontal" enctype="multipart/form-data" action="admin/project/startproject" method="post">
+ 	<form class="form-horizontal" enctype="multipart/form-data" action="admin/project/openaddtitle" method="post">
  	
  		<div class="form-group">
 			<label for="opened" class="col-sm-2 col-md-2 control-label">开启题目管理</label>

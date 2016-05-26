@@ -14,22 +14,6 @@
 	<script>
 		$(function() {
 			$('#'+'${type}').attr('class','btn btn-danger');
-			if('${currentPage}'=='1'){
-				$('#previous').addClass('disabled');
-				$('#previous').click(function(){
-					return false;
-				})
-			}else{
-				$('#previous').removeClass('disabled');
-			}
-			if('${currentPage}'=='${countPage}'){
-				$('#next').addClass('disabled');
-				$('#next').click(function(){
-					return false;
-				})
-			}else{
-				$('#next').removeClass('disabled');
-			}
 		})
 	</script>
 </jsp:attribute>
@@ -39,8 +23,8 @@
   <li class="active">我的任务</li>
 </ol>
 
-	<a id="undone" class="btn btn-primary" href="task/listmytask/undone/1" role="button">未完成</a>
-	<a id="done" class="btn btn-primary" href="task/listmytask/done/1" role="button">已完成</a>
+	<a id="undone" class="btn btn-primary" href="task/listmytask/undone" role="button">未完成</a>
+	<a id="done" class="btn btn-primary" href="task/listmytask/done" role="button">已完成</a>
 	
 	
 	<c:if test="${user.userAuthority.level>=15 }"></c:if>
@@ -48,17 +32,9 @@
 	我的任务：所有<span class="label label-success checkboxspan">未关闭</span>
 	状态任务下的，未完成、已完成任务，即，当前仍可提交、修改的任务<br>
 	任务状态：开启，正常完成任务；已过期：已超过截止时间，但仍可提交，提交后按任务分值扣分；
-	已关闭：任务正式结束，仍可查看任务详细信息
+	已关闭：任务正式结束，仍可查看任务详细信息<br>
+	
 	</p>
-	<c:if test="${details.size()!=0 }">
-		<c:if test="${currentPage*15>=count }">
-					(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
-				</c:if>
-				<c:if test="${currentPage*15<count }">
-					(${(currentPage-1)*15+1 }&nbsp;-&nbsp;${currentPage*15 }&nbsp;/&nbsp;${count })
-				</c:if>
-		<br>
-	</c:if>
 		<div class="table-responsive">
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
@@ -75,7 +51,7 @@
 			<tbody>
 				<c:forEach items="${details }" var="d" varStatus="s">
 				<tr>
-				<td>${s.count + (currentPage-1)*15 }</td>
+				<td>${s.count }</td>
 				<td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${d.fileTask.endTime.getTime() }"/></td>
 				<td>${d.fileTask.name }</td>
 								<td>
@@ -109,29 +85,5 @@
 			</tbody>
 	</table>
 	</div>
-	<c:if test="${details.size()!=0 }">
-			<nav>
-			  <ul class="pagination pagination-lg">
-			    <li id="previous">
-			      <a href="task/listmytask/${type }/${currentPage-1 }" aria-label="Previous">
-			        <span aria-hidden="true">&laquo;</span>
-			      </a>
-			    </li>
-			    <c:forEach begin="1" end="${countPage }" var="c">
-			    	<c:if test="${c==currentPage }">
-			    		<li class="active"><a href="task/listmytask/${type }/${c }">${c }</a></li>
-			    	</c:if>
-			    	<c:if test="${c!=currentPage }">
-			    		<li><a href="task/listmytask/${type }/${c }">${c }</a></li>
-			    	</c:if>
-			    </c:forEach>
-			    <li id="next">
-			      <a href="task/listmytask/${type }/${currentPage+1 }" aria-label="Next">
-			        <span aria-hidden="true">&raquo;</span>
-			      </a>
-			    </li>
-			  </ul>
-			</nav>
-		</c:if>
     </jsp:body>
 </myTemplate:template>

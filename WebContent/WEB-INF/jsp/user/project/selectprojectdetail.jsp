@@ -76,24 +76,27 @@
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>
-  <li><a href="project/projectmanagement">毕设管理</a></li>
+  <li><a href="project/projectmanagement/selecttitle">选题信息</a></li>
   <li class="active">选题信息</li>
 </ol>
 	<c:if test="${titles.size()>0 }">
+	
 		<form class="form-horizontal" action="project/confirmselectproject" method="POST">
-			<c:forEach items="${titles }" var="t">
-					<div class="form-group">
-						<div class="col-sm-12 col-md-10 col-md-offset-1">${t.name }</div>
-					</div>
-					<c:forEach items="${t.selectedTitleDetails }" var="st">
-						<div class="form-group">
-							<div class="col-sm-2 col-md-1 control-label"></div>
-							<label class="radio col-md-6 col-md-offset-1 myradios" style="font-size: 1em;">
-						         <input type="radio" data-toggle="radio" class="myradio" name="radio${t.id} " value="${st.student.student.id }" data-radiocheck-toggle="radio" required>
-						          ${st.student.student.name }(&nbsp;tel:&nbsp;${st.student.student.phoneNumber }&nbsp;)
-						    </label>
-						</div>
+			<c:forEach items="${titles }" var="t" varStatus="s">
+				<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">${s.count}.${t.name }</div>
+				  <div class="panel-body">
+				    <c:forEach items="${t.selectedTitleDetails }" var="st">
+							<div class="form-group">
+								<label class="radio col-md-6 col-md-offset-1 myradios" style="font-size: 1em;">
+							         <input type="radio" data-toggle="radio" class="myradio" name="radio${t.id} " value="${st.student.student.id }" data-radiocheck-toggle="radio" required>
+							          ${st.student.student.name }(&nbsp;tel:&nbsp;${st.student.student.phoneNumber }&nbsp;)
+							    </label>
+							</div>
 					</c:forEach>
+				  </div>
+				</div>
 			</c:forEach>
 			<!-- <div class="form-group">
 				<div class="col-sm-10 col-md-11 ">
@@ -101,12 +104,11 @@
 				</div>
 			</div> -->
 			<div class="form-group">
-				<div class="col-md-1 col-md-offset-1">
+				<div class="col-md-1">
 					<button type="button" class="btn btn-primary btn-wide" id="mybtn">提交</button>
 				</div>
 			</div>
 		</form>
 	</c:if>
-	
     </jsp:body>
 </myTemplate:template>

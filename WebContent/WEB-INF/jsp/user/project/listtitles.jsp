@@ -23,36 +23,20 @@
 				})
 				return false;
 			})
-			if('${currentPage}'=='1'){
-				$('#previous').addClass('disabled');
-				$('#previous').click(function(){
-					return false;
-				})
-			}else{
-				$('#previous').removeClass('disabled');
-			}
-			if('${currentPage}'=='${countPage}'){
-				$('#next').addClass('disabled');
-				$('#next').click(function(){
-					return false;
-				})
-			}else{
-				$('#next').removeClass('disabled');
-			}
 		})
 	</script>
 </jsp:attribute>
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>
-  <li><a href="project/projectmanagement">毕设管理</a></li>
+  <li><a href="project/projectmanagement/titleinfo">题目信息</a></li>
   <li class="active">题目信息</li>
 </ol>
 	<c:forEach items="${teachers }" var="t">
 		<a id="${t.id }" class="btn btn-primary" href="project/listtitles/${t.id }/1" role="button" style="margin-bottom: 2px;">${t.user.name }(${t.leadNum })</a>
 	</c:forEach>
 	<a id="-1" class="btn btn-primary" href="project/listtitles/-1/1" role="button">全部题目</a>
-	<c:if test="${type==-1 }">
+	<c:if test="${type==-1 && fileDetails.size()>0 }">
 			<br>
 				<c:if test="${currentPage*15>=count }">
 					(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
@@ -101,29 +85,22 @@
 			</c:forEach>
 			</tbody>
 	</table>
-	<c:if test="${type==-1 }">
-			<nav>
-			  <ul class="pagination pagination-lg">
-			    <li id="previous">
-			      <a href="project/listtitles/-1/${currentPage-1 }" aria-label="Previous">
-			        <span aria-hidden="true">&laquo;</span>
-			      </a>
-			    </li>
-			    <c:forEach begin="1" end="${countPage }" var="c">
-			    	<c:if test="${c==currentPage }">
-			    		<li class="active"><a href="project/listtitles/-1/${c }">${c }</a></li>
-			    	</c:if>
-			    	<c:if test="${c!=currentPage }">
-			    		<li><a href="project/listtitles/-1/${c }">${c }</a></li>
-			    	</c:if>
-			    </c:forEach>
-			    <li id="next">
-			      <a href="project/listtitles/-1/${currentPage+1 }" aria-label="Next">
-			        <span aria-hidden="true">&raquo;</span>
-			      </a>
-			    </li>
-			  </ul>
-			</nav>
+	<c:if test="${type==-1 && fileDetails.size()>0 }">
+		<div>
+            <ul class="pagination">
+	            <c:if test="${currentPage > 1 }">
+	            	<li class="previous"><a href="project/listtitles/-1/${currentPage-1 }" class="fui-arrow-left"></a></li>
+	            </c:if>
+	              <c:forEach var="x" begin="1" end="${countPage }" step="1">
+	              	<li <c:if test="${x == currentPage }">class="active"</c:if>>
+	              	<a href="project/listtitles/-1/${x }">${x }</a></li>
+	              </c:forEach>
+	              <c:if test="${currentPage < countPage }">
+	            	<li class="next"><a href="project/listtitles/-1/${currentPage+1 }" class="fui-arrow-right"></a></li>
+	            </c:if>   
+            </ul>
+         </div>
+			
 		</c:if>
 	</div>
     </jsp:body>

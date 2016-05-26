@@ -24,7 +24,6 @@ import com.se.working.task.entity.Notification;
 import com.se.working.task.entity.TeacherTask;
 import com.se.working.task.service.TaskService;
 import com.se.working.util.DateUtils;
-import com.se.working.util.FileTaskUtils;
 
 @Controller
 @RequestMapping("/admin/task/")
@@ -76,17 +75,15 @@ public class AdminTaskController {
 		// 开始操作
 		fileTask.setEndTime(endTime);
 		User user = (User) session.getAttribute(USER);
-		// 单一文件处理
-		if (fileTask.isSingleFile()) {
-			
-		}
+		
 		// 创建文件任务，基于单文件、普通文件有不同实现
 		long fileTaskId = taskService.addFileTask(fileTask, filetypeid, teachers, uploadFile, user.getId());
-		if (mytask!=null && mytask) {
+			
+		if (mytask != null) {
 			taskService.implementFileTask(user.getId(), fileTaskId, uploadFile);
 		}
 		uploadFile = null;
-		return redirect +"/task/list/started/1";
+		return redirect +"/task/list/started";
 
 	}
 	
@@ -185,7 +182,7 @@ public class AdminTaskController {
 	 */
 	@RequestMapping(path = "/addnotification", method = RequestMethod.POST)
 	public String addNotifcation(@DateTimeFormat(pattern="yyyy-MM-dd HH:mm") Date datetime, 
-			String comment, boolean advanced, int point, long[] teachers) {
+			String comment, boolean advanced, int point, long[] teachers,  HttpSession session) {
 		Notification notification = new Notification();
 		notification.setComment(comment);
 		if (datetime != null) {
@@ -196,7 +193,8 @@ public class AdminTaskController {
 		if (advanced) {
 			notification.setPoint(point);
 		}
-		
+		User user = (User) session.getAttribute(USER);
+		notification.setCreateUser(new TeacherTask(user.getId()));
 		taskService.addNotification(notification, teachers);
 		
 		return redirect + "addnotification";

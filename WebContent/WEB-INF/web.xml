@@ -9,7 +9,7 @@
 	</welcome-file-list>
 	<context-param>
 		<param-name>webAppRootKey</param-name>
-		<param-value>webapp.root</param-value>
+		<param-value>SEWM.root</param-value>
 	</context-param>
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>

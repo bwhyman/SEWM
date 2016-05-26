@@ -10,32 +10,10 @@
 %>
 
 <myTemplate:template>
-	<jsp:attribute name="footer">
-		<script>
-			$(function(){
-				if('${currentPage}'=='1'){
-					$('#previous').addClass('disabled');
-					$('#previous').click(function(){
-						return false;
-					})
-				}else{
-					$('#previous').removeClass('disabled');
-				}
-				if('${currentPage}'=='${countPage}'){
-					$('#next').addClass('disabled');
-					$('#next').click(function(){
-						return false;
-					})
-				}else{
-					$('#next').removeClass('disabled');
-				}
-			})
-		</script>
-	</jsp:attribute>
 	<jsp:body>
 	<ol class="breadcrumb">
 	  <li><a href="">主页</a></li>
-	  <li><a href="project/projectmanagement">毕设管理</a></li>
+	  <li><a href="project/projectmanagement/stage">阶段管理</a></li>
 	  <li class="active">${typeZH }评审结果</li>
 	</ol>
 	<c:if test="${evaluations.size()!=0 }">
@@ -84,28 +62,20 @@
 		</table>
 		</div>
 		<c:if test="${evaluations.size()!=0 }">
-			<nav>
-			  <ul class="pagination pagination-lg">
-			    <li id="previous">
-			      <a href="project/listevaluation/${type }/${currentPage-1 }" aria-label="Previous">
-			        <span aria-hidden="true">&laquo;</span>
-			      </a>
-			    </li>
-			    <c:forEach begin="1" end="${countPage }" var="c">
-			    	<c:if test="${c==currentPage }">
-			    		<li class="active"><a href="project/listevaluation/${type }/${c }">${c }</a></li>
-			    	</c:if>
-			    	<c:if test="${c!=currentPage }">
-			    		<li><a href="project/listevaluation/${type }/${c }">${c }</a></li>
-			    	</c:if>
-			    </c:forEach>
-			    <li id="next">
-			      <a href="project/listevaluation/${type }/${currentPage+1 }" aria-label="Next">
-			        <span aria-hidden="true">&raquo;</span>
-			      </a>
-			    </li>
-			  </ul>
-		</nav>
+			<div>
+	            <ul class="pagination">
+	            <c:if test="${currentPage > 1 }">
+	            	<li class="previous"><a href="project/listevaluation/${type }/${currentPage-1 }" class="fui-arrow-left"></a></li>
+	            </c:if>
+	              <c:forEach var="x" begin="1" end="${countPage }" step="1">
+	              	<li <c:if test="${x == currentPage }">class="active"</c:if>>
+	              	<a href="project/listevaluation/${type }/${x }">${x }</a></li>
+	              </c:forEach>
+	              <c:if test="${currentPage < countPage }">
+	            	<li class="next"><a href="project/listevaluation/${type }/${currentPage+1 }" class="fui-arrow-right"></a></li>
+	            </c:if>   
+	            </ul>
+          </div>
 		</c:if>
 	</c:if>
     </jsp:body>

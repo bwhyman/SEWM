@@ -1,9 +1,7 @@
 package com.se.working.controller.user;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +20,7 @@ import com.se.working.exception.SEWMException;
 import com.se.working.task.entity.FileTask;
 import com.se.working.task.entity.FileTaskDetail;
 import com.se.working.task.entity.FileTaskStatus.FileTaskStatusType;
-import com.se.working.task.entity.Notification;
-import com.se.working.task.service.NotificationService;
 import com.se.working.task.service.TaskService;
-import com.se.working.util.EnumConstant;
 import com.se.working.util.FileTaskUtils;
 
 @Controller
@@ -36,54 +31,6 @@ public class UserTaskController {
 	private String basePath = "/user/task/";
 	@Autowired
 	private TaskService taskService;
-	@Autowired
-	private NotificationService notifiService;
-	
-	@RequestMapping(path = "/notificationdetail/{id}")
-	public String getNotificationDetail(@PathVariable long id, Map<String, Object> vMap){
-		Notification notification = notifiService.findById(id);
-		boolean isExpired = false;
-		if (notification.getEndTime().getTime().before(new Date())) {
-			isExpired = true;
-		} 
-		vMap.put("notification", notification);
-		vMap.put("isExpired", isExpired);
-		return basePath + "notificationdetail";
-	}
-	
-	/**
-	 * 查询通知信息
-	 * @param type
-	 * @param vMap
-	 * @return
-	 */
-	@RequestMapping(path = "/listnotification/{type}/{page}", method = RequestMethod.GET)
-	public String listNotification(@PathVariable String type, @PathVariable int page, Map<String, Object> vMap, HttpSession session){
-		List<Notification> notifications = new ArrayList<>();
-		long count = 0;
-		switch (type) {
-		case "expired":
-		case "started":
-			notifications = notifiService.findNotifiByEndTime(type,page);
-			count = notifiService.getCountByStatusType(type);
-			break;
-		case "all":
-			notifications = notifiService.findByPage(page);
-			count = notifiService.findAll().size();
-			break;
-		default:
-			return basePath + "error";
-		}
-		
-		Collections.reverse(notifications);
-		vMap.put("type", type);
-		vMap.put("notifications", notifications);
-		vMap.put("count", count);
-		vMap.put("currentPage", page);
-		vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
-				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
-		return basePath + "listnotification";
-	}
 
 	/**
 	 * 列出任务
@@ -91,28 +38,22 @@ public class UserTaskController {
 	 * @param vMap
 	 * @return
 	 */
-	@RequestMapping(path = "/list/{tasktype}/{page}", method = RequestMethod.GET)
-	public String listTasks(@PathVariable String tasktype, @PathVariable int page, Map<String, Object> vMap, HttpSession session) {
+	@RequestMapping(path = "/list/{tasktype}", method = RequestMethod.GET)
+	public String listTasks(@PathVariable String tasktype, Map<String, Object> vMap, HttpSession session) {
 
 		List<FileTask> fileTasks = new ArrayList<>();
-		long count = 0;
 		switch (tasktype) {
 		case "started":
-			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatusType.STARTED, page);
-			count = taskService.getCountTaskByStatusId(FileTaskStatusType.STARTED);
+			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatusType.STARTED);
 			break;
 		case "expired":
-			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatusType.EXPIRED, page);
-			count = taskService.getCountTaskByStatusId(FileTaskStatusType.EXPIRED);
+			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatusType.EXPIRED);
 			break;
 		case "closed":
-			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatusType.CLOSED, page);
-			count = taskService.getCountTaskByStatusId(FileTaskStatusType.CLOSED);
+			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatusType.CLOSED);
 			break;
 		case "all":
-			fileTasks = taskService.findFileTasks(page);
-			//-1代表所有文件类型总数
-			count = taskService.getCountTaskByStatusId(-1);
+			fileTasks = taskService.findFileTasks();
 			break;
 		default:
 			return basePath + "error";
@@ -121,10 +62,6 @@ public class UserTaskController {
 		Collections.reverse(fileTasks);
 		vMap.put("tasks", fileTasks);
 		vMap.put("type", tasktype);
-		vMap.put("count", count);
-		vMap.put("currentPage", page);
-		vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
-				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		return basePath + "listtask";
 	}
 
@@ -135,36 +72,28 @@ public class UserTaskController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(path = "/listmytask/{tasktype}/{page}", method = RequestMethod.GET)
-	public String listMyTasks(@PathVariable String tasktype, @PathVariable int page, Map<String, Object> vMap, HttpSession session) {
+	@RequestMapping(path = "/listmytask/{tasktype}", method = RequestMethod.GET)
+	public String listMyTasks(@PathVariable String tasktype, Map<String, Object> vMap, HttpSession session) {
 		User user = (User) session.getAttribute(USER);
-		long count = 0;
+
 		List<FileTaskDetail> details = new ArrayList<>();
 		switch (tasktype) {
 		case "undone":
 			// 开启状态，未完成
-			//details = taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.STARTED);
+			details = taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.STARTED);
 			// 过期状态，未完成
-			//details.addAll(taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.EXPIRED));
-			details = taskService.findFileTaskDetails(user.getId(), false, page);
-			count = taskService.getCountByUserId(user.getId(), false);
+			details.addAll(taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.EXPIRED));
 			break;
 		case "done":
 			// 开启状态，已完成
-			//details = taskService.findFileTaskDetails(user.getId(), true, FileTaskStatusType.STARTED);
+			details = taskService.findFileTaskDetails(user.getId(), true, FileTaskStatusType.STARTED);
 			// 过期状态，已完成
-			//details.addAll(taskService.findFileTaskDetails(user.getId(), true, FileTaskStatusType.EXPIRED));
-			details = taskService.findFileTaskDetails(user.getId(), true, page);
-			count = taskService.getCountByUserId(user.getId(), true);
+			details.addAll(taskService.findFileTaskDetails(user.getId(), true, FileTaskStatusType.EXPIRED));
 			break;
 		}
 		Collections.reverse(details);
 		vMap.put("details", details);
 		vMap.put("type", tasktype);
-		vMap.put("count", count);
-		vMap.put("currentPage", page);
-		vMap.put("countPage", count%EnumConstant.values()[0].getPageCount()==0
-				?count/EnumConstant.values()[0].getPageCount():count/EnumConstant.values()[0].getPageCount()+1);
 		return basePath + "listmytask";
 	}
 
@@ -213,16 +142,12 @@ public class UserTaskController {
 	 * 
 	 * @param directory
 	 * @return
-	 * @throws SEWMException
 	 */
 	@RequestMapping(path = "/downloadzip/{directory}/", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> getFileZip(@PathVariable String directory) {
-		// 基于任务文件夹相对路径，生成相同名称的zip压缩文件
-		File file = FileTaskUtils.zipDirectory(directory);
-		// 以字节流返回
-		ResponseEntity<byte[]> entity = FileTaskUtils.downloadFile(file);
-		// 压缩文件已转为字节数组，可以删除压缩文件
-		file.delete();
+		
+		ResponseEntity<byte[]> entity = FileTaskUtils.toResponseEntity(directory, FileTaskUtils.zipDirectory(directory));
+	
 		return entity;
 	}
 

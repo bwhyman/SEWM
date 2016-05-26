@@ -1,7 +1,7 @@
 package com.se.working.util;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +18,20 @@ import com.se.working.entity.Classes;
 import com.se.working.entity.Student;
 import com.se.working.exception.SEWMException;
 
+/**
+ * 解析学生信息Excel
+ * @author XuQingQing
+ *
+ */
 public class StudentExcelUtil {
 
 	public static String REGEX_STUDENTID = "^[0-9]{8,}$";
 	public static String REGEX_ClASSES = "软件(一|二)班";
 	public static String REGEX_SEX = "(男|女)";
-	public static List<Student> getExcel(File excelFile) {
+	public static List<Student> getExcel(InputStream is) {
 		Workbook workbook = null;
 		try {
-			workbook = WorkbookFactory.create(excelFile);
+			workbook = WorkbookFactory.create(is);
 			return getRow(workbook.getSheetAt(0));
 		 } catch (Exception e) {
 			// TODO Auto-generated catch block

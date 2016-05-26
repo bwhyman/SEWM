@@ -57,12 +57,13 @@
 	
 	<c:if test="${exception != null}">
 		&nbsp;&nbsp;
-		<div class="alert alert-danger alert-dismissable" role="alert">
+		<div class="alert alert-danger alert-dismissable col-md-9 col-md-offset-1" role="alert">
   			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 			</button><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <strong>错误！</strong> ${exception }
-</div>
+			<strong>错误！</strong> ${exception }
+		</div>
+<br><br><br>
 </c:if>     
 	
 	
@@ -84,7 +85,7 @@
 			</div>
 		</div>
 		<div class="form-group" id="myfileinput1">
-			<label for="uploadFile" class="col-sm-2 col-md-2 control-label">${typeRecodeCH }</label>
+			<label for="uploadFile" class="col-sm-2 col-md-2 control-label">答辩记录模板</label>
 			<div class="col-sm-10 col-md-8">
 				<input id="file-2" type="file" name="uploadFiles" multiple data-min-file-count="0" accept=".doc,.docx">
 			</div>

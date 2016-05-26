@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -26,6 +27,7 @@ public class ProjectFileDetail {
 	@ManyToOne
 	private ProjectTitle title;
 	@OneToMany(mappedBy = "projectFileDetail")
+	@OrderBy(value = "id DESC")
 	private Set<GuideRecord> guideRecords;
 
 	@Temporal(TemporalType.TIMESTAMP)

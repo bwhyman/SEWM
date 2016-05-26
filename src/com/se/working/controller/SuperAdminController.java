@@ -53,12 +53,6 @@ public class SuperAdminController {
 		return redirect+ "initsys";
 	}
 	
-	@RequestMapping(path = "/initProjectFileType", method = RequestMethod.POST)
-	public String initProjectFileType() {
-		superAdminService.initProjectFileType();
-		return redirect+ "initsys";
-	}
-	
 	
 	
 	/**

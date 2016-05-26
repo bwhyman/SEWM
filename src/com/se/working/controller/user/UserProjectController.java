@@ -49,7 +49,6 @@ public class UserProjectController {
 	 */
 	@RequestMapping(path = "/updateevaluation", method = RequestMethod.POST)
 	public String updateEvaluation(long[] studentIds, String type){
-		
 		if (studentIds!=null) {
 			switch (type) {
 			case "opening":
@@ -120,22 +119,34 @@ public class UserProjectController {
 	 */
 	@RequestMapping(path = "/listevaluation/{type}")
 	public String listEvaluation(@PathVariable String type, Map<String, Object> vMap, HttpSession session){
+		String typeZH = null;
 		long teacherId = ((User)session.getAttribute("user")).getId();
 		List<Evaluation> evaluations = null;
 		List<StudentProject> studentProjects = null;
-		String typeZH = null;
 		switch (type) {
 		case "opening":
+			if (projectService.isManageEval(FileTypes.OPENINGREPORT)) {
+				vMap.put("message", "本阶段评审已结束！");
+				break;
+			}
 			studentProjects = projectService.findByTeatherIdTypeId(teacherId, FileTypes.OPENINGREPORT);
 			evaluations = projectService.findEvalByTeatherIdTypeId(teacherId, FileTypes.OPENINGREPORT);
 			typeZH = "开题";
 			break;
 		case "interim":
+			if (projectService.isManageEval(FileTypes.INTERIMREPORT)) {
+				vMap.put("message", "本阶段评审已结束！");
+				break;
+			}
 			studentProjects = projectService.findByTeatherIdTypeId(teacherId, FileTypes.INTERIMREPORT);
 			evaluations = projectService.findEvalByTeatherIdTypeId(teacherId, FileTypes.INTERIMREPORT);
 			typeZH = "中期";
 			break;
 		case "paper":
+			if (projectService.isManageEval(FileTypes.PAPER)) {
+				vMap.put("message", "本阶段评审已结束！");
+				break;
+			}
 			studentProjects = projectService.findByTeatherIdTypeId(teacherId, FileTypes.PAPER);
 			evaluations = projectService.findEvalByTeatherIdTypeId(teacherId, FileTypes.PAPER);
 			typeZH = "终期";
@@ -411,7 +422,7 @@ public class UserProjectController {
 		projectService.updateProject(title, uploadfile);
 		
 		
-		return redirect + "listtitles/" + ((User)session.getAttribute("user")).getId();
+		return redirect + "listtitles/1/" + ((User)session.getAttribute("user")).getId();
 	}
 	
 	/**
@@ -447,7 +458,7 @@ public class UserProjectController {
 	
 	/**
 	 * 查看个人、全部教师的题目信息
-	 * @param type
+	 * @param type userId或者全部
 	 * @param vMap
 	 * @return
 	 */
@@ -477,8 +488,24 @@ public class UserProjectController {
 	 * @param vMap
 	 * @return
 	 */
-	@RequestMapping(path = "/projectmanagement")
-	public String projectManagement(Map<String, Object> vMap){
+	@RequestMapping(path = "/projectmanagement/{type}")
+	public String projectManagement(@PathVariable String type, Map<String, Object> vMap){
+		String typeZH = null;
+		switch (type) {
+		case "titleinfo":
+			typeZH = "题目信息";
+			break;
+		case "selecttitle":
+			typeZH = "选题信息";
+			break;
+		case "stage":
+			typeZH = "阶段管理";
+			break;
+		default:
+			break;
+		}
+		vMap.put("type", type);
+		vMap.put("typeZH", typeZH);
 		ProjectFileType demonstration = projectService.findFileTypeById(FileTypes.DEMONSTRATIONREPORT);
 		vMap.put("demonstration", demonstration);
 		return basePath + "projectmanagement";

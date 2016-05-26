@@ -40,7 +40,7 @@
 </ol>
 	<form class="form-horizontal" action="admin/invi/addspecinviinfo" method="POST">
 					<div class="form-group">
-						<label for="title" class="col-sm-2 col-md-1 control-label">类型</label>
+						<label for="title" class="col-sm-2 col-md-2 control-label">类型</label>
 						<div class="col-sm-10 col-md-4">
 						<select data-toggle="select" class="select select-primary mrs mbm" name="typeId">
 					<c:forEach items="${types }" var="t">
@@ -51,7 +51,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">日期</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">日期</label>
 						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="date">
 						<input type='text' class="form-control" name="date" required />
@@ -62,20 +62,20 @@
 					</div>
 
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">地点</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">地点</label>
 						<div class="col-sm-10 col-md-4">
 							<input type="text" class="form-control" placeholder="地点" required value="科学会堂" name="location">
 						</div>
 					</div>
 					
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">备注</label>
+						<label for="name" class="col-sm-2 col-md-2 control-label">备注</label>
 						<div class="col-sm-10 col-md-4">
 							<textarea class="form-control" rows="5" placeholder="备注" name="comment"></textarea>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="title" class="col-sm-2 col-md-1 control-label">分配</label>
+						<label for="title" class="col-sm-2 col-md-2 control-label">分配</label>
 						<div class="col-sm-10 col-md-4">
 						<select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info" name="checkeds" required>
 					<c:forEach items="${teachers }" var="t">
@@ -87,11 +87,9 @@
 					
 						
 					<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label"></div>
-						<div class="col-sm-10 col-md-2">
+						<div class="col-sm-2 col-md-2 control-label"></div>
+						<div class="col-sm-10 col-md-4">
 							<button type="submit" class="btn btn-primary btn-wide">提交</button>
-						</div>
-						<div class="col-sm-10 col-md-2">
 							<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>	
 						</div>
 					</div>

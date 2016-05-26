@@ -42,7 +42,7 @@
 	<jsp:body>
 		<ol class="breadcrumb">
 		<li><a href="">主页</a></li>
-		<li><a href="task/list/started/1">任务信息</a></li>
+		<li><a href="task/list/started">任务信息</a></li>
 		<li class="active">任务详细信息</li>
 	</ol>
 		<c:if test="${exception != null}">
@@ -94,15 +94,15 @@
 	</div>
 	<div class="form-horizontal">
 		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label">任务</div>
+			<div class="col-sm-2 col-md-1 control-label">任务</div>
 			<div class="col-sm-2 col-md-4">${task.name }</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label">说明</div>
+			<div class="col-sm-2 col-md-1 control-label">说明</div>
 			<div class="col-sm-2 col-md-4">${task.comment }</div>
 		</div>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label">教师</div>
+			<div class="col-sm-2 col-md-1 control-label">教师</div>
 			<div class="col-sm-2 col-md-8">
 				<c:forEach items="${task.fileTaskDetails }" var="d">
 					${d.teacher.user.name }; 
@@ -111,12 +111,12 @@
 		</div>
 		<c:if test="${task.singleFile == true }">
 		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label"><span class="label label-danger">任务类型</span></div>
+			<div class="col-sm-2 col-md-1 control-label"><span class="label label-danger">任务类型</span></div>
 			<div class="col-sm-2 col-md-4"><span class="label label-danger">单一文件</span></div>
 		</div>
 		</c:if>
 		<div class="form-group">
-			<div class="col-sm-2 col-md-2 control-label">模板</div>
+			<div class="col-sm-2 col-md-1 control-label">模板</div>
 			<div class="col-sm-2 col-md-4">
 				<c:if test="${task.templeteFile == null }">
 					无
@@ -130,7 +130,7 @@
 	<div class="form-horizontal">
 		<c:if test="${task.currentStatus.id < 3}">
 			<div class="form-group">
-				<div class="col-sm-2 col-md-2 control-label"></div>
+				<div class="col-sm-2 col-md-1 control-label"></div>
 				<div class="col-sm-10 col-md-5">
 					<a class="btn btn-primary btn-wide" role="button" id="implbutton">实现</a>
 					<c:if test="${user.userAuthority.level >=15 }">
@@ -158,20 +158,20 @@
 		<form class="form-horizontal" action="task/implementfiletask" enctype="multipart/form-data" method="POST">
 			<input type="hidden" value="${task.id }" name="taskid">
 			<div class="form-group">
-				<label for="name" class="col-sm-2 col-md-2 control-label">任务文件</label>
-				<div class="col-sm-10 col-md-6">
+				<label for="name" class="col-sm-2 col-md-1 control-label">任务文件</label>
+				<div class="col-sm-10 col-md-5">
 					<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="0" accept="${task.fileType.type }">
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-sm-2 col-md-2 control-label"></div>
+				<div class="col-sm-2 col-md-1 control-label"></div>
 				<div class="col-sm-10 col-md-5">
 					<button type="submit" class="btn btn-primary btn-wide">提交</button>
 					<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>
 				</div>
 			</div>
 		</form>
-		<!-- <p class="text-danger">说明: 
+		<p class="text-danger">说明: 
 	模板：教师需填写的模板文件，或发布者提供的参考文件，没有则为空<br>
 	单一文件：所有任务教师在同一模板文件中添加数据信息；
 	基于文档名称中的时间完成版本校验；<span class="label label-danger">勿修改文件名称</span><br>
@@ -180,7 +180,7 @@
 	例如，每位教师都需要上传课表文件，而没有上传的教师系统无法判断是其没有按时完成任务还是本学期没有课而无需完成上传任务。<br>
 	因此，教师可不选择上传文件而直接提交，或关闭上传文件功能后提交，则系统判定其任务完成<br>
 	重复上传自动覆盖原文件；上传文件后，再提交空文件，则删除原上传文件，但任务状态仍为完成。相当于删除文件。
-	</p>  -->
+	</p> 
 	</div>
 	
 	<div id="closediv" hidden>

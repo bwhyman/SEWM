@@ -29,10 +29,10 @@
   <strong>错误！</strong> ${exception }
 </div>
 </c:if>
- 	<form class="form-horizontal" action="admin/invi/importtimetabletask" method="post">
+ 	<form class="form-horizontal" enctype="multipart/form-data" action="admin/invi/importtimetabletask" method="post">
 			<div class="form-group">
 			<label for="title" class="col-sm-2 col-md-2 control-label">课表任务</label>
-			<div class="col-sm-10 col-md-3">
+			<div class="col-sm-10 col-md-4">
 				<select data-toggle="select" class="select select-primary mrs mbm" name="filetaskId">
 					<option>课表任务
 					<c:forEach items="${tasks }" var="t">
@@ -43,7 +43,7 @@
 		</div>
 		<div class="form-group">
 		<div class="col-sm-2 col-md-2 control-label"></div>
-		<div class="col-sm-10 col-md-3">
+		<div class="col-sm-10 col-md-4">
 			<button type="submit" class="btn btn-primary btn-wide">提交</button>
 		</div>
 	</div>

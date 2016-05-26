@@ -15,16 +15,19 @@
 	<jsp:body>
 	<ol class="breadcrumb">
 	  <li><a href="">主页</a></li>
-	  <li><a href="student/project/projectmanagement">毕设管理</a></li>
-	  <li class="active">${typeCH }</li>
-	  <li class="active">指导记录</li>
+	  <li><a href="student/project/projectmanagement/${type }">${typeZH }信息</a></li>
+	  <li class="active">${typeZH }指导记录</li>
 	</ol>
-	
+	<c:if test="${guideRecords==null ||guideRecords.size()==0 }">
+		<div class="alert alert-warning" role="alert">
+			<strong>当前无任何记录！</strong>
+		</div>
+	</c:if>
 	<div class="table-responsive">
 		<table class="table table-condensed">
-		
 			<tbody>
-				<c:forEach items="${guideRecords }" var="g" varStatus="s">
+				<c:if test="${guideRecords!=null && guideRecords.size()>0}">
+					<c:forEach items="${guideRecords }" var="g" varStatus="s">
 						<tr>
 							<td>#${s.count }</td>
 							<td>
@@ -54,7 +57,8 @@
 								</div>
 							</td>
 						</tr>
-			</c:forEach>
+				</c:forEach>
+			</c:if>
 			</tbody>
 	</table>
 	</div>

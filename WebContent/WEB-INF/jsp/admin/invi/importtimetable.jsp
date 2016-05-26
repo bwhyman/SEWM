@@ -48,11 +48,11 @@
 				<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="1" accept=".xls,.xlsx">
 			</div>
 		</div>
-		<!-- <div class="form-group">
+		<div class="form-group">
 			<div class="col-sm-10 col-md-8">
 				<p class="text-danger">说明: 自动判断是否为课表格式文件；仅专业教师课表可以导入；导入课表自动清空以前课程信息；</p>
 			</div>
-		</div> -->
+		</div>
 	</form>
 	
 	<c:if test="${courses != null }">

@@ -14,22 +14,6 @@
 	<script>
 		$(function() {
 			$('#'+'${type}').attr('class','btn btn-danger');
-			if('${currentPage}'=='1'){
-				$('#previous').addClass('disabled');
-				$('#previous').click(function(){
-					return false;
-				})
-			}else{
-				$('#previous').removeClass('disabled');
-			}
-			if('${currentPage}'=='${countPage}'){
-				$('#next').addClass('disabled');
-				$('#next').click(function(){
-					return false;
-				})
-			}else{
-				$('#next').removeClass('disabled');
-			}
 		})
 	</script>
 </jsp:attribute>
@@ -38,28 +22,28 @@
   <li><a href="">主页</a></li>
   <li class="active">监考信息</li>
 </ol>
-	<a id="unassinvi" class="btn btn-primary" href="invi/listinviinfo/unassinvi/1" role="button">未分配</a>
-	<a id="assinvi" class="btn btn-primary" href="invi/listinviinfo/assinvi/1" role="button">已分配</a>
-	<a id="done" class="btn btn-primary" href="invi/listinviinfo/done/1" role="button">已完成</a>
-	<a id="all" class="btn btn-primary" href="invi/listinviinfo/all/1" role="button">全部</a>
+<div class="row-fluid">
+<div class="pull-right">
+	<a class="btn btn-primary" href="invi/downloadinviinfoexcel" role="button">下载监考记录</a>
+	</div>
+<div>
+	<a id="unassinvi" class="btn btn-primary" href="invi/listinviinfo/unassinvi" role="button">未分配</a>
+	<a id="assinvi" class="btn btn-primary" href="invi/listinviinfo/assinvi" role="button">已分配</a>
+	<a id="done" class="btn btn-primary" href="invi/listinviinfo/done" role="button">已完成</a>
+	<a id="all" class="btn btn-primary" href="invi/listinviinfo/all" role="button">全部</a>
+	</div>
+	
+	</div>
 	<c:if test="${user.userAuthority.level>=15 }">
-	<!-- <p class="text-danger">说明: 
+	<div class="row-fluid">
+	<p class="text-danger">说明: 
 	编辑，对监考信息进行修改，修改监考时间地点，添加监考课程名称等，提交后自动转到监考分配<br>
 	分配，对已分配监考完成重新分配，对未分配监考创建监考分配
-	</p> -->
+	</p>
+	</div>
 	</c:if>
-	<c:if test="${infos.size()!=0 }">
-		<br>
-			<c:if test="${currentPage*15>=count }">
-				(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
-			</c:if>
-			<c:if test="${currentPage*15<count }">
-				(${(currentPage-1)*15+1 }&nbsp;-&nbsp;${currentPage*15 }&nbsp;/&nbsp;${count })
-			</c:if>
-		<br>
-	</c:if>
-	
 		 <div class="table-responsive">
+		 (${firstresult+1 } - ${firstresult + infos.size() } / ${typesize })
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
 			<tr>
@@ -67,7 +51,7 @@
                   <th>日期</th>
                   <th>时间</th>
                   <th>地点</th>
-                  <th>课程</th>
+                  <th>课程/备注</th>
                   <th>人数</th>
                   <th>分配</th>
                   <th>状态</th>
@@ -79,12 +63,13 @@
 			<tbody>
 				<c:forEach items="${infos }" var="i" varStatus="s">
 				<tr>
-				<td>${s.count + (currentPage-1)*15 }</td>
-				<td><fmt:formatDate pattern="yyyy-MM-dd" value="${i.startTime.getTime() }"/></td>
+				<td>${s.count + firstresult }</td>
+				<td>第${weeks[s.index] }周
+				<fmt:formatDate pattern="yyyy-MM-dd E" value="${i.startTime.getTime() }"/></td>
 				<td><fmt:formatDate pattern="HH:mm" value="${i.startTime.getTime() }"/>
 					- <fmt:formatDate pattern="HH:mm" value="${i.endTime.getTime() }"/></td>
 				<td>${i.location }</td>
-				<td>${i.course }</td>
+				<td>${i.comment }</td>
 				<td>${i.requiredNumber }</td>
 				<td>
 					<c:forEach items="${i.invigilations }" var="t">${t.teacher.user.name }<br></c:forEach>
@@ -115,29 +100,20 @@
 			</tbody>
 	</table>
 	</div>
-	<c:if test="${infos.size()!=0 }">
-		<nav>
-			  <ul class="pagination pagination-lg">
-			    <li id="previous">
-			      <a href="invi/listinviinfo/${type }/${currentPage-1 }" aria-label="Previous">
-			        <span aria-hidden="true">&laquo;</span>
-			      </a>
-			    </li>
-			    <c:forEach begin="1" end="${countPage }" var="c">
-			    	<c:if test="${c==currentPage }">
-			    		<li class="active"><a href="invi/listinviinfo/${type }/${c }">${c }</a></li>
-			    	</c:if>
-			    	<c:if test="${c!=currentPage }">
-			    		<li><a href="invi/listinviinfo/${type }/${c }">${c }</a></li>
-			    	</c:if>
-			    </c:forEach>
-			    <li id="next">
-			      <a href="invi/listinviinfo/${type }/${currentPage+1 }" aria-label="Next">
-			        <span aria-hidden="true">&raquo;</span>
-			      </a>
-			    </li>
-			  </ul>
-		</nav>
-	</c:if>
+	
+		<div>
+            <ul class="pagination">
+            <c:if test="${currentpage > 1 }">
+            	<li class="previous"><a href="invi/listinviinfo/${type}/${currentpage-1}" class="fui-arrow-left"></a></li>
+            </c:if>
+              <c:forEach var="x" begin="1" end="${countpages }" step="1">
+              	<li <c:if test="${x == currentpage }">class="active"</c:if>>
+              	<a href="invi/listinviinfo/${type}/${x }">${x }</a></li>
+              </c:forEach>
+              <c:if test="${currentpage < countpages }">
+            	<li class="next"><a href="invi/listinviinfo/${type}/${currentpage+1}" class="fui-arrow-right"></a></li>
+            </c:if>   
+            </ul>
+          </div>
     </jsp:body>
 </myTemplate:template>

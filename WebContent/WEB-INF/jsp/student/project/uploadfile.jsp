@@ -31,8 +31,8 @@
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>
-  <li><a href="student/project/projectmanagement">毕设管理</a></li>
-  <li class="active">上传${typeCH }</li>
+  <li><a href="student/project/projectmanagement/${stageType }">${stageTypeZH }信息</a></li>
+  <li class="active">上传${typeZH }</li>
 </ol>
 	
 	<c:if test="${exception != null}">
@@ -44,13 +44,75 @@
   <strong>错误！</strong> ${exception }
 </div>
 </c:if>     
- 	<form class="form-horizontal" enctype="multipart/form-data" action="student/project/uploadfile/${type }" method="post">
-		<div class="form-group" id="myfileinput">
-			<div class="col-sm-10 col-md-8">
-				<input id="file-1" type="file" name="uploadfile" multiple data-min-file-count="0" accept=".doc,.docx">
+	<c:if test="${openReport.opened }">
+		<form class="form-horizontal" enctype="multipart/form-data" action="student/project/uploadfile/${type }" method="post">
+			<div class="form-group" id="myfileinput">
+				<div class="col-sm-10 col-md-8">
+					<input id="file-1" type="file" name="uploadfile" multiple data-min-file-count="0" accept=".doc,.docx">
+				</div>
 			</div>
-		</div>
-		<input type="hidden" name="typeId" value="${typeId }">
-	</form>
+			<input type="hidden" name="typeId" value="${typeId }">
+			<input type="hidden" name="stageType" value="${stageType }">
+		</form>
+	</c:if>
+	<c:if test="${openRecord.opened }">
+		<form class="form-horizontal" enctype="multipart/form-data" action="student/project/uploadfile/${type }" method="post">
+			<div class="form-group" id="myfileinput">
+				<div class="col-sm-10 col-md-8">
+					<input id="file-1" type="file" name="uploadfile" multiple data-min-file-count="0" accept=".doc,.docx">
+				</div>
+			</div>
+			<input type="hidden" name="typeId" value="${typeId }">
+			<input type="hidden" name="stageType" value="${stageType }">
+		</form>
+	</c:if>
+	<c:if test="${interimReport.opened }">
+		<form class="form-horizontal" enctype="multipart/form-data" action="student/project/uploadfile/${type }" method="post">
+			<div class="form-group" id="myfileinput">
+				<div class="col-sm-10 col-md-8">
+					<input id="file-1" type="file" name="uploadfile" multiple data-min-file-count="0" accept=".doc,.docx">
+				</div>
+			</div>
+			<input type="hidden" name="typeId" value="${typeId }">
+			<input type="hidden" name="stageType" value="${stageType }">
+		</form>
+	</c:if>
+	<c:if test="${interimRecord.opened }">
+		<form class="form-horizontal" enctype="multipart/form-data" action="student/project/uploadfile/${type }" method="post">
+			<div class="form-group" id="myfileinput">
+				<div class="col-sm-10 col-md-8">
+					<input id="file-1" type="file" name="uploadfile" multiple data-min-file-count="0" accept=".doc,.docx">
+				</div>
+			</div>
+			<input type="hidden" name="typeId" value="${typeId }">
+			<input type="hidden" name="stageType" value="${stageType }">
+		</form>
+	</c:if>
+	<c:if test="${paperReport.opened }">
+		<form class="form-horizontal" enctype="multipart/form-data" action="student/project/uploadfile/${type }" method="post">
+			<div class="form-group" id="myfileinput">
+				<div class="col-sm-10 col-md-8">
+					<input id="file-1" type="file" name="uploadfile" multiple data-min-file-count="0" accept=".doc,.docx">
+				</div>
+			</div>
+			<input type="hidden" name="typeId" value="${typeId }">
+			<input type="hidden" name="stageType" value="${stageType }">
+		</form>
+	</c:if>
+	<c:if test="${paperRecord.opened }">
+		<form class="form-horizontal" enctype="multipart/form-data" action="student/project/uploadfile/${type }" method="post">
+			<div class="form-group" id="myfileinput">
+				<div class="col-sm-10 col-md-8">
+					<input id="file-1" type="file" name="uploadfile" multiple data-min-file-count="0" accept=".doc,.docx">
+				</div>
+			</div>
+			<input type="hidden" name="typeId" value="${typeId }">
+			<input type="hidden" name="stageType" value="${stageType }">
+		</form>
+	</c:if>
+	<c:if test="${!openReport.opened&&!openRecord.opened&&!interimReport.opened&&!interimRecord.opened&&!paperReport.opened&&!paperRecord.opened }">
+		<div class="alert alert-warning" role="alert"><strong>该功能未开启或已关闭！</strong></div>
+	</c:if>
+ 	
     </jsp:body>
 </myTemplate:template>

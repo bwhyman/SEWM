@@ -20,7 +20,7 @@
 	<jsp:body>
 	<ol class="breadcrumb">
 	  <li><a href="">主页</a></li>
-	  <li><a href="project/projectmanagement">毕设管理</a></li>
+	  <li><a href="project/projectmanagement/stage">阶段管理</a></li>
 	  <li class="active">${typeCH }</li>
 	</ol>
 	<div class="table-responsive">

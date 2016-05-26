@@ -29,6 +29,8 @@ public class TeacherTask {
 	private Set<FileTaskDetail> fDetails;
 	@OneToMany(mappedBy = "createUser")
 	private Set<FileTask> createFileTasks;
+	@OneToMany(mappedBy = "createUser")
+	private Set<Notification> createNotifications;
 	
 	@ManyToMany(mappedBy = "teachers")
 	@OrderBy("id ASC")
@@ -76,6 +78,12 @@ public class TeacherTask {
 	}
 	public void setNotifications(Set<Notification> notifications) {
 		this.notifications = notifications;
+	}
+	public Set<Notification> getCreateNotifications() {
+		return createNotifications;
+	}
+	public void setCreateNotifications(Set<Notification> createNotifications) {
+		this.createNotifications = createNotifications;
 	}
 	
 }

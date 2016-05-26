@@ -1,6 +1,6 @@
 package com.se.working.service;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,100 +51,6 @@ public class AdminService extends GenericService<User, Long> {
 	@Autowired
 	private ClassesDao classesDao;
 
-	
-	
-	/**
-	 * 查询所有通知者
-	 * @return
-	 */
-	public List<User> findNotifusers(){
-		List<User> users = new ArrayList<>();
-		for (User user : userDao.list()) {
-			users.add(user);
-		}
-		return users;
-	}
-	
-	/**
-	 * 清除所有学生信息（仅限于导入信息有误）
-	 */
-	public void clearStudents(){
-		studentProjectDao.deleteAll();
-		studentDao.delStudents();
-	}
-	
-	/**
-	 * 根据id删除学生信息（用于信息上传错误）
-	 * @param studentId
-	 */
-	public void delStudent(long studentId){
-		studentProjectDao.delete(studentProjectDao.get(studentId));
-		studentDao.delete(new Student(studentId));
-	}
-	
-	/**
-	 * 查询所有学生信息
-	 * @return
-	 */
-	public List<Student> findStudents(){
-		return studentDao.list();
-	}
-	
-	/**
-	 * 导入学生信息
-	 * @param file
-	 * @return
-	 */
-	public void importStudent(File file){
-		List<Student> students = new ArrayList<>();
-		students = StudentExcelUtil.getExcel(file);
-		if (students == null) {
-			if (file.exists()) {
-				file.delete();
-			}
-			throw new SEWMException("读取学生信息为空");
-		}
-		List<Student> oldStudents = studentDao.list();
-		for (Student student : students) {
-			boolean isExist = false;
-			for (Student student2 : oldStudents) {
-				if (student2.getStudentId().equals(student.getStudentId())) {
-					isExist = true;
-					break;
-				}
-			}
-			if (!isExist) {
-				student.setPassword(MD5.generateMD5(student.getStudentId()));
-				student.setUserAuthority(new UserAuthority(UserAuthorityType.STUDENT));
-				Classes classes = student.getClasses();
-				Classes classes2 = classesDao.getByName(classes.getName());
-				if (classes2 != null) {
-					classes.setId(classes2.getId());
-				}else {
-					classesDao.persist(classes);
-					classesDao.flush();
-					classesDao.refresh(classes);
-				}
-				studentDao.persist(student);
-				studentDao.flush();
-				studentDao.refresh(student);
-				StudentProject studentProject = new StudentProject();
-				studentProject.setStudent(student);
-				studentProjectDao.persist(studentProject);
-				studentProjectDao.flush();
-			}
-		}
-	}
-	
-	/**
-	 * 分页查询学生信息
-	 * @param page
-	 * @return
-	 */
-	public List<Student> findByPage(int page){
-		return studentDao.listByPage(page);
-	}
-	
 	/**
 	 * 添加用户，需重写 单向关系，没有级联，需手动创建关联对象
 	 */
@@ -158,16 +64,6 @@ public class AdminService extends GenericService<User, Long> {
 		teacherInvigilation.setUser(user);
 		teacherInviDao.persist(teacherInvigilation);
 
-	}
-	
-	/**
-	 * 初始密码重置为用户名，即学号
-	 * 
-	 * @param studentId
-	 */
-	public void updateStudentDefaultPassword(long studentId) {
-		Student student = studentDao.get(studentId);
-		student.setPassword(MD5.generateMD5(student.getStudentId()));
 	}
 
 	/**
@@ -264,5 +160,93 @@ public class AdminService extends GenericService<User, Long> {
 	 */
 	public List<User> findDisabledUsers() {
 		return userDao.listDisableds();
+	}
+	
+	/**
+	 * 清除所有学生信息（仅限于导入信息有误）
+	 */
+	public void clearStudents(){
+		studentProjectDao.deleteAll();
+		studentDao.delStudents();
+	}
+	
+	/**
+	 * 根据id删除学生信息（用于信息上传错误）
+	 * @param studentId
+	 */
+	public void delStudent(long studentId){
+		studentProjectDao.delete(studentProjectDao.get(studentId));
+		studentDao.delete(new Student(studentId));
+	}
+	
+	/**
+	 * 查询所有学生信息
+	 * @return
+	 */
+	public List<Student> findStudents(){
+		return studentDao.list();
+	}
+	
+	/**
+	 * 导入学生信息
+	 * @param file
+	 * @return
+	 */
+	public void importStudent(InputStream is){
+		List<Student> students = new ArrayList<>();
+		students = StudentExcelUtil.getExcel(is);
+		if (students == null) {
+			throw new SEWMException("读取学生信息为空");
+		}
+		List<Student> oldStudents = studentDao.list();
+		//查询判断该学生信息（学号）是否已存在，若不存在则添加，存在跳过
+		for (Student student : students) {
+			boolean isExist = false;
+			for (Student student2 : oldStudents) {
+				if (student2.getStudentId().equals(student.getStudentId())) {
+					isExist = true;
+					break;
+				}
+			}
+			if (!isExist) {
+				student.setPassword(MD5.generateMD5(student.getStudentId()));
+				student.setUserAuthority(new UserAuthority(UserAuthorityType.STUDENT));
+				Classes classes = student.getClasses();
+				Classes classes2 = classesDao.getByName(classes.getName());
+				if (classes2 != null) {
+					classes.setId(classes2.getId());
+				}else {
+					classesDao.persist(classes);
+					classesDao.flush();
+					classesDao.refresh(classes);
+				}
+				studentDao.persist(student);
+				studentDao.flush();
+				studentDao.refresh(student);
+				StudentProject studentProject = new StudentProject();
+				studentProject.setStudent(student);
+				studentProjectDao.persist(studentProject);
+				studentProjectDao.flush();
+			}
+		}
+	}
+	
+	/**
+	 * 分页查询学生信息
+	 * @param page
+	 * @return
+	 */
+	public List<Student> findByPage(int page){
+		return studentDao.listByPage(page);
+	}
+	
+	/**
+	 * 初始密码重置为用户名，即学号
+	 * 
+	 * @param studentId
+	 */
+	public void updateStudentDefaultPassword(long studentId) {
+		Student student = studentDao.get(studentId);
+		student.setPassword(MD5.generateMD5(student.getStudentId()));
 	}
 }

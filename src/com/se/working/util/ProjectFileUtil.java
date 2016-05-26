@@ -92,7 +92,7 @@ public class ProjectFileUtil {
 	 * @return
 	 */
 	private static String setUploadDirectory() {
-		String webapp = System.getProperty("webapp.root");
+		String webapp = System.getProperty("SEWM.root");
 		String uploadDirectory = webapp + "\\WEB-INF\\jsp\\upload\\";
 		File directory = new File(uploadDirectory);
 		if (!directory.exists() && !directory.isDirectory()) {

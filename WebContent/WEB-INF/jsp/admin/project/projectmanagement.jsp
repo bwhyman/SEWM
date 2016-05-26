@@ -55,7 +55,7 @@
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-md-2">
-						<a class="btn btn-info btn-block" role="button" href="admin/project/startproject">毕设题目管理</a>
+						<a class="btn btn-info btn-block" role="button" href="admin/project/openaddtitle">毕设题目管理</a>
 					</div>
 				</div>
 			</div>

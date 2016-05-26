@@ -68,8 +68,8 @@
 	</c:if>
 	<form class="form-horizontal" action="project/updatetitle" method="POST" enctype="multipart/form-data">
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-2 control-label">题目</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="name" class="col-sm-2 col-md-1 control-label">题目</label>
+						<div class="col-sm-10 col-md-5">
 							<input type="text" class="form-control" placeholder="题目" required name="name" id="title" value="${title.name }">
 						</div>
 						<div class="col-sm-10 col-md-3" hidden id="myalert">
@@ -83,25 +83,25 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="major" class="col-sm-2 col-md-2 control-label">专业</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="major" class="col-sm-2 col-md-1 control-label">专业</label>
+						<div class="col-sm-10 col-md-5">
 							<input type="text" class="form-control" placeholder="专业" required name="major" value="软件工程">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="property" class="col-sm-2 col-md-2 control-label">题目性质</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="property" class="col-sm-2 col-md-1 control-label">题目性质</label>
+						<div class="col-sm-10 col-md-5">
 							<input type="text" class="form-control" placeholder="题目性质" name="property" value="${title.property }">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="objective" class="col-sm-2 col-md-2 control-label">立题依据</label>
+						<label for="objective" class="col-sm-2 col-md-1 control-label">立题依据</label>
 						<div class="col-sm-10 col-md-8">
 							<textarea class="form-control" rows="15" placeholder="立题依据" name="objective" id="editor_id">${title.objective }</textarea>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="opened" class="col-sm-2 col-md-2 control-label">是否上传论证报告</label>
+						<label for="opened" class="col-sm-2 col-md-1 control-label">上传论证报告</label>
 						<div class="col-md-1">
 							<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
 							name="isExist"  value="1" id="opened"/>
@@ -109,7 +109,7 @@
 					</div>
 					
 					<div class="form-group" id="myfileinput" hidden>
-						<label for="objective" class="col-sm-2 col-md-2 control-label">论证报告</label>
+						<label for="objective" class="col-sm-2 col-md-1 control-label">论证报告</label>
 						<div class="col-sm-10 col-md-8">
 							<input id="file-1" type="file" name="uploadfile" multiple data-min-file-count="0" accept=".doc,.docx">
 						</div>
@@ -119,6 +119,8 @@
 						<div class="col-sm-2 col-md-2 control-label"></div>
 						<div class="col-sm-10 col-md-3">
 							<button type="submit" class="btn btn-primary btn-wide">提交</button>
+						</div>
+						<div class="col-sm-10 col-md-3">
 							<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>	
 						</div>
 					</div>

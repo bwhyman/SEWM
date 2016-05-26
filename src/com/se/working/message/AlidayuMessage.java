@@ -1,16 +1,20 @@
 package com.se.working.message;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
-import com.se.working.entity.User;
+import com.se.working.exception.SEWMException;
 import com.se.working.invigilation.entity.Invigilation;
 import com.se.working.invigilation.entity.InvigilationInfo;
+import com.se.working.message.entity.AlidayuInvi;
+import com.se.working.message.entity.AlidayuInviRemind;
+import com.se.working.message.entity.AlidayuNotification;
 import com.se.working.task.entity.Notification;
 import com.se.working.task.entity.TeacherTask;
 import com.se.working.util.DateUtils;
@@ -30,52 +34,45 @@ public class AlidayuMessage {
 	 * 
 	 * 手机关机，属于正常发送，即，与正常发送短信效果相同，
 	 * 当超过运营商限制(不知具体数据)，营运商返回发送失败给dayu，dayu返回发送错误数据，但需单写监听器实现 手机欠费没有测试
-	 */
-	/**
-	 * 监考通知模板代码: SMS_5082963 监考通知模板:
-	 * 监考通知:时间:${t};地点:${l};人员:${ns};备注:${c};${n}老师，当前已分配${f}次监考 监考通知例子：监考通知:时间:
-	 * 第15周星期二 06-06 08:00-10:00; 地点: 丹青楼101; 监考教师: 王波，孙哲; 王波老师，当前已分配15次监考
 	 * 
+	 * 短信字数<=70个字数，按照70个字数一条短信计算
+	 * 短信字数>70个字数，即为长短信，按照67个字数记为一条短信计算
 	 */
-	/**
-	 * 通知模板：
-	 * 通知:内容${c};时间:${t};地点${l}
-	 */
+
 	private static final String url = "http://gw.api.taobao.com/router/rest";
 	private static final String appkey = "23292991";
 	private static final String secret = "a80a71d6f7b73752a00c4203eb21f36e";
 	// 签名
 	private static final String SIGN_NAME = "东林软件";
-	// 监考通知模板
-	private static final String SMS_INVI_NOTICE = "SMS_5082963";
+	// 软件专业监考通知模板
+	private static final String SMS_INVI_NOTICE = "SMS_7480213";
+	// 专业监考提醒模板
+	private static final String SMS_INVI_REMIND = "SMS_7816430";
+	// 专业通知模板
+	private static final String SMS_NOTICE = "SMS_6105454";
 
 	/**
-	 * 按监考信息发送，而不是监考安排，因为需要为每一位监考教师提供所有监考人员名单
+	 * 按监考信息发送，而不是监考安排，因为需要为每一位监考教师提供所有监考人员名单，用于在紧急情况下联络相关教师
+	 * 
+	 * 监考通知模板代码: 第N次申请，为减少短信字符压缩删除参数前的声明，结果已全参数模板被拒 改为自己拼接监考通知字符串
+	 * 
+	 * 监考:${invi};地点:${location};人员:${names};您已分配${freq}次 
+	 * 例子: 68字符 
+	 * [东林软件]监考:15周星期二 06-06 08:00;软件构件与中间件;丹青楼101;王波波,孙哲波,王波波;您已分配15次
 	 * 
 	 * @param info
 	 */
-	public void sendInviNotice(InvigilationInfo info) {
+	public List<String> sendInviNotice(List<Invigilation> invigilations) {
+		List<String> results = new ArrayList<>();
+		InvigilationInfo info = invigilations.get(0).getInvInfo();
 		Calendar startDate = info.getStartTime();
-		Calendar endDate = info.getEndTime();
-		int iWeek = 0;
-		// 判断是否跨年
-		if (startDate.getWeekYear() > DateUtils.getBaseCalender().getWeekYear()) {
-			iWeek = startDate.get(Calendar.WEEK_OF_YEAR) - DateUtils.getBaseCalender().get(Calendar.WEEK_OF_YEAR)
-					+ DateUtils.getBaseCalender().getWeeksInWeekYear();
-		} else {
-			iWeek = startDate.get(Calendar.WEEK_OF_YEAR) - DateUtils.getBaseCalender().get(Calendar.WEEK_OF_YEAR);
-		}
-		// 没有第0周
-		iWeek = iWeek + 1;
-
-		StringBuffer sTime = new StringBuffer("第" + iWeek + "周");
+		int iWeek = DateUtils.getWeekRelativeBaseDate(startDate);
+		
+		StringBuffer sTimeBuffer = new StringBuffer(iWeek + "周");
 		// 星期 日期
-		SimpleDateFormat sfDate = new SimpleDateFormat("E MM-dd");
-		SimpleDateFormat sfTime = new SimpleDateFormat("HH:mm");
-		sTime.append(sfDate.format(startDate.getTime()) + " ");
-		sTime.append(sfTime.format(startDate.getTime()) + "-");
-		sTime.append(sfTime.format(endDate.getTime()));
-		String sLocation = info.getLocation();
+		SimpleDateFormat sfDate = new SimpleDateFormat("E MM-dd HH:mm");
+		sTimeBuffer.append(sfDate.format(startDate.getTime()));
+		
 		// 获取本次监考全部人员
 		String ns = null;
 		int count = 0;
@@ -87,61 +84,109 @@ public class AlidayuMessage {
 			}
 			count++;
 		}
-		Gson gson = new Gson();
-		AlidayuInvi invi = null;
-		try {
-			for (Invigilation i : info.getInvigilations()) {
-				invi = new AlidayuInvi();
-				invi.setT(sTime.toString());
-				invi.setL(sLocation);
-				invi.setNs(ns);
-				invi.setN(i.getTeacher().getUser().getName());
-				invi.setF(String.valueOf(i.getTeacher().getInvigilations().size()));
-				System.out.println(i.getTeacher().getUser().getPhoneNumber());
-				sendSMS(gson.toJson(invi), i.getTeacher().getUser().getPhoneNumber(), SMS_INVI_NOTICE);
-			}
-		} catch (ApiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Date date = new Date();
-			invi.setT("ERROR:" + date.toString());
-			invi.setNs("ERROR");
-			sendError(gson.toJson(invi), SMS_INVI_NOTICE);
-		} finally {
-			gson = null;
+		// 时间
+		String invi = sTimeBuffer.toString();
+		// 地点
+		String Location = info.getLocation();
+		// 如果有备注，追加在时间后面
+		if (info.getComment() != null) {
+			invi = invi + ";" + info.getComment();
 		}
+		
+		Gson gson = new Gson();
+		for (Invigilation i : invigilations) {
+			AlidayuInvi inviP = new AlidayuInvi();
+			inviP.setInvi(invi);
+			inviP.setLocation(Location);
+			inviP.setNames(ns);
+			inviP.setFreq(String.valueOf(i.getTeacher().getInvigilations().size()));
+			sendSMS(gson.toJson(inviP), i.getTeacher().getUser().getPhoneNumber(), SMS_INVI_NOTICE);
+			results.add(getMessage(inviP));
+		}
+		return results;
+	}
+	/**
+	 * 监考:${invi};地点:${location};人员:${names};您已分配${freq}次 
+	 * @param invi
+	 * @return
+	 */
+	private String getMessage(AlidayuInvi invi) {
+		String message = "【东林软件】监考:" + invi.getInvi() + ";" + "地点:" + invi.getLocation() + ";" + "人员:" + invi.getNames()
+				+ ";" + "您已分配" + invi.getFreq() + "次";
 
+		return message;
 	}
 	
+	/**
+	 * 通知:内容:${c};时间:${t};地点:${l};发布:${n}
+	 * @param notification
+	 */
 	public void sendNotification(Notification notification) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuffer phoneNumberbuffer = new StringBuffer();
 		int count = 0;
+		// 拼接电话号码
 		for (TeacherTask task : notification.getTeachers()) {
 			if (count == 0) {
-				buffer = buffer.append(task.getUser().getPhoneNumber());
+				phoneNumberbuffer = phoneNumberbuffer.append(task.getUser().getPhoneNumber());
 			} else {
-				buffer = buffer.append("," + task.getUser().getPhoneNumber());
+				phoneNumberbuffer = phoneNumberbuffer.append("," + task.getUser().getPhoneNumber());
 			}
 			count++;
 		}
 		
-		try {
-			sendSMS(notification.getComment(), buffer.toString(), SMS_INVI_NOTICE);
-		} catch (ApiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		AlidayuNotification aNotification = new AlidayuNotification();
+		aNotification.setC(notification.getComment());
+		aNotification.setN(notification.getCreateUser().getUser().getName());
+		Gson gson = new Gson();
+		sendSMS(gson.toJson(aNotification), phoneNumberbuffer.toString(), SMS_NOTICE);
+	
 	}
+	/**
+	 * 监考提醒:时间:${time};地点:${location};人员:${names}
+	 * @param info
+	 */
+	public void sendInviRemind(InvigilationInfo info) {
+		SimpleDateFormat sfDate = new SimpleDateFormat("HH:mm");
+		//时间
+		String time = sfDate.format(info.getStartTime().getTime());
+		time = "明日 " + time;
+		String location = info.getLocation();
+		// 获取本次监考全部人员姓名
+		String names = null;
+		// 获取本次监考全部人员手机号
+		String phoneNumbers = null;
+		int count = 0;
+		for (Invigilation i : info.getInvigilations()) {
+			if (count == 0) {
+				names = i.getTeacher().getUser().getName();
+				phoneNumbers = i.getTeacher().getUser().getPhoneNumber();
+			} else {
+				names = names + "," + i.getTeacher().getUser().getName();
+				phoneNumbers = phoneNumbers + "," + i.getTeacher().getUser().getPhoneNumber();
+			}
+			count++;
+		}
+		// 在人员后追加备注
+		if (info.getComment() != null) {
+			names  = names + ";" + info.getComment();
+		}
+		Gson gson = new Gson();
+		AlidayuInviRemind r = new AlidayuInviRemind();
+		r.setTime(time);
+		r.setLocation(location);
+		r.setNames(names);
+		sendSMS(gson.toJson(r), phoneNumbers, SMS_INVI_REMIND);
+	}
+	
 
 	/**
 	 * 抽象发送SMS短信方法，recNum可以是多号码，以英文逗号分开，无空格
-	 * 
 	 * @param smsParamString
-	 * @param RecNum
+	 * @param recNum
 	 * @param smsTemplateCode
-	 * @throws ApiException
 	 */
-	private void sendSMS(String smsParamString, String recNum, String smsTemplateCode) throws ApiException {
+	private boolean sendSMS(String smsParamString, String recNum, String smsTemplateCode) {
+		boolean result = false;
 		TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
 		AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
 		req.setSmsType("normal");
@@ -154,14 +199,29 @@ public class AlidayuMessage {
 		AlibabaAliqinFcSmsNumSendResponse rsp;
 		System.out.println(smsParamString);
 		System.out.println(recNum);
-		/*
-		 * rsp = client.execute(req);
-		 * 
-		 * if (rsp.getBody().contains("success")) { throw new
-		 * ApiException("error"); }
-		 */
+		/*try {
+			rsp = client.execute(req);
+			String body = rsp.getBody();
+			System.out.println(body);
+			if (body.contains("true")) {
+				result = true;
+			} else {
+				throw new SEWMException("监考短信通知发送失败；" + recNum + "; " + smsParamString);
+			}
+		} catch (ApiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new SEWMException("监考短信通知发送失败；" + recNum + "; " + smsParamString);
+		} finally {
+			client = null;
+			req = null;
+			rsp = null;
+		}*/
 		client = null;
 		req = null;
+		rsp = null;
+		
+		return result;
 	}
 
 	private void sendError(String smsParamString, String smsTemplateCode) {
@@ -174,7 +234,7 @@ public class AlidayuMessage {
 		req.setRecNum("15104548299");
 		// 必须使用注册的短信模板
 		req.setSmsTemplateCode(smsTemplateCode);
-		try {
+		/*try {
 			client.execute(req);
 		} catch (ApiException e) {
 			// TODO Auto-generated catch block
@@ -182,8 +242,9 @@ public class AlidayuMessage {
 		} finally {
 			client = null;
 			req = null;
-		}
-
+		}*/
+		client = null;
+		req = null;
 	}
 
 	public AlidayuMessage() {

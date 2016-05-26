@@ -10,20 +10,6 @@
 %>
 
 <myTemplate:template>
-<jsp:attribute name="header">
-	<style type="text/css">
-		/* .bootstrap-switch {
-z-index: 1500;
-} */
-
-/* .navbar-fixed-top,
-.navbar-fixed-bottom {
-    z-index: 1030;
-    border-radius: 1;
-}  */
-
-	</style>
-</jsp:attribute>
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>

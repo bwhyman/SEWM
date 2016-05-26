@@ -32,7 +32,7 @@
   <li><a href="admin/invi/invimanagement">监考管理</a></li>
   <li class="active">导入监考信息</li>
 </ol>
-	
+	${exception }
 	<c:if test="${exception != null}">
 		&nbsp&nbsp
 		<div class="alert alert-danger alert-dismissable" role="alert">
@@ -49,7 +49,7 @@
 				<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="1" accept=".xls,.xlsx">
 			</div>
 		</div>
-		<!-- <div class="form-group">
+		<div class="form-group">
 			<div class="col-sm-2col-md-12">
 				<p class="text-danger">说明: 
 				监考表格太过随意，字段规则模糊；<br>
@@ -67,7 +67,7 @@
 				</p>
 				
 			</div>
-		</div> -->
+		</div>
 	</form>
      <c:if test="${infos != null }">
 		 <div class="table-responsive">
@@ -113,10 +113,10 @@
 			</tbody>
 	</table>
 	</div>
-	<!-- <p class="text-danger">说明: 
+	<p class="text-danger">说明: 
 	编辑，可对监考信息进行修改，添加监考课程名称等，提交后自动转到监考分配功能
 	分配，直接分配该监考
-	</p> -->
+	</p>
 	</c:if>
 	  
     </jsp:body>
