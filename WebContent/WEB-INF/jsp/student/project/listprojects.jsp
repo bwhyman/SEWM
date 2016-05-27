@@ -94,7 +94,11 @@
 								<td>${s.count+(currentPage-1)*15 }</td>
 								<td><a href="project/title/${p.id }">${p.title.name }</a></td>
 								<td >
-									 <a class="telphone" tabindex="0" data-toggle="popover" data-trigger="focus" data-placement="top" title="联系方式" data-content="${p.title.teacher.user.phoneNumber }">${p.title.teacher.user.name }</a>
+									<a class="telphone" tabindex="0" data-toggle="popover" data-trigger="focus" data-placement="top" title="联系方式" data-content="${p.title.teacher.user.phoneNumber }">
+										<span class="input-group-addon" style="width: 30px;">
+											<span class="glyphicon glyphicon-phone-alt"></span>
+										</span>
+									${p.title.teacher.user.name }</a>
 								</td>
 								<td>
 									<a href="download/${p.directory }/${p.fileName}/">论证报告</a>

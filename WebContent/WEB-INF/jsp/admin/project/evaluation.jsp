@@ -19,8 +19,22 @@
 					} else {
 						$('.student').radiocheck('uncheck') 
 					}
-					
 				});
+				
+				//提交按钮是否可用，若无选中项，无法提交
+				$('.student').on('change.radiocheck', function(){
+					var isHaveSelected = false;
+					$('.student').each(function(i){
+						if ($(this).prop('checked')) {
+							isHaveSelected = true;
+						}
+					})
+					if (isHaveSelected) {
+						$('#btn_submit').removeAttr('disabled');
+					}else{
+						$('#btn_submit').attr('disabled','disabled');
+					}
+				})
 			})
 		</script>
 	</jsp:attribute>
@@ -30,8 +44,7 @@
 	  <li><a href="admin/project/projectmanagement">毕设管理</a></li>
 	  <li class="active">${typeZH }评审</li>
 	</ol>
-	<c:if test="${studentProjects!=null && studentProjects.size()!=0 }">
-		<form class="form-horizontal col-md-offset-1" action="admin/project/updateevaluation" method="POST">
+		<form class="form-horizontal" action="admin/project/updateevaluation" method="POST" style="margin-left:1em">
 			<div class="form-group">
 				<label class="checkbox col-sm-5 col-md-1" id="allcheck">
 					<input type="checkbox" data-toggle="checkbox" id="allchecked">
@@ -40,28 +53,57 @@
 						</span>
 				</label>
 			</div>
-			<div class="row">
-				<c:forEach items="${studentProjects }" var="i" varStatus="s">
-					<div class="form-group col-sm-5 col-md-3">
-						<label class="checkbox">
-							<input type="checkbox" class="student" data-toggle="checkbox" name="studentIds"  value="${i.student.id }">
-								<span class="label label-success checkboxspan col-md-10">${i.student.name };${i.student.studentId }</span>
-						</label>
+			<c:if test="${studentProjects!=null && studentProjects.size()!=0 }">
+				<div class="row">
+					<c:forEach items="${studentProjects }" var="i" varStatus="s">
+						<div class="form-group col-sm-5 col-md-3">
+							<label class="checkbox">
+								<input type="checkbox" class="student" data-toggle="checkbox" name="studentIds"  value="${i.student.id }">
+									<span class="label label-success checkboxspan col-md-10">${i.student.name };${i.student.studentId }</span>
+							</label>
+						</div>
+					</c:forEach>
+				</div>
+			</c:if>
+			
+				<c:if test="${notPassTeacherStus!=null && notPassTeacherStus.size()>0 }">
+					<div class="row">
+						<h6>未通过教师评审</h6>
+						<c:forEach items="${notPassTeacherStus }" var="i">
+							<c:if test="${!i.opened }">
+								<div class="form-group col-sm-5 col-md-3">
+									<label class="checkbox">
+										<input type="checkbox" class="student" data-toggle="checkbox" name="studentIds"  value="${i.student.id }">
+											<span class="label label-warning checkboxspan col-md-10">${i.student.name };${i.student.studentId }</span>
+									</label>
+								</div>
+							</c:if>
+						</c:forEach>
 					</div>
-				</c:forEach>
-			</div>
+				</c:if>
+			
+				<c:if test="${notOpenedStus!=null && notOpenedStus.size()>0 }">
+					<div class="row">
+						<h6>未开题</h6>
+						<c:forEach items="${notOpenedStus }" var="i">
+							<div class="form-group col-sm-5 col-md-3">
+								<label class="checkbox">
+									<input type="checkbox"data-toggle="checkbox" name="studentIds"  value="${i.student.id }" disabled="disabled">
+										<span class="label label-default checkboxspan col-md-10">${i.student.name };${i.student.studentId }</span>
+								</label>
+							</div>
+						</c:forEach>
+					</div>
+				</c:if>
 				<input type="hidden" name="type" value="${type }">
-				<div class="form-group">
-			<div class="col-md-1">
-					<button type="submit" class="btn btn-primary btn-wide">提交</button>
+			<div class="form-group">
+				<div class="col-md-1">
+					<button type="submit" class="btn btn-primary btn-wide" id="btn_submit" disabled="disabled">提交</button>
 				</div>
 			</div>
 		</form>
-	</c:if>
 
-	
-	<c:if test="${evaluations.size()!=0 }">
-		<h3>评审结果</h3>
+	<c:if test="${evaluations!=null && evaluations.size()!=0 }">
 		<c:if test="${currentPage*15>=count }">
 			<div>(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })</div>
 		</c:if>

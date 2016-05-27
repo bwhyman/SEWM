@@ -81,9 +81,8 @@
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li>开启选题功能</li>
-				<li>上传开题报告模板</li>
-				<li>上传开题记录模板</li>
+				<li>开启选题功能，上传开题报告模板、开题记录模板</li>
+				<li>开题评审</li>
 			</ul>
 		</div>
 	</div>

@@ -12,14 +12,20 @@ import com.se.working.util.EnumConstant;
 public class StudentProjectDao extends GenericDao<StudentProject, Long> {
 	
 	/**
-	 * 查询已通过评审的学生信息
+	 * 指定毕设阶段按照管理员评审、教师评审是否通过查询已通过评审的学生信息
 	 * @param typeId
+	 * @param teacherEval
+	 * @param managerEval
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<StudentProject> listPassByEval(long typeId){
-		String HQL = "SELECT e.student FROM Evaluation e WHERE e.managerEval = true AND e.teacherEval = true AND e.fileType.id =:typeId";
-		return getSessionFactory().getCurrentSession().createQuery(HQL).setLong("typeId", typeId).list();
+	public List<StudentProject> listPassByEval(long typeId, boolean teacherEval, boolean managerEval){
+		String HQL = "SELECT e.student FROM Evaluation e WHERE e.managerEval =:managerEval AND e.teacherEval =:teacherEval AND e.fileType.id =:typeId";
+		return getSessionFactory().getCurrentSession().createQuery(HQL)
+				.setLong("typeId", typeId)
+				.setBoolean("managerEval", managerEval)
+				.setBoolean("teacherEval", teacherEval)
+				.list();
 	}
 	
 	/**

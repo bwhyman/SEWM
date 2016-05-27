@@ -59,10 +59,11 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * 教师评审
 	 * @param studentIds
 	 * @param typeId
+	 * @return
 	 */
-	public boolean updateEvaluationByUser(long[] studentIds, long typeId){
+	public boolean updateEvaluationByUser(long[] studentIds, long typeId, long teacherId){
 		//当前评审的学生
-		List<StudentProject> studentProjects = findEvalStudentByTypeId(typeId);
+		List<StudentProject> studentProjects = findByTeatherIdTypeId(teacherId, typeId);
 		for (StudentProject studentProject : studentProjects) {
 			if (evalDao.getByStudentIdTypeId(studentProject.getId(), typeId)==null) {
 				Evaluation evaluation = new Evaluation(studentProject, projectFileTypeDao.get(typeId));
@@ -89,17 +90,26 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @param typeId
 	 */
 	public void updateEvaluation(long[] studentIds, long typeId){
-		//当前评审的学生
-		List<StudentProject> studentProjects = findEvalStudentByTypeId(typeId);
-		for (StudentProject studentProject : studentProjects) {
-			if (evalDao.getByStudentIdTypeId(studentProject.getId(), typeId)==null) {
-				Evaluation evaluation = new Evaluation(studentProject, projectFileTypeDao.get(typeId));
+		//所有学生
+		List<StudentProject> studentProjects = studentProjectDao.list();
+		//已通过的学生
+		List<StudentProject> passEvalStudents = studentProjectDao.listPassByEval(typeId, false, true);
+		//未通过的学生
+		studentProjects.removeAll(passEvalStudents);
+		
+		//未选题、教师未评审学生教师评审置：否
+		for (StudentProject studentProject : passEvalStudents) {
+			//未评审创建评审记录
+			Evaluation evaluation = evalDao.getByStudentIdTypeId(studentProject.getId(), typeId);
+			if (evaluation==null) {
+				evaluation = new Evaluation(studentProject, projectFileTypeDao.get(typeId));
 				evaluation.setManagerEval(false);
 				evaluation.setTeacherEval(false);
 				evalDao.persist(evaluation);
 				evalDao.flush();
 			}
 		}
+		
 		for (long l : studentIds) {
 			evalDao.getByStudentIdTypeId(l, typeId).setManagerEval(true);
 		}
@@ -126,12 +136,6 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 			Evaluation evaluation = evalDao.getByStudentIdTypeId(studentProject.getId(), typeId);
 			if (evaluation == null || evaluation.isTeacherEval() == false) {
 				studentProjects.add(studentProject);
-				/*evaluation = new Evaluation(studentProject, projectFileTypeDao.get(typeId));
-				evaluation.setManagerEval(false);
-				evaluation.setTeacherEval(false);
-				evalDao.persist(evaluation);
-				evalDao.flush();*/
-				
 			}
 		}
 		return studentProjects;
@@ -146,7 +150,10 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 		List<Evaluation> evaluations = new ArrayList<>();
 		for (SelectedTitleDetail stDetail : selectedTitleDetailDao.listByTeacherIdAndconfirmed(teacherId, true)) {
 			if (stDetail.getStudent().isOpened()) {
-				evaluations.add(evalDao.getByStudentIdTypeId(stDetail.getStudent().getId(), typeId));
+				Evaluation evaluation = evalDao.getByStudentIdTypeId(stDetail.getStudent().getId(), typeId);
+				if (evaluation !=null ) {
+					evaluations.add(evaluation);
+				}
 			}
 		}
 		return evaluations;
@@ -163,33 +170,67 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	}
 	
 	/**
-	 * 根据typeId返回StudentProject
+	 * 指定教师查询选该教师题目后未开题的学生
+	 * @param teacherId
+	 * @return
+	 */
+	public List<StudentProject> findStudentNotOpenedByTeacherId(long teacherId){
+		List<StudentProject> studentProjects = new ArrayList<>();
+		for (SelectedTitleDetail selectedTitleDetail : selectedTitleDetailDao.listByTeacherIdAndconfirmed(teacherId, true)) {
+			StudentProject studentProject = selectedTitleDetail.getStudent();
+			if (!studentProject.isOpened()) {
+				studentProjects.add(studentProject);
+			}
+		}
+		return studentProjects;
+	}
+	
+	/**
+	 * 查询所有学生毕设模块
+	 * @return
+	 */
+	public List<StudentProject> findAllStudents(){
+		return studentProjectDao.list();
+	}
+	
+	/**
+	 * 查询未开题学生
+	 * @return
+	 */
+	public List<StudentProject> findStudentsNotOpend(){
+		List<StudentProject> studentProjects = new ArrayList<>();
+		for (StudentProject studentProject : studentProjectDao.list()) {
+			if (!studentProject.isOpened()) {
+				studentProjects.add(studentProject);
+			}
+		}
+		return studentProjects;
+	}
+	
+	/**
+	 * 查询未通过教师评审学生
+	 * @param typeId
+	 * @return
+	 */
+	public List<StudentProject> findNotPassTeacherByTypeId(long typeId){
+		List<StudentProject> studentProjects = new ArrayList<>();
+		studentProjects.addAll(studentProjectDao.listPassByEval(typeId, false, false));
+		studentProjects.addAll(studentProjectDao.listPassByEval(typeId, false, true));
+		return studentProjects;
+	}
+	
+	/**
+	 * 根据typeId返回教师评审未评审或未通过评审学生
 	 * @param TypeId
 	 * @return
 	 */
-	public List<StudentProject> findEvalStudentByTypeId(long typeId){
-		if (evalDao.listByTypeId(typeId).size() < studentProjectDao.list().size()) {
-			if (typeId == FileTypes.OPENINGREPORT) {
-				//查询已开题学生信息
-				List<StudentProject> studentOpened = studentProjectDao.listOpened();
-				List<Evaluation> evaluations = evalDao.listByTypeId(typeId);
-				//若开题已评审的总数为0，说明第一次开题的学生未评审,对第一次开题的学生进行评审
-				if (evaluations.size()==0) {
-					return studentOpened;
-				}else {
-					//第二次评审，对象：第二次开题的学生，第一次开题未通过的，即除第一次开题已过的学生
-					List<StudentProject> studentPassEval = studentProjectDao.listPassByEval(typeId);
-					List<StudentProject> studentsAll = studentProjectDao.list();
-					//除第一次开题已过的学生
-					studentsAll.removeAll(studentPassEval);
-					return studentsAll;
-				}
-			}else{
-				return studentProjectDao.list();
-			}
-		}
-		
-		return null;
+	public List<StudentProject> findNotPassManagerByTypeId(long typeId){
+		//所有学生
+		List<StudentProject> studentsAll = studentProjectDao.list();
+		//未评审或未通过评审学生
+		studentsAll.removeAll(studentProjectDao.listPassByEval(typeId, true, true));
+		studentsAll.removeAll(studentProjectDao.listPassByEval(typeId, false, true));
+		return studentsAll;
 	}
 	/**
 	 * 根据typeId分页返回Evaluation
@@ -197,7 +238,10 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @return
 	 */
 	public List<Evaluation> findByTypeId(long typeId, int page){
-		return evalDao.listByTypeIdPage(typeId, page);
+		if (isManageEval(typeId)) {
+			return evalDao.listByTypeIdPage(typeId, page);
+		}
+		return null;
 	}
 	
 	/**

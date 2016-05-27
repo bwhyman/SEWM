@@ -48,17 +48,18 @@ public class UserProjectController {
 	 * @return
 	 */
 	@RequestMapping(path = "/updateevaluation", method = RequestMethod.POST)
-	public String updateEvaluation(long[] studentIds, String type){
+	public String updateEvaluation(long[] studentIds, String type, HttpSession session){
+		long teacherId = ((User)session.getAttribute("user")).getId();
 		if (studentIds!=null) {
 			switch (type) {
 			case "opening":
-				projectService.updateEvaluationByUser(studentIds,FileTypes.OPENINGREPORT);
+				projectService.updateEvaluationByUser(studentIds,FileTypes.OPENINGREPORT, teacherId);
 				break;
 			case "interim":
-				projectService.updateEvaluationByUser(studentIds,FileTypes.INTERIMREPORT);
+				projectService.updateEvaluationByUser(studentIds,FileTypes.INTERIMREPORT, teacherId);
 				break;
 			case "paper":
-				projectService.updateEvaluationByUser(studentIds,FileTypes.PAPER);
+				projectService.updateEvaluationByUser(studentIds,FileTypes.PAPER, teacherId);
 				break;
 			default:
 				break;
@@ -123,39 +124,35 @@ public class UserProjectController {
 		long teacherId = ((User)session.getAttribute("user")).getId();
 		List<Evaluation> evaluations = null;
 		List<StudentProject> studentProjects = null;
+		List<StudentProject> notOpenedStudents = projectService.findStudentNotOpenedByTeacherId(teacherId);
+		boolean isManagerEval = false;
 		switch (type) {
 		case "opening":
-			if (projectService.isManageEval(FileTypes.OPENINGREPORT)) {
-				vMap.put("message", "本阶段评审已结束！");
-				break;
-			}
 			studentProjects = projectService.findByTeatherIdTypeId(teacherId, FileTypes.OPENINGREPORT);
 			evaluations = projectService.findEvalByTeatherIdTypeId(teacherId, FileTypes.OPENINGREPORT);
+			isManagerEval = projectService.isManageEval(FileTypes.OPENINGREPORT);
 			typeZH = "开题";
 			break;
 		case "interim":
-			if (projectService.isManageEval(FileTypes.INTERIMREPORT)) {
-				vMap.put("message", "本阶段评审已结束！");
-				break;
-			}
 			studentProjects = projectService.findByTeatherIdTypeId(teacherId, FileTypes.INTERIMREPORT);
 			evaluations = projectService.findEvalByTeatherIdTypeId(teacherId, FileTypes.INTERIMREPORT);
+			isManagerEval = projectService.isManageEval(FileTypes.INTERIMREPORT);
 			typeZH = "中期";
 			break;
 		case "paper":
-			if (projectService.isManageEval(FileTypes.PAPER)) {
-				vMap.put("message", "本阶段评审已结束！");
-				break;
-			}
 			studentProjects = projectService.findByTeatherIdTypeId(teacherId, FileTypes.PAPER);
 			evaluations = projectService.findEvalByTeatherIdTypeId(teacherId, FileTypes.PAPER);
+			isManagerEval = projectService.isManageEval(FileTypes.PAPER);
 			typeZH = "终期";
 			break;
 		default:
 			break;
 		}
+		studentProjects.removeAll(notOpenedStudents);
+		vMap.put("notOpenedStudents", notOpenedStudents);
 		vMap.put("studentProjects", studentProjects);
 		vMap.put("evaluations", evaluations);
+		vMap.put("isManagerEval", isManagerEval);
 		vMap.put("type", type);
 		vMap.put("typeZH", typeZH);
 		return basePath + "evaluation";

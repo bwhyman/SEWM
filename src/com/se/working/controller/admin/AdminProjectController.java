@@ -2,6 +2,7 @@ package com.se.working.controller.admin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,28 +67,41 @@ public class AdminProjectController {
 		}
 		return redirect + "listevaluation/" + type + "/1";
 	}
-	
+	/**
+	 * 评审结果
+	 * @param type
+	 * @param page
+	 * @param vMap
+	 * @return
+	 */
 	@RequestMapping(path = "/listevaluation/{type}/{page}")
 	public String listEvaluation(@PathVariable String type, @PathVariable int page, Map<String, Object> vMap){
 		List<Evaluation> evaluations = null;
-		List<StudentProject> studentProjects = null;
+		List<StudentProject> studentProjects = new ArrayList<>();
+		List<StudentProject> notPassTeacherStus = null;
+		List<StudentProject> notOpenedStus = projectService.findStudentsNotOpend();
 		int count = 0;
 		String typeZH = null;
 		switch (type) {
 		case "opening":
-			studentProjects = projectService.findEvalStudentByTypeId(FileTypes.OPENINGREPORT);
+			//获取评审的学生信息
+			studentProjects = projectService.findNotPassManagerByTypeId(FileTypes.OPENINGREPORT);
+			notPassTeacherStus = projectService.findNotPassTeacherByTypeId(FileTypes.OPENINGREPORT);
+			//获取已评审的评审结果
 			evaluations = projectService.findByTypeId(FileTypes.OPENINGREPORT, page);
 			count = projectService.getEvalCountByTypeId(FileTypes.OPENINGREPORT);
 			typeZH = "开题";
 			break;
 		case "interim":
-			studentProjects = projectService.findEvalStudentByTypeId(FileTypes.INTERIMREPORT);
+			studentProjects = projectService.findNotPassManagerByTypeId(FileTypes.INTERIMREPORT);
+			notPassTeacherStus = projectService.findNotPassTeacherByTypeId(FileTypes.INTERIMREPORT);
 			evaluations = projectService.findByTypeId(FileTypes.INTERIMREPORT, page);
 			count = projectService.getEvalCountByTypeId(FileTypes.INTERIMREPORT);
 			typeZH = "中期";
 			break;
 		case "paper":
-			studentProjects = projectService.findEvalStudentByTypeId(FileTypes.PAPER);
+			studentProjects = projectService.findNotPassManagerByTypeId(FileTypes.PAPER);
+			notPassTeacherStus = projectService.findNotPassTeacherByTypeId(FileTypes.PAPER);
 			evaluations = projectService.findByTypeId(FileTypes.PAPER, page);
 			count = projectService.getEvalCountByTypeId(FileTypes.PAPER);
 			typeZH = "终期";
@@ -95,7 +109,12 @@ public class AdminProjectController {
 		default:
 			break;
 		}
+		studentProjects.removeAll(notOpenedStus);
+		studentProjects.removeAll(notPassTeacherStus);
+		notPassTeacherStus.removeAll(notOpenedStus);
 		vMap.put("studentProjects", studentProjects);
+		vMap.put("notPassTeacherStus", notPassTeacherStus);
+		vMap.put("notOpenedStus", notOpenedStus);
 		vMap.put("evaluations", evaluations);
 		vMap.put("type", type);
 		vMap.put("typeZH", typeZH);
