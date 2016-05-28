@@ -132,9 +132,20 @@
 				<div class="row">
 						<div class="col-sm-2 col-md-2 control-label"></div>
 						<div class="col-sm-10 col-md-4">
-							<button type="button" class="btn btn-danger btn-wide" data-toggle="modal" data-target="#myModal">删除监考信息</button>	
+							<button type="button" class="btn btn-danger btn-wide" data-toggle="modal" data-target="#myModal">删除监考信息</button>
 						</div>
 					</div>
+					<c:if test="${info.requiredNumber > 1}">
+						<form class="form-horizontal" action="admin/invi/splitinviinfo" method="POST">
+							<input type="hidden" value="${info.id }" name="inviinfoid">
+						<div class="form-group">
+							<div class="col-sm-2 col-md-2 control-label"></div>
+							<div class="col-sm-10 col-md-4">
+							<button type="submit" class="btn btn-primary btn-wide">分解监考</button>
+							</div>
+						</div>	
+					</form>
+					</c:if>
 				<br>
 	<p class="text-danger">说明: 
 	修改<span class="label label-danger">已分配</span>监考信息时，如监考人数发生变化，

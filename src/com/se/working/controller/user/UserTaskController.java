@@ -146,7 +146,7 @@ public class UserTaskController {
 	@RequestMapping(path = "/downloadzip/{directory}/", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> getFileZip(@PathVariable String directory) {
 		
-		ResponseEntity<byte[]> entity = FileTaskUtils.toResponseEntity(directory, FileTaskUtils.zipDirectory(directory));
+		ResponseEntity<byte[]> entity = FileTaskUtils.toResponseEntity(directory + ".zip", FileTaskUtils.zipDirectory(directory));
 	
 		return entity;
 	}

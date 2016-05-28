@@ -41,7 +41,7 @@ public class InviTimer {
 		List<InvigilationInfo> assInfos = infoDao.listInviInfos(startTime, endTime, InviStatusType.ASSIGNED);
 		for (InvigilationInfo i : assInfos) {
 			aMessage.sendInviRemind(i);
-			// i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.REMINDED));
+			i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.REMINDED));
 		}
 	}
 	
