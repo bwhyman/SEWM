@@ -26,7 +26,6 @@ public class InitSys implements InitializingBean {
 		superAdminService.initSpecInviType();
 		superAdminService.initFileType();
 		superAdminService.initFileTaskStatus();
-		superAdminService.initProjectFileType();
 	}
 	public InitSys() {
 		// TODO Auto-generated constructor stub
