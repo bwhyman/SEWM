@@ -34,6 +34,9 @@ import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
 import com.se.working.message.AlidayuMessage;
 import com.se.working.service.GenericService;
+import com.se.working.task.entity.FileTask;
+import com.se.working.task.entity.FileTaskDetail;
+import com.se.working.task.service.TaskService;
 import com.se.working.util.DateUtils;
 import com.se.working.util.FileTaskUtils;
 import com.se.working.util.InviExcelUtil;
@@ -62,6 +65,8 @@ public class InviService extends GenericService<Invigilation, Long> {
 	private InviDao inviDao;
 	@Autowired
 	private AlidayuMessage alidayuMessage;
+	@Autowired
+	private TaskService taskService;
 	@Autowired
 	private InviTimer inviTimer;
 
@@ -94,9 +99,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 		String name = null;
 		List<Course> courses = null;
 		try {
-			InputStream is = uploadFile.getInputStream();
-			name = TimetableExcelUtil.getTimetableName(is);
-			is = uploadFile.getInputStream();
+			name = TimetableExcelUtil.getTimetableName(uploadFile.getInputStream());
 			if (name == null) {
 				throw new SEWMException("不是课表文件，" + uploadFile.getOriginalFilename());
 			}
@@ -116,7 +119,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 					courseDao.delete(course);
 				}
 			}
-			courses = TimetableExcelUtil.getExcel(is);
+			courses = TimetableExcelUtil.getExcel(uploadFile.getInputStream());
 			for (Course course : courses) {
 				course.setTeacher(teacher);
 				// 有级联，但是关系由many维护，因此在保存时需在session中使many重新set one端
@@ -257,7 +260,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 		}
 		return infos;
 	}
-	
+
 	/**
 	 * 返回指定教师、指定监考状态的所有监考信息
 	 * 

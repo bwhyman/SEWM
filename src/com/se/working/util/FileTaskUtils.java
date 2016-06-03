@@ -344,7 +344,7 @@ public class FileTaskUtils {
 			fileName = URLEncoder.encode(fileName, "UTF-8");
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-			headers.setContentDispositionFormData("attachment", fileName + ".rar");
+			headers.setContentDispositionFormData("attachment", fileName);
 			entity = new ResponseEntity<byte[]>(datas, headers, HttpStatus.OK);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

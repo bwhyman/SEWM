@@ -24,7 +24,7 @@
 </ol>
 <div class="row-fluid">
 <div class="pull-right">
-	<a class="btn btn-primary" href="invi/downloadinviinfoexcel" role="button">下载监考记录</a>
+	<a id="all" class="btn btn-primary" href="invi/downloadinviinfoexcel" role="button">下载监考记录</a>
 	</div>
 <div>
 	<a id="unassinvi" class="btn btn-primary" href="invi/listinviinfo/unassinvi" role="button">未分配</a>
