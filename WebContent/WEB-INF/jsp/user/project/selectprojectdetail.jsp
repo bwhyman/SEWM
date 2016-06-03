@@ -32,7 +32,7 @@
 			})
 
 			$("#mybtn").click(function(){
-				//创建存储已选学生id的数组，以1,2,3的形式传至服务器进行解析，将选中学生的选题信息确认成功
+				//创建存储已选学生id的数组，已1,2,3的形式传至服务器进行解析，将选中学生的选题信息确认成功
 	            var str = new Array();
 	            var i = 0;
 				$(".myradio").each(function(){
@@ -66,24 +66,10 @@
 				clicktimes++;
 			}) 
 			
-			$(".userinfo").popover({
-				trigger:'manual',
-	            html: 'true', //needed to show html of course
-	            animation: false
-	        }).on("mouseenter", function () {
-	                    var _this = this;
-	                    $(this).popover("show");
-	                    $(this).siblings(".popover").on("mouseleave", function () {
-	                        $(_this).popover('hide');
-	                    });
-	                }).on("mouseleave", function () {
-	                    var _this = this;
-	                    setTimeout(function () {
-	                        if (!$(".popover:hover").length) {
-	                            $(_this).popover("hide")
-	                        }
-	                    }, 100);
-	                });
+			/* $('.myradios').on('change.radiocheck', function() {
+				$(this).children('.myradio').radiocheck('toggle');
+			}); */
+			
 		})
 	</script>
 </jsp:attribute>
@@ -105,13 +91,7 @@
 							<div class="form-group">
 								<label class="radio col-md-6 col-md-offset-1 myradios" style="font-size: 1em;">
 							         <input type="radio" data-toggle="radio" class="myradio" name="radio${t.id} " value="${st.student.student.id }" data-radiocheck-toggle="radio" required>
-									 <a tabindex="0" class="userinfo" data-toggle="popover" data-trigger="focus" 
-										title="详细信息" data-content="
-										学号：${st.student.student.studentId }<br>
-								                班级：${st.student.student.classes.name}<br>
-								                电话：${st.student.student.phoneNumber }">
-								             <span class="glyphicon glyphicon-user" aria-hidden="true">${st.student.student.name }</span>
-								     </a>
+							          ${st.student.student.name }(&nbsp;tel:&nbsp;${st.student.student.phoneNumber }&nbsp;)
 							    </label>
 							</div>
 					</c:forEach>
