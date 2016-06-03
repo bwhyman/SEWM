@@ -35,6 +35,25 @@
 						$('#btn_submit').attr('disabled','disabled');
 					}
 				})
+				
+				$(".userinfo").popover({
+					trigger:'manual',
+		            html: 'true', //needed to show html of course
+		            animation: false
+		        }).on("mouseenter", function () {
+		                    var _this = this;
+		                    $(this).popover("show");
+		                    $(this).siblings(".popover").on("mouseleave", function () {
+		                        $(_this).popover('hide');
+		                    });
+		                }).on("mouseleave", function () {
+		                    var _this = this;
+		                    setTimeout(function () {
+		                        if (!$(".popover:hover").length) {
+		                            $(_this).popover("hide")
+		                        }
+		                    }, 100);
+		                });
 			})
 		</script>
 	</jsp:attribute>
@@ -55,11 +74,18 @@
 			</div>
 			<c:if test="${studentProjects!=null && studentProjects.size()!=0 }">
 				<div class="row">
+					<h6>已通过教师评审</h6>
 					<c:forEach items="${studentProjects }" var="i" varStatus="s">
 						<div class="form-group col-sm-5 col-md-3">
 							<label class="checkbox">
 								<input type="checkbox" class="student" data-toggle="checkbox" name="studentIds"  value="${i.student.id }">
-									<span class="label label-success checkboxspan col-md-10">${i.student.name };${i.student.studentId }</span>
+										<a tabindex="0" class="userinfo" data-toggle="popover" data-trigger="focus" 
+										title="详细信息" data-content="
+										学号：${i.student.studentId }<br>
+								                班级：${i.student.classes.name}<br>
+								                电话：${i.student.phoneNumber }">
+								             <span class="glyphicon glyphicon-user" aria-hidden="true">${i.student.name }</span>
+								        </a>
 							</label>
 						</div>
 					</c:forEach>
@@ -70,11 +96,17 @@
 					<div class="row">
 						<h6>未通过教师评审</h6>
 						<c:forEach items="${notPassTeacherStus }" var="i">
-							<c:if test="${!i.opened }">
+							<c:if test="${i.opened }">
 								<div class="form-group col-sm-5 col-md-3">
 									<label class="checkbox">
 										<input type="checkbox" class="student" data-toggle="checkbox" name="studentIds"  value="${i.student.id }">
-											<span class="label label-warning checkboxspan col-md-10">${i.student.name };${i.student.studentId }</span>
+													<a tabindex="0" class="userinfo" data-toggle="popover" data-trigger="focus" 
+													title="详细信息" data-content="
+													学号：${i.student.studentId }<br>
+											                班级：${i.student.classes.name}<br>
+											                电话：${i.student.phoneNumber }">
+											             <span class="glyphicon glyphicon-user" aria-hidden="true">${i.student.name }</span>
+											        </a>
 									</label>
 								</div>
 							</c:if>
@@ -89,7 +121,13 @@
 							<div class="form-group col-sm-5 col-md-3">
 								<label class="checkbox">
 									<input type="checkbox"data-toggle="checkbox" name="studentIds"  value="${i.student.id }" disabled="disabled">
-										<span class="label label-default checkboxspan col-md-10">${i.student.name };${i.student.studentId }</span>
+										<a tabindex="0" class="userinfo" data-toggle="popover" data-trigger="focus" 
+										title="详细信息" data-content="
+										学号：${i.student.studentId }<br>
+								                班级：${i.student.classes.name}<br>
+								                电话：${i.student.phoneNumber }">
+								             <span class="glyphicon glyphicon-user" aria-hidden="true">${i.student.name }</span>
+								        </a>
 								</label>
 							</div>
 						</c:forEach>
