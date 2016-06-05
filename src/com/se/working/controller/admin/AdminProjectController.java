@@ -219,7 +219,7 @@ public class AdminProjectController {
 	@RequestMapping(path = "/downloadzip/{directory}/")
 	public ResponseEntity<byte[]> getFileZip(@PathVariable String directory) {
 		// 基于任务文件夹相对路径，生成相同名称的zip压缩文件
-		ResponseEntity<byte[]> entity = FileTaskUtils.toResponseEntity(directory, FileTaskUtils.zipDirectory(directory));
+		ResponseEntity<byte[]> entity = FileTaskUtils.toResponseEntity(directory + ".zip", FileTaskUtils.zipDirectory(directory));
 		// 压缩文件已转为字节数组，可以删除压缩文件
 		return entity;
 	}
