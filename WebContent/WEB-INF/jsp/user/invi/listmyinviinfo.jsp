@@ -38,9 +38,9 @@
                   <th>人数</th>
                   <th>分配</th>
                   <th>状态</th>
-                  <th>导入时间</th>
                   <c:if test="${user.userAuthority.level>=15 }">
-                  <th>操作</th>
+                  	<th>导入时间</th>
+                    <th>操作</th>
                   </c:if>
 			</tr>
 			</thead>
@@ -73,9 +73,10 @@
 						<span class="label label-info checkboxspan">
 				</c:if>
 				${i.currentStatusType.name }</span></td>
+				
 				<c:if test="${user.userAuthority.level>=15 }">
-				<td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.insertTime }" /></td>
-				<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>  
+					<td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.insertTime }" /></td>
+					<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>  
 						<a class="btn btn-primary"  href="admin/invi/assigninvi/${i.id }" role="button">分配</a></td>
 				</c:if>		
 			</tr>

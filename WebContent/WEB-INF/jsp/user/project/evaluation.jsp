@@ -66,7 +66,7 @@
 	</c:if>
 	<c:if test="${message==null }">
 			<form class="form-horizontal" action="project/updateevaluation" method="POST" style="margin-left:1em;">
-				<c:if test="${studentProjects.size()!=0 }">
+				<c:if test="${studentProjects.size()!=0 || (notOpenedStudents!=null && notOpenedStudents.size()>0) }">
 					<div class="row ">
 						<label class="checkbox col-sm-5 col-md-1" id="allcheck">
 							<input type="checkbox" data-toggle="checkbox" id="allchecked">
@@ -75,54 +75,58 @@
 								</span>
 						</label>
 					</div>
-					<div class="row">
-						<h6>教师评审</h6>
-						<c:forEach items="${studentProjects }" var="i" varStatus="s">
-							<c:if test="${!isManagerEval }">
-								<div class="form-group col-sm-5 col-md-4">
-									<label class="checkbox">
-										<input type="checkbox" class="student" data-toggle="checkbox" name="studentIds"  value="${i.student.id }">
-											<a tabindex="0" class="userinfo" data-toggle="popover" data-trigger="focus" 
-											title="详细信息" data-content="
-											学号：${i.student.studentId }<br>
-									                班级：${i.student.classes.name}<br>
-									                电话：${i.student.phoneNumber }" style="font-size: large;">
-									             <span class="label label-success" style="font-size:large;">${i.student.name }</span>&nbsp;&nbsp;<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-									        </a>
-									</label>
-								</div>
-							</c:if>
-						</c:forEach>
-					</div>
-				</c:if>
-				<div class="row">
-					<c:if test="${notOpenedStudents!=null && notOpenedStudents.size()>0 }">
-						<h6>未开题</h6>
-							<c:forEach items="${notOpenedStudents }" var="i" varStatus="s">
-								<c:if test="${!i.opened }">
+					<c:if test="${studentProjects.size()!=0 }">
+						<div class="row">
+							<h6>教师评审</h6>
+							<c:forEach items="${studentProjects }" var="i" varStatus="s">
+								<c:if test="${!isManagerEval }">
 									<div class="form-group col-sm-5 col-md-4">
 										<label class="checkbox">
-											<input type="checkbox" data-toggle="checkbox" name="studentIds"  value="${i.student.id }" disabled="disabled">
+											<input type="checkbox" class="student" data-toggle="checkbox" name="studentIds"  value="${i.student.id }">
 												<a tabindex="0" class="userinfo" data-toggle="popover" data-trigger="focus" 
 												title="详细信息" data-content="
 												学号：${i.student.studentId }<br>
 										                班级：${i.student.classes.name}<br>
 										                电话：${i.student.phoneNumber }" style="font-size: large;">
-										             <span class="label label-default" style="font-size:large;">${i.student.name }</span>&nbsp;&nbsp;<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+										             <span class="label label-success" style="font-size:large;">${i.student.name }</span>&nbsp;&nbsp;<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 										        </a>
 										</label>
 									</div>
 								</c:if>
 							</c:forEach>
+						</div>
 					</c:if>
-				</div>
-				
-				<input type="hidden" name="type" value="${type }">
-				<div class="row">
-					<div class="col-md-1">
-						<button type="submit" class="btn btn-primary btn-wide" id="btn_submit" disabled="disabled">提交</button>
+					
+					<div class="row">
+						<c:if test="${notOpenedStudents!=null && notOpenedStudents.size()>0 }">
+							<h6>未开题</h6>
+								<c:forEach items="${notOpenedStudents }" var="i" varStatus="s">
+									<c:if test="${!i.opened }">
+										<div class="form-group col-sm-5 col-md-4">
+											<label class="checkbox">
+												<input type="checkbox" data-toggle="checkbox" name="studentIds"  value="${i.student.id }" disabled="disabled">
+													<a tabindex="0" class="userinfo" data-toggle="popover" data-trigger="focus" 
+													title="详细信息" data-content="
+													学号：${i.student.studentId }<br>
+											                班级：${i.student.classes.name}<br>
+											                电话：${i.student.phoneNumber }" style="font-size: large;">
+											             <span class="label label-default" style="font-size:large;">${i.student.name }</span>&nbsp;&nbsp;<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+											        </a>
+											</label>
+										</div>
+									</c:if>
+								</c:forEach>
+						</c:if>
 					</div>
-				</div>
+					
+					<input type="hidden" name="type" value="${type }">
+					<div class="row">
+						<div class="col-md-1">
+							<button type="submit" class="btn btn-primary btn-wide" id="btn_submit" disabled="disabled">提交</button>
+						</div>
+					</div>
+				</c:if>
+				
 			</form>
 		<c:if test="${evaluations.size()!=0}">
 		<hr>

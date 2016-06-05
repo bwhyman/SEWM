@@ -23,6 +23,8 @@ public class InviTimer {
 	private InviInfoDao infoDao;
 	@Autowired
 	private AlidayuMessage aMessage;
+	@Autowired
+	private InviService inviService;
 
 	/**
 	 * 查询当前时间24hrs以内的已分配及未分配监考
@@ -45,7 +47,13 @@ public class InviTimer {
 		}
 	}
 	
-	
+	/**
+	 * 修改监考已完成状态
+	 */
+	@Scheduled(cron = "0 0/5 * * * ?")
+	public void updateInviStatus(){
+		inviService.updateInviStatusByTimer();
+	}
 
 	public InviTimer() {
 		// TODO Auto-generated constructor stub

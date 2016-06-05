@@ -94,6 +94,9 @@
   <li><a href="project/projectmanagement/selecttitle">选题信息</a></li>
   <li class="active">选题信息</li>
 </ol>
+	<c:if test="${titles.size()==0 }">
+		<div class="alert alert-info" role="alert">当前无任何记录！</div>
+	</c:if>
 	<c:if test="${titles.size()>0 }">
 	
 		<form class="form-horizontal" action="project/confirmselectproject" method="POST">

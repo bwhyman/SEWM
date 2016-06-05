@@ -11,6 +11,22 @@ import com.se.working.invigilation.entity.InvigilationInfo;
 
 @Repository
 public class InviInfoDao extends GenericDao<InvigilationInfo, Long> {
+	
+	/**
+	 * 查询当前未完成的
+	 * @param statusId
+	 * @param calendar
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<InvigilationInfo> listByStatus(long statusId, Calendar calendar){
+		String HQL = "FROM InvigilationInfo i WHERE i.currentStatusType.id =:statusId AND i.endTime <=:calendar";
+		return getSessionFactory().getCurrentSession().createQuery(HQL)
+				.setLong("statusId", statusId)
+				.setCalendar("calendar", calendar)
+				.list();
+	}
+	
 	/**
 	 * 基于时间查找相应监考，全部监考状态<br>
 	 * 查询条件：开始时间在监考时间内，或，结束时间在监考时间内，或，开始时间在监考时间前同时结束时间在监考时间后

@@ -57,8 +57,9 @@
                   <th>状态</th>
                   <th>分配时间</th>
                   <th>导入时间</th>
-                  <c:if test="${user.userAuthority.level>=15 }"></c:if>
-                  <th>操作</th>
+                  <c:if test="${user.userAuthority.level>=15 }">
+                  	<th>操作</th>
+                  </c:if>
 			</tr>
 			</thead>
 			<tbody>

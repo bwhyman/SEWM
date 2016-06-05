@@ -100,6 +100,9 @@ public class UserProjectController {
 		default:
 			break;
 		}
+		if (evaluations == null) {
+			count = 0;
+		}
 		vMap.put("evaluations", evaluations);
 		vMap.put("type", type);
 		vMap.put("typeZH", typeZH);

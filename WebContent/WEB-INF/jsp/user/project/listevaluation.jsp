@@ -16,7 +16,10 @@
 	  <li><a href="project/projectmanagement/stage">阶段管理</a></li>
 	  <li class="active">${typeZH }评审结果</li>
 	</ol>
-	<c:if test="${evaluations.size()!=0 }">
+	<c:if test="${evaluations==null }">
+		<div class="alert alert-info" role="alert">当前无任何记录！</div>
+	</c:if>
+	<c:if test="${evaluations!=null && evaluations.size()!=0 }">
 		<c:if test="${currentPage*15>=count }">
 			(${(currentPage-1)*15+1 } &nbsp;-&nbsp;${count }&nbsp;/&nbsp;${count })
 		</c:if>
