@@ -54,12 +54,12 @@ public class UserController {
 		//任务
 		vMap.put("startUndoTaskTimes", taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.STARTED).size());
 		vMap.put("expiredUndoTaskTimes", taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.EXPIRED).size());
-		vMap.put("recentTasks", taskService.findByUserId(user.getId(), FileTaskStatusType.STARTED, 1));
+		vMap.put("recentTasks", taskService.findByUserId(user.getId(), FileTaskStatusType.STARTED, 5));
 		vMap.put("teacherTask", taskService.findTeacherTaskById(user.getId()));
 		//普通监考
 		vMap.put("undoInviTimes", inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED).size());
 		vMap.put("myInviTimes", inviService.findInviInfosByUserId(user.getId()).size());
-		vMap.put("undoInvi",inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED, 1));
+		vMap.put("undoInvi",inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED, 5));
 		//特殊监考
 		vMap.put("undoSpeInviTimes", specInviService.getCountUndo(user.getId()));
 		vMap.put("mySpeInviTimes", inviService.findTeacherInviById(user.getId()).getSpecialInvigilations().size());

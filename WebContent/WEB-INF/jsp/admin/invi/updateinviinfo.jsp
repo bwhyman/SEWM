@@ -61,8 +61,8 @@
 	<form class="form-horizontal" action="admin/invi/updateinviinfo" method="POST">
 					<input type="hidden" value="${info.id }" name="id">
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">监考日期</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="name" class="col-sm-2 col-md-2 control-label">监考日期</label>
+						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="date">
 						<input type='text' class="form-control" name="date" 
 						value="<fmt:formatDate pattern="yyyy-MM-dd" value="${info.startTime.getTime() }"/>" required />
@@ -74,8 +74,8 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">开始时间</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="name" class="col-sm-2 col-md-2 control-label">开始时间</label>
+						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="stime">
 						<input type='text' class="form-control" name="stime" 
 						 value="<fmt:formatDate pattern="HH:mm" value="${info.startTime.getTime() }"/>" required />
@@ -86,8 +86,8 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">结束时间</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="name" class="col-sm-2 col-md-2 control-label">结束时间</label>
+						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="etime">
 						<input type='text' class="form-control"  name="etime" 
 						value="<fmt:formatDate pattern="HH:mm" value="${info.endTime.getTime() }"/>" required />
@@ -99,30 +99,30 @@
 					</div>
 					
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">地点</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="name" class="col-sm-2 col-md-2 control-label">地点</label>
+						<div class="col-sm-10 col-md-4">
 							<input type="text" class="form-control" placeholder="地点" required 
 							value="${info.location }" name="location">
 						</div>
 					</div>
 					
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">人数</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="name" class="col-sm-2 col-md-2 control-label">人数</label>
+						<div class="col-sm-10 col-md-4">
 							<input type="text" class="form-control" placeholder="人数" required 
 							value="${info.requiredNumber }" name="requiredNumber">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="name" class="col-sm-2 col-md-1 control-label">课程/备注</label>
-						<div class="col-sm-10 col-md-3">
+						<label for="name" class="col-sm-2 col-md-2 control-label">课程/备注</label>
+						<div class="col-sm-10 col-md-4">
 							<textarea class="form-control" rows="5" placeholder="课程/备注" name="comment">${info.comment }</textarea>
 						</div>
 					</div>
 						
 					<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label"></div>
-						<div class="col-sm-10 col-md-3">
+						<div class="col-sm-2 col-md-2 control-label"></div>
+						<div class="col-sm-10 col-md-4">
 							<button type="submit" class="btn btn-primary btn-wide">提交</button>
 							<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>	
 						</div>
@@ -130,11 +130,22 @@
 				</form>	
 				
 				<div class="row">
-						<div class="col-sm-2 col-md-1 control-label"></div>
-						<div class="col-sm-10 col-md-3">
-							<button type="button" class="btn btn-danger btn-wide" data-toggle="modal" data-target="#myModal">删除监考信息</button>	
+						<div class="col-sm-2 col-md-2 control-label"></div>
+						<div class="col-sm-10 col-md-4">
+							<button type="button" class="btn btn-danger btn-wide" data-toggle="modal" data-target="#myModal">删除监考信息</button>
 						</div>
 					</div>
+					<c:if test="${info.requiredNumber > 1}">
+						<form class="form-horizontal" action="admin/invi/splitinviinfo" method="POST">
+							<input type="hidden" value="${info.id }" name="inviinfoid">
+						<div class="form-group">
+							<div class="col-sm-2 col-md-2 control-label"></div>
+							<div class="col-sm-10 col-md-4">
+							<button type="submit" class="btn btn-primary btn-wide">分解监考</button>
+							</div>
+						</div>	
+					</form>
+					</c:if>
 				<br>
 	<p class="text-danger">说明: 
 	修改<span class="label label-danger">已分配</span>监考信息时，如监考人数发生变化，

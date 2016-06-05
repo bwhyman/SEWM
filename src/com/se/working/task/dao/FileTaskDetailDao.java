@@ -63,7 +63,7 @@ public class FileTaskDetailDao extends GenericDao<FileTaskDetail, Long> {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<FileTaskDetail> listByUserId(long userId, long statusId, int maxResult) {
-		String HQL = "FROM FileTaskDetail f WHERE f.fileTask.currentStatus.id=:statusId AND f.teacher.id=:userId AND f.fileTask.endTime >=:currentTime";
+		String HQL = "FROM FileTaskDetail f WHERE f.fileTask.currentStatus.id=:statusId AND f.teacher.id=:userId AND f.fileTask.endTime >=:currentTime ORDER BY f.fileTask.endTime DESC";
 		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
 		query.setLong("userId", userId);
 		query.setLong("statusId", statusId);

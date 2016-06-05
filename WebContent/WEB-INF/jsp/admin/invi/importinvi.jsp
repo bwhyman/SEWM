@@ -18,8 +18,11 @@
 	$(function() {
 		$('#file-1').fileinput({
 			showPreview : false,
+			showUpload: false,
+	        showRemove: false,
 	        browseClass: "btn btn-primary",
 			initialCaption: "上传监考文件",
+			maxFileSize: 50000,
 		});
 	})
 </script>
@@ -32,7 +35,7 @@
   <li><a href="admin/invi/invimanagement">监考管理</a></li>
   <li class="active">导入监考信息</li>
 </ol>
-	${exception }
+	
 	<c:if test="${exception != null}">
 		&nbsp&nbsp
 		<div class="alert alert-danger alert-dismissable" role="alert">
@@ -44,28 +47,43 @@
 </c:if>     
 	
  	<form class="form-horizontal" enctype="multipart/form-data" action="admin/invi/importinvi" method="post">
+ 	<c:forEach items="${infos }" var="i">
+		<input type="hidden" name="inviids" value="${i.id }">
+		</c:forEach>
 		<div class="form-group">
 			<div class="col-sm-10 col-md-8">
 				<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="1" accept=".xls,.xlsx">
 			</div>
 		</div>
 		<div class="form-group">
+		<label for="name" class="col-sm-2 col-md-2 control-label">阶段考试</label>
+	<div class="col-sm-10 col-md-4">
+		<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default" class="myswitch" 
+		name="checked" value="true" />
+	</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-2 col-md-2 control-label"></div>
+		<div class="col-sm-10 col-md-4">
+			<p class="text-danger">
+			阶段考试，自动在备注/课程后追加"阶段"字样</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-2 col-md-2 control-label"></div>
+		<div class="col-sm-10 col-md-4">
+			<button type="submit" class="btn btn-primary btn-wide">提交</button>
+		</div>
+		</div>
+		<div class="form-group">
 			<div class="col-sm-2col-md-12">
-				<p class="text-danger">说明: 
-				监考表格太过随意，字段规则模糊；<br>
-				课程名称可能包含中文字符、英文字符、数字(高等数学A1)，虽然可以区分年级字段，例如，软件工程导论与软件工程2013-01-2，
-				但是，目前在没有课程名称数据的情况下无法完成监考课程的模糊匹配；<br>
-				例如，无法区分会计学与阎为学那个字段是课程名称那个字段是主考教师；<br>
-				<br>
+				<p class="text-danger">说明: 监考表格太过随意，字段规则模糊，
+				因此默认将<span class="label label-danger checkboxspan">表格第一列设为考试课程</span>，请修改表格后加载；<br>
 				导入监考文件不会对数据库中已包含的监考信息做出修改<br>
 				判定规则：与系统原数据比对，考试时间地点相同，即判定为同一考试，因同一地点不可能同时有2个考试<br>
 				因此，如果同一课程监考信息发生重大改变，如修改了考试地点或时间，则系统无法检测，将生成一个新监考信息；因此，需在监考编辑中修改信息<br>
 				如导入的监考时间地点信息与原信息相同，但是监考人数不同，则系统将更新该监考的监考人数，同时将该监考置为未分配状态，便于操作者重新分配<br>
-				<span class="label label-danger checkboxspan">
-					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-						测试期内建议与监考文件比对，防止出错</span>
-				</p>
-				
+				测试期内建议与监考文件比对，防止出错
 			</div>
 		</div>
 	</form>
@@ -75,6 +93,7 @@
 		<thead>
 			<tr>
 				 <th>#</th>
+				 <th>课程/备注</th>
                   <th>日期</th>
                   <th>时间</th>
                   <th>地点</th>
@@ -88,6 +107,7 @@
 				<c:forEach items="${infos }" var="i" varStatus="s">
 				<tr>
 				<td>${s.count }</td>
+				<td>${i.comment }</td>
 				<td><fmt:formatDate pattern="yyyy-MM-dd" value="${i.startTime.getTime() }"/></td>
 				<td><fmt:formatDate pattern="HH:mm" value="${i.startTime.getTime() }"/>
 					- <fmt:formatDate pattern="HH:mm" value="${i.endTime.getTime() }"/></td>
@@ -113,10 +133,6 @@
 			</tbody>
 	</table>
 	</div>
-	<p class="text-danger">说明: 
-	编辑，可对监考信息进行修改，添加监考课程名称等，提交后自动转到监考分配功能
-	分配，直接分配该监考
-	</p>
 	</c:if>
 	  
     </jsp:body>

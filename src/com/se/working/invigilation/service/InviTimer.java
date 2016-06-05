@@ -27,7 +27,7 @@ public class InviTimer {
 	/**
 	 * 查询当前时间24hrs以内的已分配及未分配监考
 	 */
-	// @Scheduled(cron = "30 23 * * * ? ")
+	@Scheduled(cron = "30 23 * * * ? ")
 	public void inviRemind() {
 		Date CurrentDateTime = new Date();
 		Calendar startTime = Calendar.getInstance();
@@ -41,7 +41,7 @@ public class InviTimer {
 		List<InvigilationInfo> assInfos = infoDao.listInviInfos(startTime, endTime, InviStatusType.ASSIGNED);
 		for (InvigilationInfo i : assInfos) {
 			aMessage.sendInviRemind(i);
-			// i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.REMINDED));
+			i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.REMINDED));
 		}
 	}
 	

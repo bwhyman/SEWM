@@ -41,7 +41,7 @@
 					   	<tbody>
 					   		<c:forEach items="${recentTasks }" var="rt">
 					   		<tr>
-					   			<td>任务:<a href="task/filetaskdetail/${rt.id }">${rt.fileTask.name }</a></td>
+					   			<td>任务:<a href="task/filetaskdetail/${rt.fileTask.id }">${rt.fileTask.name }</a></td>
 					   			<td>截止时间:<fmt:formatDate pattern="yyyy-MM-dd HH:mm"
 											value="${rt.fileTask.endTime.getTime() }" /></td>
 					   		</tr>
@@ -88,6 +88,8 @@
 				</p>
 			  </div>
 			</div>
+			</div>
+			 <div class="row">
 			<!-- 毕设信息 -->
 			<div class="panel panel-info col-md-5">
 			  <!-- Default panel contents -->

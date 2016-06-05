@@ -51,6 +51,24 @@ public class TaskService extends GenericService<FileTask, Long> {
 	private NotificationDao notificationDao;
 	@Autowired
 	private AlidayuMessage alidayuMessage;
+	
+	/**
+	 * 修改截止时间早于当前时间的文件任务状态为已过期
+	 * 文件任务过期，但未实现的用户自动减分
+	 */
+	public void updateTaskStatusByTimer(){
+		for (FileTask fileTask : fileTaskDao.listByStatusId(FileTaskStatusType.STARTED, Calendar.getInstance())) {
+			if(fileTask!=null){
+				fileTask.setCurrentStatus(new FileTaskStatus(FileTaskStatusType.EXPIRED));
+				for (FileTaskDetail fileTaskDetail : fileTask.getFileTaskDetails()) {
+					if (!fileTaskDetail.isDone()) {
+						TeacherTask teacher = fileTaskDetail.getTeacher();
+						teacher.setPoint(teacher.getPoint() - fileTask.getPoint());
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * 根据用户id，任务状态，结果数查询文件任务详细信息
