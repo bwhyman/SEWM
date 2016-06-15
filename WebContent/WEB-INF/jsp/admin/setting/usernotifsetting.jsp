@@ -33,7 +33,7 @@
 		
 		</c:forEach>
 		<div class="form-group">
-	<div class="col-md-1">
+	<div class="col-md-1 col-md-offset-1">
 			<button type="submit" class="btn btn-primary btn-wide">提交</button>
 		</div>
 	</div>

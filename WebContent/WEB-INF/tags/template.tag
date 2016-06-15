@@ -45,69 +45,101 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="">专业工作管理平台</a>
+				<a class="navbar-brand" href='<c:if test="${user.userAuthority.level>5 }">main</c:if><c:if test="${user.userAuthority.level==5 }">student/main</c:if>'>专业工作管理平台</a>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<strong>${user.name }, 老师</strong>
+					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href='<c:if test="${user.userAuthority.level>5 }">main</c:if><c:if test="${user.userAuthority.level==5 }">student/main</c:if>'>
+							<strong>${user.name }
+								<c:if test="${user.userAuthority.level >=10}">, 老师</c:if>
+							</strong>
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="updateusersetting">个人设置</a></li>
+							<c:if test="${user.userAuthority.level==5 }">
+								<li><a href="student/updateusersetting">个人设置</a></li>
+							</c:if>
+							<c:if test="${user.userAuthority.level>5 }">
+								<li><a href="updateusersetting">个人设置</a></li>
+							</c:if>
 							<li class="divider"></li>
 							<li><a href="logout">退出</a></li>
 						</ul></li>
-					<!-- <li><a href="#">Settings</a></li>
-					<li><a href="#">Profile</a></li>
-					<li><a href="#">Help</a></li> -->
 				</ul>
-				<!-- <form class="navbar-form navbar-right">
-					<input type="text" class="form-control" placeholder="Search...">
-				</form> -->
 			</div>
 	</nav>
 	<div class="container-fluid">
 		<div class="row">
 			<!-- 左导航 -->
 			<div class="col-sm-3 col-md-2 sidebar">
-				<ul class="nav nav-sidebar">
-					<li class="active"><a href="#">
-							任务信息
-							<span class="sr-only">(current)</span>
-						</a></li>
-						<li><a href="task/listmytask/undone">我的任务</a></li>
-					<li><a href="task/list/started">任务信息</a></li>
-				</ul>
-				<ul class="nav nav-sidebar">
-					<li class="active"><a href="#">
-							监考信息
-							<span class="sr-only">(current)</span>
-						</a></li>
-						<li><a href="invi/listmyinviinfo/undone">我的监考</a></li>
-					<li><a href="invi/listinviinfo/unassinvi">监考信息</a></li>
-				</ul>
-				<c:if test="${user.userAuthority.level >=15 }">
-				<ul class="nav nav-sidebar">
-					<li class="active"><a href="#">
-							工作管理
-							<span class="sr-only">(current)</span>
-						</a></li>
-					<li><a href="admin/invi/invimanagement">监考管理</a></li>
-					<li><a href="admin/task/taskmanagement">任务管理</a></li>
-					<li><a href="admin/setting/usersetting">用户管理</a></li>
-				</ul>
+				<c:if test="${user.userAuthority.level >=10 }">
+					<ul class="nav nav-sidebar">
+						<li class="active"><a href='<c:if test="${user.userAuthority.level>5 }">main</c:if><c:if test="${user.userAuthority.level==5 }">student/main</c:if>'>
+								任务信息
+								<span class="sr-only">(current)</span>
+							</a></li>
+							<li><a href="task/listmytask/undone">我的任务</a></li>
+						<li><a href="task/list/started">任务信息</a></li>
+					</ul>
+					<ul class="nav nav-sidebar">
+						<li class="active"><a href='<c:if test="${user.userAuthority.level>5 }">main</c:if><c:if test="${user.userAuthority.level==5 }">student/main</c:if>'>
+								监考信息
+								<span class="sr-only">(current)</span>
+							</a></li>
+							<li><a href="invi/listmyinviinfo/undone">我的监考</a></li>
+						<li><a href="invi/listinviinfo/unassinvi">监考信息</a></li>
+					</ul>
+					<ul class="nav nav-sidebar">
+						<li class="active"><a href='<c:if test="${user.userAuthority.level>5 }">main</c:if><c:if test="${user.userAuthority.level==5 }">student/main</c:if>'>
+							毕设信息
+								<span class="sr-only">(current)</span>
+							</a></li>
+						<li><a href="project/projectmanagement/titleinfo">题目信息</a></li>
+						<li><a href="project/projectmanagement/selecttitle">选题信息</a></li>
+						<li><a href="project/projectmanagement/stage">阶段管理</a></li>
+					</ul>
+					<c:if test="${user.userAuthority.level >=15 }">
+					<ul class="nav nav-sidebar">
+						<li class="active"><a href='<c:if test="${user.userAuthority.level>5 }">main</c:if><c:if test="${user.userAuthority.level==5 }">student/main</c:if>'>
+								工作管理
+								<span class="sr-only">(current)</span>
+							</a></li>
+						<li><a href="admin/invi/invimanagement">监考管理</a></li>
+						<li><a href="admin/task/taskmanagement">任务管理</a></li>
+						<li><a href="admin/project/projectmanagement">毕设管理</a></li>
+						<li><a href="admin/setting/usersetting">用户管理</a></li>
+					</ul>
+					</c:if>
+					<c:if test="${user.userAuthority.level >=20 }">
+					<ul class="nav nav-sidebar">
+						<li class="active"><a href='<c:if test="${user.userAuthority.level>5 }">main</c:if><c:if test="${user.userAuthority.level==5 }">student/main</c:if>'>
+								系统管理
+								<span class="sr-only">(current)</span>
+							</a></li>
+						<li><a href="">通配符</a></li>
+						<li><a href="">维护日志</a></li>
+						<li><a href="superadmin/initsys">系统初始化</a></li>
+					</ul>
+					</c:if>
 				</c:if>
-				<c:if test="${user.userAuthority.level >=20 }">
-				<ul class="nav nav-sidebar">
-					<li class="active"><a href="#">
-							系统管理
+				<c:if test="${user.userAuthority.level == 5 }">
+					<ul class="nav nav-sidebar">
+						<li class="active"><a href='<c:if test="${user.userAuthority.level>5 }">main</c:if><c:if test="${user.userAuthority.level==5 }">student/main</c:if>'>
+							毕设信息
 							<span class="sr-only">(current)</span>
-						</a></li>
-					<li><a href="">通配符</a></li>
-					<li><a href="">维护日志</a></li>
-					<li><a href="superadmin/initsys">系统初始化</a></li>
-				</ul>
+								</a></li>
+						<li><a href="student/project/mytitle">我的题目</a></li>
+						<li><a href="student/project/listtitles/-1/1">题目信息</a></li>
+					</ul>
+					<ul class="nav nav-sidebar">
+						<li class="active"><a href='<c:if test="${user.userAuthority.level>5 }">main</c:if><c:if test="${user.userAuthority.level==5 }">student/main</c:if>'>
+							阶段信息
+							<span class="sr-only">(current)</span>
+								</a></li>
+						<li><a href="student/project/projectmanagement/opening">开题信息</a></li>
+						<li><a href="student/project/projectmanagement/interim">中期信息</a></li>
+						<li><a href="student/project/projectmanagement/paper">结题信息</a></li>
+					</ul>
 				</c:if>
 			</div>
 			<!-- 主界面 -->
@@ -119,7 +151,7 @@
 
 	<footer class="footer">
 		<div class="container">
-			<p class="text-muted">东北林业大学 软件工程专业. &copy; 2016</p>
+			<p class="text-center" style="margin-top: 3%;">东北林业大学 软件工程专业. &copy; 2016</p>
 		</div>
 	</footer>
 

@@ -18,6 +18,10 @@ import com.se.working.invigilation.dao.TeacherInviDao;
 import com.se.working.invigilation.entity.InvigilationStatusType;
 import com.se.working.invigilation.entity.SpecialInvigilationType;
 import com.se.working.invigilation.entity.TeacherInvigilation;
+import com.se.working.project.dao.ProjectFileTypeDao;
+import com.se.working.project.dao.TeacherProjectDao;
+import com.se.working.project.entity.ProjectFileType;
+import com.se.working.project.entity.TeacherProject;
 import com.se.working.task.dao.FileTaskStatusDao;
 import com.se.working.task.dao.FileTypeDao;
 import com.se.working.task.dao.TeacherTaskDao;
@@ -48,6 +52,11 @@ public class SuperAdminService extends GenericService<User, Long>{
 	private FileTypeDao fileTypeDao;
 	@Autowired
 	private FileTaskStatusDao fileTaskStatusDao;
+	@Autowired
+	private ProjectFileTypeDao projectFileTypeDao;
+	@Autowired
+	private TeacherProjectDao teacherProjectDao;
+	
 	/**
 	 * 初始化职称
 	 * @return 
@@ -118,7 +127,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 	 * 初始化用户
 	 */
 	public void initUser() {
-		if (userDao.list().size() == 0) {
+		if (userAuthorityDao.get(UserAuthorityType.TEACHER).getUsers().size() == 0) {
 			int point = 100;
 			int sqnum = 10;
 			User luo = new User();
@@ -137,6 +146,10 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tluo.setUser(luo);
 			tluo.setPoint(point);
 			teacherTaskDao.persist(tluo);
+			TeacherProject tpluo = new TeacherProject();
+			tpluo.setUser(luo);
+			teacherProjectDao.persist(tpluo);
+			
 			
 			User lili = new User();
 			lili.setName("李莉");
@@ -154,6 +167,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tlili.setUser(lili);
 			tlili.setPoint(point);
 			teacherTaskDao.persist(tlili);
+			TeacherProject tplili = new TeacherProject();
+			tplili.setUser(lili);
+			teacherProjectDao.persist(tplili);
 			
 			User wangjian = new User();
 			wangjian.setName("王健");
@@ -171,6 +187,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			twangjian.setUser(wangjian);
 			twangjian.setPoint(point);
 			teacherTaskDao.persist(twangjian);
+			TeacherProject tpwangjian = new TeacherProject();
+			tpwangjian.setUser(wangjian);
+			teacherProjectDao.persist(tpwangjian);
 			
 			User sujianmin = new User();
 			sujianmin.setName("苏健民");
@@ -188,6 +207,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tsujianmin.setUser(sujianmin);
 			tsujianmin.setPoint(point);
 			teacherTaskDao.persist(tsujianmin);
+			TeacherProject tpsujianmin = new TeacherProject();
+			tpsujianmin.setUser(sujianmin);
+			teacherProjectDao.persist(tpsujianmin);
 			
 			User zhangxiying = new User();
 			zhangxiying.setName("张锡英");
@@ -205,6 +227,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tzhangxiying.setUser(zhangxiying);
 			tzhangxiying.setPoint(point);
 			teacherTaskDao.persist(tzhangxiying);
+			TeacherProject tpzhangxiying = new TeacherProject();
+			tpzhangxiying.setUser(zhangxiying);
+			teacherProjectDao.persist(tpzhangxiying);
 			
 			User qiuzhaowen = new User();
 			qiuzhaowen.setName("邱兆文");
@@ -222,6 +247,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tqiuzhaowen.setUser(qiuzhaowen);
 			tqiuzhaowen.setPoint(point);
 			teacherTaskDao.persist(tqiuzhaowen);
+			TeacherProject tpqiuzhaowen = new TeacherProject();
+			tpqiuzhaowen.setUser(qiuzhaowen);
+			teacherProjectDao.persist(tpqiuzhaowen);
 			
 			User bo = new User();
 			bo.setName("王波");
@@ -239,6 +267,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tbo.setUser(bo);
 			tbo.setPoint(point);
 			teacherTaskDao.persist(tbo);
+			TeacherProject tpbo = new TeacherProject();
+			tpbo.setUser(bo);
+			teacherProjectDao.persist(tpbo);
 			
 			User liyan = new User();
 			liyan.setName("李琰");
@@ -256,6 +287,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tliyan.setUser(liyan);
 			tliyan.setPoint(point);
 			teacherTaskDao.persist(tliyan);
+			TeacherProject tpliyan = new TeacherProject();
+			tpliyan.setUser(liyan);
+			teacherProjectDao.persist(tpliyan);
 			
 			User zhaoyuming = new User();
 			zhaoyuming.setName("赵玉茗");
@@ -273,6 +307,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tzhaoyuming.setUser(zhaoyuming);
 			tzhaoyuming.setPoint(point);
 			teacherTaskDao.persist(tzhaoyuming);
+			TeacherProject tpzhaoyuming = new TeacherProject();
+			tpzhaoyuming.setUser(zhaoyuming);
+			teacherProjectDao.persist(tpzhaoyuming);
 			
 			User wu = new User();
 			wu.setName("吴頔");
@@ -290,6 +327,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			twu.setUser(wu);
 			twu.setPoint(point);
 			teacherTaskDao.persist(twu);
+			TeacherProject tpwu = new TeacherProject();
+			tpwu.setUser(wu);
+			teacherProjectDao.persist(tpwu);
 	
 			
 			User bian = new User();
@@ -308,6 +348,9 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tbian.setUser(bian);
 			tbian.setPoint(point);
 			teacherTaskDao.persist(tbian);
+			TeacherProject tpbian = new TeacherProject();
+			tpbian.setUser(bian);
+			teacherProjectDao.persist(tpbian);
 			
 		}
 	}
@@ -357,6 +400,48 @@ public class SuperAdminService extends GenericService<User, Long>{
 			FileTaskStatus closed = new FileTaskStatus();
 			closed.setName("已关闭");
 			fileTaskStatusDao.persist(closed);
+		}
+	}
+	
+	/**
+	 * 初始化毕设上传文档类型信息
+	 */
+	public void initProjectFileType(){
+		if (projectFileTypeDao.list().size() == 0) {
+			ProjectFileType demonstrationReport = new ProjectFileType();
+			demonstrationReport.setName("论证报告");
+			demonstrationReport.setDirectory("论证报告");
+			projectFileTypeDao.persist(demonstrationReport);
+			
+			ProjectFileType openningReport = new ProjectFileType();
+			openningReport.setName("开题报告");
+			openningReport.setDirectory("开题报告");
+			projectFileTypeDao.persist(openningReport);
+			
+			ProjectFileType openDefenseRecord = new ProjectFileType();
+			openDefenseRecord.setName("开题答辩记录");
+			openDefenseRecord.setDirectory("开题答辩记录");
+			projectFileTypeDao.persist(openDefenseRecord);
+			
+			ProjectFileType interimDefenseRecord = new ProjectFileType();
+			interimDefenseRecord.setName("中期答辩记录");
+			interimDefenseRecord.setDirectory("中期答辩记录");
+			projectFileTypeDao.persist(interimDefenseRecord);
+			
+			ProjectFileType paperDefenseRecord = new ProjectFileType();
+			paperDefenseRecord.setName("论文答辩记录");
+			paperDefenseRecord.setDirectory("论文答辩记录");
+			projectFileTypeDao.persist(paperDefenseRecord);
+			
+			ProjectFileType interimReport = new ProjectFileType();
+			interimReport.setName("中期报告");
+			interimReport.setDirectory("中期报告");
+			projectFileTypeDao.persist(interimReport);
+			
+			ProjectFileType paper = new ProjectFileType();
+			paper.setName("论文");
+			paper.setDirectory("论文");
+			projectFileTypeDao.persist(paper);
 		}
 	}
 	

@@ -28,6 +28,16 @@ public class SpecInviService extends GenericService<SpecialInvigilation, Long> {
 	private SpecialInviInfoDao specInfoDao;
 	@Autowired
 	private TeacherInviDao teacherInviDao;
+	
+	/**
+	 * 指定用户还未完成的监考总数
+	 * @param userId
+	 * @return
+	 */
+	public long getCountUndo(long userId){
+		return specInviDao.getCountUndo(userId);
+	}
+	
 	/**
 	 * 查找全部特殊监考类
 	 * @return

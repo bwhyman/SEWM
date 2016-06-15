@@ -27,11 +27,23 @@
 			});
 
 			$('#implbutton').click(function() {
-				$('#impldiv').slideToggle('slow');
+				$(this).addClass('btn-danger');
+				$('#closebutton').removeClass('btn-danger');
+				$('#impldiv').slideToggle('slow',function(){
+					if ($('#impldiv').is(":hidden")) {
+						$('#implbutton').removeClass('btn-danger');
+					}
+				});
 				$('#closediv').slideUp();
 			});
 			$('#closebutton').click(function() {
-				$('#closediv').slideToggle('slow');
+				$(this).addClass('btn-danger');
+				$('#implbutton').removeClass('btn-danger');
+				$('#closediv').slideToggle('slow',function(){
+					if ($("#closediv").is(":hidden")) {
+						$('#closebutton').removeClass('btn-danger');
+					}
+				});
 				$('#impldiv').slideUp();
 			});
 			
@@ -131,7 +143,7 @@
 		<c:if test="${task.currentStatus.id < 3}">
 			<div class="form-group">
 				<div class="col-sm-2 col-md-1 control-label"></div>
-				<div class="col-sm-10 col-md-5">
+				<div class="col-sm-10 col-md-6">
 					<a class="btn btn-primary btn-wide" role="button" id="implbutton">实现</a>
 					<c:if test="${user.userAuthority.level >=15 }">
 						<a class="btn btn-primary btn-wide" href="admin/task/updatefiletask/${task.id }" role="button">编辑</a>
@@ -190,11 +202,11 @@
 			<label for="name" class="col-sm-2 col-md-1 control-label">
 				<span class="label label-danger">未完成</span>
 			</label>
-			<div class="col-sm-10 col-md-3">
+			<div class="col-sm-10 col-md-4">
 				<select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info"
 							name="undoneusers" id="select">
 					<c:forEach items="${task.fileTaskDetails }" var="f">
-						<option value="${f.teacher.id }" <c:if test="${f.done ==  false}">selected</c:if>>${f.teacher.user.name }
+						<option value="${f.teacher.id }" <%-- <c:if test="${f.done ==  false}">selected</c:if> --%>>${f.teacher.user.name }
 							</c:forEach>
 				</select>
 			</div>

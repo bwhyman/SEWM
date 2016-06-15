@@ -1,7 +1,6 @@
 package com.se.working.controller.user;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +24,7 @@ import com.se.working.util.DateUtils;
 @RequestMapping("/invi")
 public class UserInviController {
 	private String USER = "user";
-	private String redirect = "redirect:";
+	//private String redirect = "redirect:";
 	private String basePath = "/user/invi/";
 	@Autowired
 	private InviService inviService;

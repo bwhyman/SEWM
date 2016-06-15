@@ -28,6 +28,20 @@ public class FileTaskUtils {
 	private static String INVIGILATION = setInviDirectory();
 
 	/**
+	 * 基于文件目录，文件名称，重命名文件
+	 * @param directory
+	 * @param FileName
+	 */
+	public static void renameFileTaskFile(String directory, String FileName, String newName) {
+		File file = new File(ROOT +directory + "\\" + FileName);
+		if (file.exists() && file.isFile()) {
+			file.renameTo(new File(ROOT +directory + "\\" + newName));
+		}else {
+			throw new SEWMException("文件已不存在");
+		}
+	}
+	
+	/**
 	 * 空文件，在课表文件夹下创建课表文件
 	 * 
 	 * @param fileName

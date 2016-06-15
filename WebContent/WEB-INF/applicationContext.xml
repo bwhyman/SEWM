@@ -28,7 +28,7 @@
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/sewm" />
+		<property name="url" value="jdbc:mysql://localhost:3306/sewm1" />
 		<property name="username" value="root" />
 		<property name="password" value="root" />
 		<!-- 池启动时创建的连接数量 -->
@@ -62,14 +62,23 @@
 	<mvc:interceptors>
 		<!-- 登录用户操作 -->
 		<mvc:interceptor>
-			<!-- 所有操作 -->
+		<!-- 所有操作 -->
 			<mvc:mapping path="/**" />
 			<!-- 排除login操作 -->
 			<mvc:exclude-mapping path="/login" />
 			<mvc:exclude-mapping path="/logout" />
+			<mvc:exclude-mapping path="/student/studentlogin"/>
 			<!-- 排除资源 -->
 			<mvc:exclude-mapping path="/resources/**" />
 			<bean class="com.se.working.interceptor.UserInterceptor"></bean>
+		</mvc:interceptor>
+		<!-- 学生登录操作 -->
+		<mvc:interceptor>
+			<!-- 所有操作 -->
+			<mvc:mapping path="/student/**" />
+			<mvc:exclude-mapping path="/student/studentlogin"/>
+			<mvc:exclude-mapping path="/resources/**" />
+			<bean class="com.se.working.interceptor.StudentInterceptor"></bean>
 		</mvc:interceptor>
 		<!-- 管理员操作 -->
 		<mvc:interceptor>
@@ -96,7 +105,7 @@
 	</bean>
 
 	<!-- 根目录重定向，设置welcome为空，定向view-name对应的视图名称，不调用controller -->
-	<mvc:view-controller path="/" view-name="/user/main" />
+	<!-- <mvc:view-controller path="/" view-name="/user/main" /> -->
 	
 
 </beans>

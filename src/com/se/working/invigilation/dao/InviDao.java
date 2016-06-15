@@ -18,7 +18,7 @@ import com.se.working.invigilation.entity.Invigilation;
 public class InviDao extends GenericDao<Invigilation, Long> {
 	@SuppressWarnings("unchecked")
 	public List<Invigilation> listInvisByUserIdAndTypeId(long userId, long typeId) {
-		String HQL = "FROM Invigilation i WHERE i.teacher.id=:userId AND i.invInfo.currentStatusType.id = :typeId ORDER BY i.invInfo.startTime";
+		String HQL = "FROM Invigilation i WHERE i.teacher.id=:userId AND i.invInfo.currentStatusType.id =:typeId ORDER BY i.invInfo.startTime";
 		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
 		query.setLong("userId", userId);
 		query.setLong("typeId", typeId);

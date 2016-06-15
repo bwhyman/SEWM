@@ -1,6 +1,7 @@
 package com.se.working.task.dao;
 
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -54,5 +55,21 @@ public class FileTaskDetailDao extends GenericDao<FileTaskDetail, Long> {
 		return query.list();
 	}
 	
+	/**
+	 * 指定用户，指定任务状态，还未到截止时间的任务详细信息
+	 * @param userId
+	 * @param done
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<FileTaskDetail> listByUserId(long userId, long statusId, int maxResult) {
+		String HQL = "FROM FileTaskDetail f WHERE f.fileTask.currentStatus.id=:statusId AND f.teacher.id=:userId AND f.fileTask.endTime >=:currentTime ORDER BY f.fileTask.endTime ASC";
+		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+		query.setLong("userId", userId);
+		query.setLong("statusId", statusId);
+		query.setCalendar("currentTime", Calendar.getInstance());
+		query.setMaxResults(maxResult);
+		return query.list();
+	}
 	
 }

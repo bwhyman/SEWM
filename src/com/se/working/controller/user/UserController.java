@@ -16,7 +16,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
 import com.se.working.exception.SEWMException;
+import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
+import com.se.working.invigilation.service.InviService;
+import com.se.working.invigilation.service.SpecInviService;
+import com.se.working.project.entity.ProjectFileType.FileTypes;
+import com.se.working.project.service.ProjectService;
 import com.se.working.service.UserService;
+import com.se.working.task.entity.FileTaskStatus.FileTaskStatusType;
+import com.se.working.task.service.TaskService;
 import com.se.working.util.FileTaskUtils;
 
 /**
@@ -32,6 +39,47 @@ public class UserController {
 	private String basePath = "/user/";
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private InviService inviService;
+	@Autowired
+	private TaskService taskService;
+	@Autowired
+	private SpecInviService specInviService;
+	@Autowired
+	private ProjectService projectService;
+	
+	@RequestMapping(path = "/main")
+	public String toMain(Map<String, Object> vMap, HttpSession session){
+		User user = (User) session.getAttribute(USER);
+		//任务
+		vMap.put("startUndoTaskTimes", taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.STARTED).size());
+		vMap.put("expiredUndoTaskTimes", taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.EXPIRED).size());
+		vMap.put("recentTasks", taskService.findByUserId(user.getId(), FileTaskStatusType.STARTED, 5));
+		vMap.put("teacherTask", taskService.findTeacherTaskById(user.getId()));
+		//普通监考
+		vMap.put("undoInviTimes", inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED).size());
+		vMap.put("myInviTimes", inviService.findInviInfosByUserId(user.getId()).size());
+		vMap.put("undoInvi",inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED, 5));
+		//特殊监考
+		vMap.put("undoSpeInviTimes", specInviService.getCountUndo(user.getId()));
+		vMap.put("mySpeInviTimes", inviService.findTeacherInviById(user.getId()).getSpecialInvigilations().size());
+		//毕设信息
+		String stageType = null;
+		if (projectService.stageIsOpenedBy(FileTypes.DEMONSTRATIONREPORT)) {
+			stageType = "titles";
+		}
+		if (projectService.stageIsOpenedBy(FileTypes.OPENINGREPORT)) {
+			stageType = "opening";
+		}
+		if (projectService.stageIsOpenedBy(FileTypes.INTERIMREPORT)) {
+			stageType = "interim";
+		}
+		if (projectService.stageIsOpenedBy(FileTypes.PAPER)) {
+			stageType = "paper";
+		}
+		vMap.put("stageType", stageType);
+		return basePath + "main";
+	}
 
 	/**
 	 * 加载login页面

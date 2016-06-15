@@ -71,8 +71,8 @@
 	<form class="form-horizontal" action="admin/task/updatefiletask" enctype="multipart/form-data" method="POST">
 			<input type="hidden" value="${task.id }" name="id">
 		<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-1 control-label">截止时间</label>
-			<div class="col-sm-10 col-md-3">
+			<label for="name" class="col-sm-2 col-md-2 control-label">截止时间</label>
+			<div class="col-sm-10 col-md-4">
 				<div class='input-group date' id="date">
 					<input type='text' class="form-control" name="datetime" required
 					 value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${task.endTime.getTime() }"/>" />
@@ -83,15 +83,15 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-1 control-label">任务名称</label>
-			<div class="col-sm-10 col-md-3">
+			<label for="name" class="col-sm-2 col-md-2 control-label">任务名称</label>
+			<div class="col-sm-10 col-md-4">
 				${task.name }
 			</div>
 			
 			</div>
 			<div class="form-group">
-				<label for="name" class="col-sm-2 col-md-1 control-label">文件格式</label>
-				<div class="col-sm-10 col-md-3">
+				<label for="name" class="col-sm-2 col-md-2 control-label">文件格式</label>
+				<div class="col-sm-10 col-md-4">
 					<c:forEach items="${filetypes }" var="f" varStatus="s">
 						<input type="hidden" id="type_${f.id }" value="${f.type }">
 					
@@ -106,8 +106,8 @@
 			</div>
 		
 		<div class="form-group">
-			<label for="title" class="col-sm-2 col-md-1 control-label">分值</label>
-			<div class="col-sm-10 col-md-3">
+			<label for="title" class="col-sm-2 col-md-2 control-label">分值</label>
+			<div class="col-sm-10 col-md-4">
 				<select data-toggle="select" class="select select-primary mrs mbm" name="point">
 					<option value="1" <c:if test="${task.point == 1 }">selected</c:if>>1			
 					<option value="2" <c:if test="${task.point == 2 }">selected</c:if>>2
@@ -119,8 +119,8 @@
 		</div>
 
 		<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-1 control-label">人员</label>
-			<div class="col-sm-10 col-md-3">
+			<label for="name" class="col-sm-2 col-md-2 control-label">人员</label>
+			<div class="col-sm-10 col-md-4">
 				<select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info" name="teachers"
 					required>
 					<c:forEach items="${users }" var="a">
@@ -135,29 +135,29 @@
 		</div>
 
 		<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-1 control-label">说明</label>
-			<div class="col-sm-10 col-md-3">
+			<label for="name" class="col-sm-2 col-md-2 control-label">说明</label>
+			<div class="col-sm-10 col-md-4">
 				<textarea class="form-control" rows="5" placeholder="说明" name="comment">${task.comment }</textarea>
 			</div>
 			
 		</div>
 		<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-1 control-label">文件模板</label>
+			<label for="name" class="col-sm-2 col-md-2 control-label">文件模板</label>
 			<div class="col-sm-10 col-md-5">
 				<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="0" accept="">
 			</div>
 			</div>
 			
 			<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-1 control-label">我的任务</label>
-			<div class="col-sm-10 col-md-3">
+			<label for="name" class="col-sm-2 col-md-2 control-label">我的任务</label>
+			<div class="col-sm-10 col-md-4">
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
 							 value="true" name="mytask" />
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="name" class="col-sm-2 col-md-1 control-label">通知</label>
-			<div class="col-sm-10 col-md-3">
+			<label for="name" class="col-sm-2 col-md-2 control-label">通知</label>
+			<div class="col-sm-10 col-md-4">
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default"
 							 value="true" name="notice" />
 			</div>
@@ -175,8 +175,10 @@
 		</div>
 		<div class="form-group">
 			<div class="col-sm-2 col-md-1 control-label"></div>
-			<div class="col-sm-10 col-md-3">
+			<div class="col-sm-10 col-md-2">
 				<button type="submit" class="btn btn-primary btn-wide">提交</button>
+			</div>
+			<div class="col-sm-10 col-md-2">
 				<button type="reset" class="btn btn-danger btn-wide" id="reset">重置</button>
 			</div>
 		</div>

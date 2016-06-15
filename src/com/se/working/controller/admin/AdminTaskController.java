@@ -24,7 +24,6 @@ import com.se.working.task.entity.Notification;
 import com.se.working.task.entity.TeacherTask;
 import com.se.working.task.service.TaskService;
 import com.se.working.util.DateUtils;
-import com.se.working.util.FileTaskUtils;
 
 @Controller
 @RequestMapping("/admin/task/")
@@ -68,7 +67,7 @@ public class AdminTaskController {
 			MultipartFile uploadFile, Boolean mytask, Boolean notice, HttpSession session) {
 		Calendar endTime = DateUtils.getCalendar(datetime);
 		if (endTime.getTime().before(new Date())) {
-			// throw new SEWMException("截止时间在当前时间之前");
+			throw new SEWMException("截止时间在当前时间之前");
 		}
 		if (teachers == null) {
 			throw new SEWMException("任务相关人员不能为空");

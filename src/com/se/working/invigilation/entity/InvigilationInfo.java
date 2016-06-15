@@ -32,6 +32,7 @@ public class InvigilationInfo {
 	private int requiredNumber;
 	// 监考安排
 	@OneToMany(mappedBy = "invInfo", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OrderBy("id ASC")
 	private Set<Invigilation> invigilations;
 	// 监考安排状态历史信息
 	@OneToMany(mappedBy = "invInfo",  cascade = {CascadeType.PERSIST, CascadeType.REMOVE})

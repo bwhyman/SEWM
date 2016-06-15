@@ -199,7 +199,7 @@ public class AlidayuMessage {
 		AlibabaAliqinFcSmsNumSendResponse rsp;
 		System.out.println(smsParamString);
 		System.out.println(recNum);
-		try {
+		/*try {
 			rsp = client.execute(req);
 			String body = rsp.getBody();
 			System.out.println(body);
@@ -216,7 +216,10 @@ public class AlidayuMessage {
 			client = null;
 			req = null;
 			rsp = null;
-		}
+		}*/
+		client = null;
+		req = null;
+		rsp = null;
 		
 		return result;
 	}
@@ -231,7 +234,7 @@ public class AlidayuMessage {
 		req.setRecNum("15104548299");
 		// 必须使用注册的短信模板
 		req.setSmsTemplateCode(smsTemplateCode);
-		try {
+		/*try {
 			client.execute(req);
 		} catch (ApiException e) {
 			// TODO Auto-generated catch block
@@ -239,8 +242,9 @@ public class AlidayuMessage {
 		} finally {
 			client = null;
 			req = null;
-		}
-
+		}*/
+		client = null;
+		req = null;
 	}
 
 	public AlidayuMessage() {

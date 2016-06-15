@@ -3,7 +3,6 @@ package com.se.working.controller.admin;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +89,7 @@ public class AdminInviController {
 	 * @throws SEWMException
 	 */
 	@RequestMapping(path = "/importinvi", method = RequestMethod.POST)
-	public String importInvigilation(MultipartFile uploadFile, RedirectAttributes vMap) {
+	public String importInvigilation(MultipartFile uploadFile, boolean checked, RedirectAttributes vMap) {
 
 		if (uploadFile.isEmpty()) {
 			throw new SEWMException("上传文件为空");
@@ -102,14 +101,9 @@ public class AdminInviController {
 			throw new SEWMException("不是Excel表格文件");
 		}
 		
-		try {
-			List<InvigilationInfo> infos = inviService.importInvi(uploadFile);
-			// 反序
-			Collections.reverse(infos);
-			vMap.addFlashAttribute("infos", infos);
-		} finally {
-			uploadFile = null;
-		}
+		List<InvigilationInfo> infos = inviService.importInvi(uploadFile, checked);
+		vMap.addFlashAttribute("infos", infos);
+		uploadFile = null;
 
 		return redirect + "importinvi";
 	}
@@ -233,6 +227,17 @@ public class AdminInviController {
 		}
 		
 		return redirect + basePath + "sendinvimessage/" +inviinfoid;
+	}
+	
+	/**
+	 * 为便于与家属等共同监考，提供将单一监考信息分解功能，允许同一监考，1人分配2次
+	 * @param inviinfoid
+	 * @return
+	 */
+	@RequestMapping(path = "/splitinviinfo", method = RequestMethod.POST)
+	public String splitInviInfo(long inviinfoid) {
+		inviService.splitInviInfo(inviinfoid);
+	 	return redirect + "/invi/listinviinfo/unassinvi";
 	}
 
 	/**

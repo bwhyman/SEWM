@@ -33,9 +33,9 @@
 		<div class="alert alert-success alert-dismissable" role="alert">
   			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
-			</button><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			</button>
   <c:forEach var="r" items="${results }" varStatus="s">
-  	${r } <c:if test="${s.last != true}"><br></c:if>
+  	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>${r } <c:if test="${s.last != true}"><br></c:if>
   </c:forEach>
 </div>
 </c:if>

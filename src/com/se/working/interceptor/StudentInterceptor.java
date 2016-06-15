@@ -29,7 +29,7 @@ public class StudentInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("StudentInterceptor");
+		
 		return true;
 	}
 

@@ -1,0 +1,138 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="myTemplate" tagdir="/WEB-INF/tags/"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+
+<myTemplate:template>
+<jsp:attribute name="footer">
+	<script>
+		$(function(){
+			var leadNum = parseInt('${leadNum}');
+			
+			//点击时判断已选人数是否超过系统要求人数
+			$('.myradio').click(function(){
+				var current = $(this);
+				if(current.prop('checked')==true){
+					var i = 0;
+					$('.myradio').each(function(){
+						if($(this).prop('checked')){
+							i++;
+							if (i>leadNum) {
+								current.radiocheck('uncheck'); 
+							}
+						}
+					})
+				}
+			})
+
+			$("#mybtn").click(function(){
+				//创建存储已选学生id的数组，已1,2,3的形式传至服务器进行解析，将选中学生的选题信息确认成功
+	            var str = new Array();
+	            var i = 0;
+				$(".myradio").each(function(){
+					if ($(this).prop('checked')) {
+						str[i++] = $(this).val();
+					}
+				})
+				if(i==0){
+					return false;
+				}
+				$.post('project/confirmselectproject',{
+					'studentId':str.toString()
+				},function(){
+					location.href = "project/selecttitles/" + ${user.id} + '/1';
+				})
+			})
+			
+			var curstudentid = 0;
+			var clicktimes = 0;
+			//使用clicktimes根据点击次数设置radio的值，因执行radio的点击事件时radio已选中
+			$('.myradio').click(function(){
+				if(curstudentid != $(this).attr('value')){
+					curstudentid = $(this).attr('value');
+					clicktimes = 1;
+				}
+				if(clicktimes%2==0){
+					$(this).radiocheck('uncheck');
+				}else{
+					$(this).radiocheck('check');
+				}
+				clicktimes++;
+			}) 
+			
+			$(".userinfo").popover({
+				trigger:'manual',
+	            html: 'true', //needed to show html of course
+	            animation: false
+	        }).on("mouseenter", function () {
+	                    var _this = this;
+	                    $(this).popover("show");
+	                    $(this).siblings(".popover").on("mouseleave", function () {
+	                        $(_this).popover('hide');
+	                    });
+	                }).on("mouseleave", function () {
+	                    var _this = this;
+	                    setTimeout(function () {
+	                        if (!$(".popover:hover").length) {
+	                            $(_this).popover("hide")
+	                        }
+	                    }, 100);
+	        });
+			
+		})
+	</script>
+</jsp:attribute>
+	<jsp:body>
+	<ol class="breadcrumb">
+  <li><a href="">主页</a></li>
+  <li><a href="project/projectmanagement/selecttitle">选题信息</a></li>
+  <li class="active">选题信息</li>
+</ol>
+	<c:if test="${titles.size()==0 }">
+		<div class="alert alert-info" role="alert">当前无任何记录！</div>
+	</c:if>
+	<c:if test="${titles.size()>0 }">
+	
+		<form class="form-horizontal" action="project/confirmselectproject" method="POST">
+			<c:forEach items="${titles }" var="t" varStatus="s">
+				<div class="panel panel-default">
+				  <!-- Default panel contents -->
+				  <div class="panel-heading">${s.count}.${t.name }</div>
+				  <div class="panel-body">
+				    <c:forEach items="${t.selectedTitleDetails }" var="st">
+							<div class="form-group">
+								<label class="radio col-md-6 col-md-offset-1 myradios" style="font-size: 1em;">
+							         <input type="radio" data-toggle="radio" class="myradio" name="radio${t.id} " value="${st.student.student.id }" data-radiocheck-toggle="radio" required>
+							          <a tabindex="0" class="userinfo" data-toggle="popover" data-trigger="focus" 
+										title="详细信息" data-content="
+										学号：${st.student.student.studentId }<br>
+								                班级：${st.student.student.classes.name}<br>
+								                电话：${st.student.student.phoneNumber }">
+								            ${st.student.student.name }&nbsp;&nbsp;<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+								     </a>
+							    </label>
+							</div>
+					</c:forEach>
+				  </div>
+				</div>
+			</c:forEach>
+			<!-- <div class="form-group">
+				<div class="col-sm-10 col-md-11 ">
+					<p class="text-danger">说明：确认后无法修改，请慎重考虑。</p>
+				</div>
+			</div> -->
+			<div class="form-group">
+				<div class="col-md-1">
+					<button type="button" class="btn btn-primary btn-wide" id="mybtn">提交</button>
+				</div>
+			</div>
+		</form>
+	</c:if>
+    </jsp:body>
+</myTemplate:template>

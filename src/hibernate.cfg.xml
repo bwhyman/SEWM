@@ -12,6 +12,8 @@
   <mapping class="com.se.working.entity.TeacherTitle"/>
   <mapping class="com.se.working.entity.User"/>
   <mapping class="com.se.working.entity.UserAuthority"/>
+  <mapping class="com.se.working.entity.Student"/>
+  <mapping class="com.se.working.entity.Classes"/>
   <mapping class="com.se.working.invigilation.entity.Course"/>
   <mapping class="com.se.working.invigilation.entity.CourseSection"/>
   <mapping class="com.se.working.invigilation.entity.Invigilation"/>
@@ -28,6 +30,16 @@
   <mapping class="com.se.working.task.entity.FileType"/>
   <mapping class="com.se.working.task.entity.TeacherTask"/>
   <mapping class="com.se.working.task.entity.FileTaskStatus"/>
-   <mapping class="com.se.working.task.entity.Notification"/>
+  <mapping class="com.se.working.task.entity.Notification"/>
+   
+   <!--  -->
+  <mapping class="com.se.working.project.entity.ProjectTitle"/>
+  <mapping class="com.se.working.project.entity.ProjectFileType"/>
+  <mapping class="com.se.working.project.entity.StudentProject"/>
+  <mapping class="com.se.working.project.entity.TeacherProject"/>
+  <mapping class="com.se.working.project.entity.SelectedTitleDetail"/>
+  <mapping class="com.se.working.project.entity.ProjectFileDetail"/>
+  <mapping class="com.se.working.project.entity.GuideRecord"/>
+  <mapping class="com.se.working.project.entity.Evaluation"/>
  </session-factory>
 </hibernate-configuration>

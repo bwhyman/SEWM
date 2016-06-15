@@ -1,13 +1,10 @@
 package com.se.working.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -28,6 +25,7 @@ public class CollegeTimetableUtils {
 	 */
 	private static final String COURSE_SECTION = "([^\n].*)\n(.*)\n(.*)\n(.*[^\n])";
 	
+	@SuppressWarnings("unused")
 	private static void getTimetable(File excelFile, List<User> users) {
 		Workbook workbook = null;
 		try {
