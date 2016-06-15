@@ -22,7 +22,7 @@
         	<!-- 任务信息 -->
         	<div class="panel panel-info col-md-5">
 			  <!-- Default panel contents -->
-			  <div class="panel-heading">任务信息</div>
+			  <div class="panel-heading">任务信息<span style="margin-left: 15em;"><a href="task/listmytask/undone"><strong>more</strong></a></span></div>
 			  <div class="panel-body">
 			  	<p>当前分值:<span class="label label-success">${teacherTask.point }</span>
 				</p>
@@ -34,7 +34,7 @@
 					  <table class="table">
 					  	<thead>
 							<tr>
-					   			<th>未完成任务</th>
+					   			<th>最近任务</th>
 					   			<th></th>
 					   		</tr>
 					   	</thead>
@@ -42,22 +42,18 @@
 					   		<c:forEach items="${recentTasks }" var="rt">
 					   		<tr>
 					   			<td>任务:<a href="task/filetaskdetail/${rt.fileTask.id }">${rt.fileTask.name }</a></td>
-					   			<td>截止时间:<fmt:formatDate pattern="yyyy-MM-dd HH:mm"
+					   			<td>截止:<fmt:formatDate pattern="yyyy-MM-dd HH:mm"
 											value="${rt.fileTask.endTime.getTime() }" /></td>
 					   		</tr>
 					   		</c:forEach>
 					   	</tbody>
 					  </table>
-			    
-			    <p class="text-right">
-					<a href="task/listmytask/undone"><strong>more</strong></a>
-				</p>
 			  </div>
 			</div>
 			<!-- 监考信息 -->
 			<div class="panel panel-info col-md-5">
 			  <!-- Default panel contents -->
-			  <div class="panel-heading">监考信息</div>
+			  <div class="panel-heading">监考信息 <span style="margin-left: 14em;"><a href="invi/listmyinviinfo/undone"><strong>more</strong></a></span></div>
 			  <div class="panel-body">
 			    <p>普通监考:<span class="label label-success">未完成：${undoInviTimes }；分配总数：${myInviTimes }；</span>
 					</p>
@@ -82,10 +78,6 @@
 					   		</c:forEach>
 					   	</tbody>
 					  </table>
-			    
-			    <p class="text-right">
-					<a href="invi/listmyinviinfo/undone"><strong>more</strong></a>
-				</p>
 			  </div>
 			</div>
 			</div>

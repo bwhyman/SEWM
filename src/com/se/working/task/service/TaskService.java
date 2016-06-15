@@ -51,14 +51,13 @@ public class TaskService extends GenericService<FileTask, Long> {
 	private NotificationDao notificationDao;
 	@Autowired
 	private AlidayuMessage alidayuMessage;
-	
+
 	/**
-	 * 修改截止时间早于当前时间的文件任务状态为已过期
-	 * 文件任务过期，但未实现的用户自动减分
+	 * 修改截止时间早于当前时间的文件任务状态为已过期 文件任务过期，但未实现的用户自动减分
 	 */
-	public void updateTaskStatusByTimer(){
+	public void updateTaskStatusByTimer() {
 		for (FileTask fileTask : fileTaskDao.listByStatusId(FileTaskStatusType.STARTED, Calendar.getInstance())) {
-			if(fileTask!=null){
+			if (fileTask != null) {
 				fileTask.setCurrentStatus(new FileTaskStatus(FileTaskStatusType.EXPIRED));
 				for (FileTaskDetail fileTaskDetail : fileTask.getFileTaskDetails()) {
 					if (!fileTaskDetail.isDone()) {
@@ -72,24 +71,26 @@ public class TaskService extends GenericService<FileTask, Long> {
 
 	/**
 	 * 根据用户id，任务状态，结果数查询文件任务详细信息
+	 * 
 	 * @param userId
 	 * @param statusId
 	 * @param maxResult
 	 * @return
 	 */
-	public List<FileTaskDetail> findByUserId(long userId, long statusId, int maxResult){
+	public List<FileTaskDetail> findByUserId(long userId, long statusId, int maxResult) {
 		return fileTaskDetailDao.listByUserId(userId, statusId, maxResult);
 	}
-	
+
 	/**
 	 * 根据id查教师任务信息
+	 * 
 	 * @param userId
 	 * @return
 	 */
-	public TeacherTask findTeacherTaskById(long userId){
+	public TeacherTask findTeacherTaskById(long userId) {
 		return teacherTaskDao.get(userId);
 	}
-	
+
 	/**
 	 * 全部教师任务信息
 	 * 
@@ -105,13 +106,14 @@ public class TaskService extends GenericService<FileTask, Long> {
 	 * @param task
 	 * @param teachers
 	 * @return
-	 * @throws SEWMException 
+	 * @throws SEWMException
 	 * @throws IOException
 	 * @throws IllegalStateException
 	 */
-	public long addFileTask(FileTask fileTask, long filetypeid, long[] teachers, MultipartFile uploadFile, long userId) {
+	public long addFileTask(FileTask fileTask, long filetypeid, long[] teachers, MultipartFile uploadFile,
+			long userId) {
 		// TODO Auto-generated method stub
-		
+
 		fileTask.setCreateUser(new TeacherTask(userId));
 		fileTask.setFileType(new FileType(filetypeid));
 		fileTask.setCurrentStatus(new FileTaskStatus(FileTaskStatusType.STARTED));
@@ -135,6 +137,9 @@ public class TaskService extends GenericService<FileTask, Long> {
 			fileTask.setTempleteFile(fileName);
 			File file = FileTaskUtils.getOrCreateFileTaskFile(fileTask.getDirectory(), fileName);
 			FileTaskUtils.transferTo(uploadFile, file);
+		} else {
+			// 没有模版文件，创建文件存放目录
+			FileTaskUtils.getOrCreateTaskDirectory(fileTask.getId(), fileTask.getName());
 		}
 
 		// 创建任务及任务细节
@@ -192,6 +197,7 @@ public class TaskService extends GenericService<FileTask, Long> {
 
 	/**
 	 * 查找指定用户，指定任务状态，指定任务详细状态，的所有任务详细信息
+	 * 
 	 * @param userId
 	 * @param done
 	 * @param statusId
@@ -226,10 +232,11 @@ public class TaskService extends GenericService<FileTask, Long> {
 	/**
 	 * 完成文件任务<br>
 	 * 单一文件直接基于模板文件修改，不再为每位教师生成单独的文件
+	 * 
 	 * @param userId
 	 * @param fileTaskId
 	 * @param uploadFile
-	 * @throws SEWMException 
+	 * @throws SEWMException
 	 */
 	public void implementFileTask(long userId, long fileTaskId, MultipartFile uploadFile) {
 		FileTask task = fileTaskDao.get(fileTaskId);
@@ -270,7 +277,7 @@ public class TaskService extends GenericService<FileTask, Long> {
 			// 如果上传空文件，并且曾经上传过文件，则删除原上传文件
 			if (detail.getFile() != null) {
 				FileTaskUtils.deleteFileTaskFile(task.getDirectory(), detail.getFile());
-				//  清空file字段
+				// 清空file字段
 				detail.setFile(null);
 			}
 		}
@@ -290,7 +297,6 @@ public class TaskService extends GenericService<FileTask, Long> {
 		}
 		return teacherTasks;
 	}
-	
 
 	/**
 	 * 删除相应任务，及所有文件
@@ -308,12 +314,13 @@ public class TaskService extends GenericService<FileTask, Long> {
 
 	/**
 	 * 修改文件任务信息
+	 * 
 	 * @param fileTask
 	 * @param filetypeid
 	 * @param teachers
 	 * @param uploadFile
 	 * @param userId
-	 * @throws SEWMException 
+	 * @throws SEWMException
 	 */
 	public void updateFileTask(FileTask fileTask, long filetypeid, long[] teachers, MultipartFile uploadFile,
 			long userId) {
@@ -325,10 +332,29 @@ public class TaskService extends GenericService<FileTask, Long> {
 
 		// 创建模板文件
 		if (!uploadFile.isEmpty()) {
-			File file = FileTaskUtils.getOrCreateFileTaskFile(fileTask.getDirectory(), fileTask.getTempleteFile());
-			
+			// 创建文件任务模板文件
+			String ext = StringUtils.getFilenameExtension(uploadFile.getOriginalFilename());
+			String fileName = null;
+			// 基于单文件、普通任务文件命名模板文件
+			if (old.isSingleFile()) {
+				fileName = FileTaskUtils.getSingalFileTaskTemplateName(old.getName(), ext);
+			} else {
+				fileName = FileTaskUtils.getFileTaskTemplateName(old.getName(), ext);
+			}
+			old.setTempleteFile(fileName);
+			File file = FileTaskUtils.getOrCreateFileTaskFile(old.getDirectory(), fileName);
 			FileTaskUtils.transferTo(uploadFile, file);
+		} else {
+			// 没有模版文件，创建文件存放目录
+			FileTaskUtils.getOrCreateTaskDirectory(old.getId(), old.getName());
 		}
+
+		/*// 创建模板文件
+		if (!uploadFile.isEmpty()) {
+			File file = FileTaskUtils.getOrCreateFileTaskFile(fileTask.getDirectory(), fileTask.getTempleteFile());
+
+			FileTaskUtils.transferTo(uploadFile, file);
+		}*/
 
 		// 删除原人员
 		for (FileTaskDetail d : old.getFileTaskDetails()) {
@@ -342,9 +368,10 @@ public class TaskService extends GenericService<FileTask, Long> {
 			fileTaskDetailDao.persist(taskDetail);
 		}
 	}
-	
+
 	/**
 	 * 关闭文件任务
+	 * 
 	 * @param task
 	 * @param undoneUserId
 	 */
@@ -361,17 +388,18 @@ public class TaskService extends GenericService<FileTask, Long> {
 			}
 		}
 		task.setCurrentStatus(new FileTaskStatus(FileTaskStatusType.CLOSED));
-		
-		if (undoneUserId.length >  0) {
+
+		if (undoneUserId.length > 0) {
 			for (int i = 0; i < undoneUserId.length; i++) {
 				FileTaskDetail detail = fileTaskDetailDao.getByUserIdAndFileTaskId(undoneUserId[i], task.getId());
 				detail.setDone(false);
 			}
 		}
 	}
-	
+
 	/**
 	 * 添加通知
+	 * 
 	 * @param notification
 	 * @param teacherIds
 	 */

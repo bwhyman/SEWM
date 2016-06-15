@@ -182,16 +182,12 @@ public class InviService extends GenericService<Invigilation, Long> {
 
 	/**
 	 * 导入监考信息
-	 * 
-	 * @param excelFile
+	 * @param uploadFile
 	 * @return
-	 * @throws SEWMException
-	 * @throws Exception
 	 */
 	public List<InvigilationInfo> importInvi(MultipartFile uploadFile, boolean phaseInviInfo) {
 		List<InvigilationInfo> newInfos = new ArrayList<>();
-		try {
-			InputStream is = uploadFile.getInputStream();
+		try(InputStream is = uploadFile.getInputStream()) {
 			// 封装监考人数，地点，起止时间
 			List<InvigilationInfo> infos = InviExcelUtil.getExcel(is);
 			if (infos == null) {
@@ -211,16 +207,6 @@ public class InviService extends GenericService<Invigilation, Long> {
 							o.setRequiredNumber(i.getRequiredNumber());
 							// 重置状态
 							o.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
-							
-							// 如果是阶段监考，添加阶段字样
-							if (phaseInviInfo) {
-								String comment = i.getComment();
-							 	if (!comment.contains("阶段")) {
-							 		comment = comment + "阶段";
-							 		i.setComment(comment);
-							 	}
-							}
-							
 							for (Invigilation invi : o.getInvigilations()) {
 								inviDao.delete(invi);
 							}
@@ -236,6 +222,16 @@ public class InviService extends GenericService<Invigilation, Long> {
 				if (!exists) {
 					// 持久化时需关联延迟加载对象的创建
 					i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
+					
+					// 如果是阶段监考，添加阶段字样
+					if (phaseInviInfo) {
+						String comment = i.getComment();
+						if (!comment.contains("阶段")) {
+							comment = comment + "阶段";
+							i.setComment(comment);
+						}
+					}
+
 					inviInfoDao.persist(i);
 					// 先刷新，在同步
 					inviInfoDao.flush();

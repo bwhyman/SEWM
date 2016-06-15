@@ -35,12 +35,26 @@
 	
 	</div>
 	<c:if test="${user.userAuthority.level>=15 }">
-	<div class="row-fluid">
+	<!-- <div class="row-fluid">
 	<p class="text-danger">说明: 
 	编辑，对监考信息进行修改，修改监考时间地点，添加监考课程名称等，提交后自动转到监考分配<br>
 	分配，对已分配监考完成重新分配，对未分配监考创建监考分配
 	</p>
-	</div>
+	</div> -->
+	<div>
+            <ul class="pagination">
+            <c:if test="${currentpage > 1 }">
+            	<li class="previous"><a href="invi/listinviinfo/${type}/${currentpage-1}" class="fui-arrow-left"></a></li>
+            </c:if>
+              <c:forEach var="x" begin="1" end="${countpages }" step="1">
+              	<li <c:if test="${x == currentpage }">class="active"</c:if>>
+              	<a href="invi/listinviinfo/${type}/${x }">${x }</a></li>
+              </c:forEach>
+              <c:if test="${currentpage < countpages }">
+            	<li class="next"><a href="invi/listinviinfo/${type}/${currentpage+1}" class="fui-arrow-right"></a></li>
+            </c:if>   
+            </ul>
+          </div>
 	</c:if>
 		 <div class="table-responsive">
 		 (${firstresult+1 } - ${firstresult + infos.size() } / ${typesize })
@@ -101,8 +115,12 @@
 				
 				<td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.insertTime }" /></td>
 				<c:if test="${user.userAuthority.level>=15 }">
-				<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>  
-						<a class="btn btn-primary"  href="admin/invi/assigninvi/${i.id }" role="button">分配</a></td>
+				<td>
+					<c:if test="${i.currentStatusType.id < 3}">
+						<a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>  
+						<a class="btn btn-primary"  href="admin/invi/assigninvi/${i.id }" role="button">分配</a>
+					</c:if>
+				</td>
 				</c:if>
 			</tr>
 			</c:forEach>
@@ -110,19 +128,6 @@
 	</table>
 	</div>
 	
-		<div>
-            <ul class="pagination">
-            <c:if test="${currentpage > 1 }">
-            	<li class="previous"><a href="invi/listinviinfo/${type}/${currentpage-1}" class="fui-arrow-left"></a></li>
-            </c:if>
-              <c:forEach var="x" begin="1" end="${countpages }" step="1">
-              	<li <c:if test="${x == currentpage }">class="active"</c:if>>
-              	<a href="invi/listinviinfo/${type}/${x }">${x }</a></li>
-              </c:forEach>
-              <c:if test="${currentpage < countpages }">
-            	<li class="next"><a href="invi/listinviinfo/${type}/${currentpage+1}" class="fui-arrow-right"></a></li>
-            </c:if>   
-            </ul>
-          </div>
+		
     </jsp:body>
 </myTemplate:template>

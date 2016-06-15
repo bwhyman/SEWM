@@ -698,7 +698,10 @@ public class ProjectService extends GenericService<ProjectTitle, Long> {
 	 * @return
 	 */
 	public boolean stageIsOpenedBy(long typeId){
-		return projectFileTypeDao.get(typeId).isOpened();
+		if (projectFileTypeDao.get(typeId)!=null) {
+			return projectFileTypeDao.get(typeId).isOpened();
+		}
+		return false;
 	}
 	
 	/**

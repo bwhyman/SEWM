@@ -33,12 +33,25 @@
 			})
 			$('.selecttitle').next('a').hide();
 			
-			$(".telphone").mouseenter(function(){
-				$(this).popover('show');
-			})
-			$(".telphone").mouseleave(function(){
-				$(this).popover('hide');
-			})
+			$(".telphone").popover({
+				trigger:'manual',
+	            html: 'true', //needed to show html of course
+	            animation: false
+	        }).on("mouseenter", function () {
+	                    var _this = this;
+	                    $(this).popover("show");
+	                    $(this).siblings(".popover").on("mouseleave", function () {
+	                        $(_this).popover('hide');
+	                    });
+	                }).on("mouseleave", function () {
+	                    var _this = this;
+	                    setTimeout(function () {
+	                        if (!$(".popover:hover").length) {
+	                            $(_this).popover("hide")
+	                        }
+	                    }, 100);
+	        });
+
 		})
 	</script>
 </jsp:attribute>
@@ -94,8 +107,11 @@
 								<td>${s.count+(currentPage-1)*15 }</td>
 								<td><a href="project/title/${p.id }">${p.title.name }</a></td>
 								<td >
-									<a class="telphone" tabindex="0" data-toggle="popover" data-trigger="focus" data-placement="top" title="联系方式" data-content="${p.title.teacher.user.phoneNumber }">
-										<span class="glyphicon glyphicon-phone-alt" aria-hidden="true">${p.title.teacher.user.name }</span>
+									<a class="telphone" tabindex="0" data-toggle="popover" data-trigger="focus" data-placement="right" title="教师信息" data-content="
+									职称：${p.title.teacher.user.title.name }<br>
+									电话：${p.title.teacher.user.phoneNumber }<br>
+									<%-- 简介：${p.title.teacher.user.introduction } --%>">
+										${p.title.teacher.user.name }&nbsp;&nbsp;<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 									</a>
 								</td>
 								<td>

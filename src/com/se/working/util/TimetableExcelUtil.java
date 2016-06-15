@@ -43,9 +43,6 @@ public class TimetableExcelUtil {
 	 * 
 	 * @param excelFile
 	 * @return
-	 * @throws SEWMException
-	 * @throws Exception
-	 * @throws Exception
 	 */
 	public static List<Course> getExcel(InputStream is) {
 		try {

@@ -114,7 +114,7 @@
 										学号：${st.student.student.studentId }<br>
 								                班级：${st.student.student.classes.name}<br>
 								                电话：${st.student.student.phoneNumber }">
-								             <span class="glyphicon glyphicon-user" aria-hidden="true">${st.student.student.name }</span>
+								            ${st.student.student.name }&nbsp;&nbsp;<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
 								     </a>
 							    </label>
 							</div>
