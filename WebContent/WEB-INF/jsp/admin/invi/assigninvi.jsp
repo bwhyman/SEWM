@@ -95,8 +95,7 @@
 							<!-- 原分配 -->
 							<c:forEach items="${olders }" var="t" varStatus="s">
 								<label class="checkbox">
-								<input type="checkbox" name="checkeds" value="${t.key }" data-toggle="checkbox"  
-								<c:if test="${s.count <= inviInfo.requiredNumber }">checked="checked"</c:if>>
+								<input type="checkbox" name="checkeds" value="${t.key }" data-toggle="checkbox" >
 								<span class="label label-info checkboxspan">
 								 ${t.value }
 								</span></label>
@@ -106,8 +105,7 @@
 							<!-- 新推荐 -->
 							<c:forEach items="${rcds }" var="t" varStatus="s">
 								<label class="checkbox">
-								<input type="checkbox" name="checkeds" value="${t.key }" data-toggle="checkbox" 
-								<c:if test="${s.count <= rest }">checked="checked"</c:if>>
+								<input type="checkbox" name="checkeds" value="${t.key }" data-toggle="checkbox">
 								<span class="label label-success checkboxspan">
 								 ${t.value }
 								</span></label>
@@ -124,8 +122,7 @@
 							<div class="col-sm-10 col-md-10">
 							<c:forEach items="${rcds }" var="t" varStatus="s">
 								<label class="checkbox">
-								<input type="checkbox" name="checkeds" value="${t.key }" data-toggle="checkbox" 
-									<c:if test="${s.count <= inviInfo.requiredNumber }">checked="checked"</c:if>>
+								<input type="checkbox" name="checkeds" value="${t.key }" data-toggle="checkbox">
 								<span class="label label-success checkboxspan">
 								 ${t.value }
 								</span></label>

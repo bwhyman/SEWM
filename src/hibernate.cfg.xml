@@ -9,19 +9,23 @@
   <property name="hibernate.hbm2ddl.auto">update</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   
-  <mapping class="com.se.working.entity.TeacherTitle"/>
   <mapping class="com.se.working.entity.User"/>
+  <mapping class="com.se.working.entity.TeacherTitle"/>
   <mapping class="com.se.working.entity.UserAuthority"/>
+  
   <mapping class="com.se.working.invigilation.entity.Course"/>
   <mapping class="com.se.working.invigilation.entity.CourseSection"/>
   <mapping class="com.se.working.invigilation.entity.Invigilation"/>
   <mapping class="com.se.working.invigilation.entity.InvigilationInfo"/>
-  <mapping class="com.se.working.invigilation.entity.InvigilationStatusDetail"/>
+  <mapping class="com.se.working.invigilation.entity.InvigilationInfoStatusDetail"/>
   <mapping class="com.se.working.invigilation.entity.InvigilationStatusType"/>
+  <mapping class="com.se.working.invigilation.entity.MessageStatusDetail"/>
+  <mapping class="com.se.working.invigilation.entity.MessageStatusType"/>
   <mapping class="com.se.working.invigilation.entity.SpecialInvigilation"/>
   <mapping class="com.se.working.invigilation.entity.SpecialInvigilationInfo"/>
   <mapping class="com.se.working.invigilation.entity.SpecialInvigilationType"/>
   <mapping class="com.se.working.invigilation.entity.TeacherInvigilation"/>
+  
   <!--  -->
   <mapping class="com.se.working.task.entity.FileTask"/>
   <mapping class="com.se.working.task.entity.FileTaskDetail"/>

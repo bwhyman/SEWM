@@ -3,6 +3,8 @@ package com.se.working.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,4 +92,16 @@ public class DateUtils {
 		iWeek = iWeek + 1;
 		return iWeek;
 	}
+	
+	public static Map<Integer, String> weeksZh = new HashMap<>();
+	static {
+		weeksZh.put(2, "一");
+		weeksZh.put(3, "二");
+		weeksZh.put(4, "三");
+		weeksZh.put(5, "四");
+		weeksZh.put(6, "五");
+		weeksZh.put(7, "六");
+		weeksZh.put(1, "日");
+	}
+	
 }

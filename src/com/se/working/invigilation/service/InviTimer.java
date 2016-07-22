@@ -10,9 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.se.working.invigilation.dao.InviInfoDao;
+import com.se.working.invigilation.dao.InviStatusDetailDao;
+import com.se.working.invigilation.dao.MessageStatusDetailDao;
+import com.se.working.invigilation.entity.Invigilation;
 import com.se.working.invigilation.entity.InvigilationInfo;
+import com.se.working.invigilation.entity.InvigilationInfoStatusDetail;
 import com.se.working.invigilation.entity.InvigilationStatusType;
 import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
+import com.se.working.invigilation.entity.MessageStatusDetail;
+import com.se.working.invigilation.entity.MessageStatusType;
 import com.se.working.message.AlidayuMessage;
 
 @Service
@@ -21,6 +27,8 @@ public class InviTimer {
 
 	@Autowired
 	private InviInfoDao infoDao;
+	@Autowired
+	private MessageStatusDetailDao messsageDetailDao;
 	@Autowired
 	private AlidayuMessage aMessage;
 
@@ -37,11 +45,19 @@ public class InviTimer {
 		// 支持跨月日期
 		endTime.add(Calendar.DAY_OF_MONTH, 1);
 		
-		// 已分配监考，发送监考提醒
-		List<InvigilationInfo> assInfos = infoDao.listInviInfos(startTime, endTime, InviStatusType.ASSIGNED);
-		for (InvigilationInfo i : assInfos) {
+		// 基于已分配，发送监考提醒
+		List<InvigilationInfo> infos = infoDao.listInviInfos(startTime, endTime, InviStatusType.ASSIGNED);
+		
+		
+		for (InvigilationInfo i : infos) {
 			aMessage.sendInviRemind(i);
-			// i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.REMINDED));
+			
+			for (Invigilation inv : i.getInvigilations()) {
+				MessageStatusDetail detail = new MessageStatusDetail();
+				detail.setInvigilation(inv);
+				detail.setType(new MessageStatusType(MessageStatusType.REMINDED));
+				messsageDetailDao.persist(detail);
+			}
 		}
 	}
 	

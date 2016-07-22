@@ -1,14 +1,11 @@
 package com.se.working.controller.admin;
 
-
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,7 +53,7 @@ public class AdminInviController {
 	 * @param uploadFile
 	 * @param request
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 * @throws SEWMException
 	 * @throws Exception
 	 */
@@ -71,7 +68,7 @@ public class AdminInviController {
 				|| StringUtils.getFilenameExtension(fileName).equals("xlsx"))) {
 			throw new SEWMException("不是Excel表格文件");
 		}
-		
+
 		List<Course> courses = inviService.importTimetable(uploadFile);
 		uploadFile = null;
 		vMap.addFlashAttribute("courses", courses);
@@ -84,13 +81,9 @@ public class AdminInviController {
 	 * @param uploadFile
 	 * @param request
 	 * @return
-	 * @throws IOException 
-	 * @throws IllegalStateException 
-	 * @throws Exception
-	 * @throws SEWMException
 	 */
 	@RequestMapping(path = "/importinvi", method = RequestMethod.POST)
-	public String importInvigilation(MultipartFile uploadFile, RedirectAttributes vMap) {
+	public String importInvigilation(MultipartFile uploadFile, boolean checked, RedirectAttributes vMap) {
 
 		if (uploadFile.isEmpty()) {
 			throw new SEWMException("上传文件为空");
@@ -101,16 +94,11 @@ public class AdminInviController {
 				|| StringUtils.getFilenameExtension(fileName).equals("xlsx"))) {
 			throw new SEWMException("不是Excel表格文件");
 		}
-		
-		try {
-			List<InvigilationInfo> infos = inviService.importInvi(uploadFile);
-			// 反序
-			Collections.reverse(infos);
-			vMap.addFlashAttribute("infos", infos);
-		} finally {
-			uploadFile = null;
-		}
 
+		List<InvigilationInfo> infos = inviService.importInvi(uploadFile, checked);
+
+		vMap.addFlashAttribute("infos", infos);
+		uploadFile = null;
 		return redirect + "importinvi";
 	}
 
@@ -188,6 +176,7 @@ public class AdminInviController {
 
 	/**
 	 * 提交监考安排，返回至发送监考通知
+	 * 
 	 * @param inviInfoId
 	 * @param checkeds
 	 * @return
@@ -198,12 +187,13 @@ public class AdminInviController {
 			throw new SEWMException("没有分配监考教师");
 		}
 		InvigilationInfo info = inviService.addinvi(inviInfoId, checkeds);
-		
+
 		return redirect + basePath + "sendinvimessage/" + info.getId();
 	}
 
 	/**
 	 * 加载发送短信通知监考信息
+	 * 
 	 * @param inviinfoid
 	 * @param vMap
 	 * @return
@@ -215,9 +205,10 @@ public class AdminInviController {
 		vMap.put("inviinfoid", inviinfoid);
 		return basePath + "sendinvimessage";
 	}
-	
+
 	/**
 	 * 发送监考短信通知
+	 * 
 	 * @param inviids
 	 * @param inviinfoid
 	 * @param vMap
@@ -231,8 +222,8 @@ public class AdminInviController {
 		} else {
 			throw new SEWMException("没有选择发送短信教师！");
 		}
-		
-		return redirect + basePath + "sendinvimessage/" +inviinfoid;
+
+		return redirect + basePath + "sendinvimessage/" + inviinfoid;
 	}
 
 	/**
@@ -271,6 +262,17 @@ public class AdminInviController {
 		inviService.updateInviInfo(info);
 		return redirect + "assigninvi/" + info.getId();
 	}
+
+	/**
+	 * 为便于与家属等共同监考，提供将单一监考信息分解功能，允许同一监考，1人分配2次
+	 * @param inviinfoid
+	 * @return
+	 */
+	@RequestMapping(path = "/splitinviinfo", method = RequestMethod.POST)
+	public String splitInviInfo(long inviinfoid) {
+		inviService.splitInviInfo(inviinfoid);
+		return redirect + "/invi/listinviinfo/unassinvi";
+		}
 
 	/**
 	 * 载入添加特殊监考信息
@@ -319,7 +321,7 @@ public class AdminInviController {
 	@RequestMapping(path = "/delinviinfo", method = RequestMethod.POST)
 	public String delInviInfo(long infoinviid) {
 		inviService.deleteInviInfo(infoinviid);
-		return redirect + "/invi/listinviinfo/unassinvi"; 
+		return redirect + "/invi/listinviinfo/unassinvi";
 	}
 
 	/**
@@ -341,8 +343,10 @@ public class AdminInviController {
 		long inviInfoId = inviService.addInviInfo(info);
 		return redirect + basePath + "assigninvi/" + inviInfoId;
 	}
+
 	/**
 	 * 加载导入课程任务页面
+	 * 
 	 * @param vMap
 	 */
 	@RequestMapping("/importtimetabletask")
@@ -354,19 +358,23 @@ public class AdminInviController {
 	}
 	/**
 	 * 使用课表任务导入课表
+	 * 
 	 * @param filetaskId
-	 * @throws SEWMException 
+	 * @throws SEWMException
 	 */
-	/*@RequestMapping(path = "/importtimetabletask", method = RequestMethod.POST)
-	public String importTimetableTask(long filetaskId, RedirectAttributes vMap) {
-		inviService.importTimetableTask(filetaskId);
-		
-		vMap.addFlashAttribute("teachers", inviService.findTeacherInvigilations());
-		return redirect + basePath + "importtimetabletask";
-	}*/
-	
+	/*
+	 * @RequestMapping(path = "/importtimetabletask", method =
+	 * RequestMethod.POST) public String importTimetableTask(long filetaskId,
+	 * RedirectAttributes vMap) { inviService.importTimetableTask(filetaskId);
+	 * 
+	 * vMap.addFlashAttribute("teachers",
+	 * inviService.findTeacherInvigilations()); return redirect + basePath +
+	 * "importtimetabletask"; }
+	 */
+
 	/**
 	 * 发送监考提醒
+	 * 
 	 * @return
 	 */
 	@RequestMapping(path = "/sendinviremind", method = RequestMethod.POST)
@@ -374,9 +382,10 @@ public class AdminInviController {
 		inviService.sendInviRemind();
 		return redirect + basePath + "invimanagement";
 	}
-	
+
 	/**
 	 * 将从学期初至今的已分配监考置为完成状态
+	 * 
 	 * @return
 	 */
 	@RequestMapping(path = "/setinviinfodone", method = RequestMethod.POST)
@@ -384,8 +393,7 @@ public class AdminInviController {
 		inviService.setInviInfoDone();
 		return redirect + basePath + "invimanagement";
 	}
-	
-	
+
 	/**
 	 * ====================================
 	 */
@@ -405,7 +413,6 @@ public class AdminInviController {
 	public String getView(@PathVariable String root, @PathVariable String viewpath) {
 		return basePath + root + "/" + viewpath;
 	}
-
 
 	public AdminInviController() {
 		// TODO Auto-generated constructor stub

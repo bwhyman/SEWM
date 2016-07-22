@@ -23,6 +23,7 @@ public class InitSys implements InitializingBean {
 		superAdminService.initUserAuthority();
 		superAdminService.initInviStatusType();
 		superAdminService.initUser();
+		superAdminService.initInviMessageType();
 		superAdminService.initSpecInviType();
 		superAdminService.initFileType();
 		superAdminService.initFileTaskStatus();

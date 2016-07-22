@@ -32,11 +32,12 @@ public class InvigilationInfo {
 	private int requiredNumber;
 	// 监考安排
 	@OneToMany(mappedBy = "invInfo", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@OrderBy("id ASC")
 	private Set<Invigilation> invigilations;
 	// 监考安排状态历史信息
 	@OneToMany(mappedBy = "invInfo",  cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	@OrderBy(value ="id ASC")
-	private Set<InvigilationStatusDetail> invStatusDetail;
+	private Set<InvigilationInfoStatusDetail> invStatusDetail;
 	// 当前监考安排状态
 	@ManyToOne
 	private InvigilationStatusType currentStatusType;
@@ -79,11 +80,11 @@ public class InvigilationInfo {
 		this.invigilations = invigilations;
 	}
 
-	public Set<InvigilationStatusDetail> getInvStatusDetail() {
+	public Set<InvigilationInfoStatusDetail> getInvStatusDetail() {
 		return invStatusDetail;
 	}
 
-	public void setInvStatusDetail(Set<InvigilationStatusDetail> invStatusDetail) {
+	public void setInvStatusDetail(Set<InvigilationInfoStatusDetail> invStatusDetail) {
 		this.invStatusDetail = invStatusDetail;
 	}
 

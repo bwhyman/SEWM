@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -195,50 +194,39 @@ public class FileTaskUtils {
 	 * @param directoryPath
 	 * @return
 	 */
-	/*public static File zipDirectory(String directoryPath) {
-		File directory = new File(ROOT + directoryPath);
-		File[] files = directory.listFiles();
-		if (files == null || files.length == 0) {
-			throw new SEWMException("没有任务文件，无法打包下载");
-		}
-		File zipFile = new File(ROOT + directoryPath + "\\" + directoryPath + ".zip");
-		try {
-			InputStream input = null;
-			ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
-			for (int i = 0; i < files.length; ++i) {
-				input = new FileInputStream(files[i]);
-				zipOut.putNextEntry(new ZipEntry(files[i].getName()));
-				int temp = 0;
-				while ((temp = input.read()) != -1) {
-					zipOut.write(temp);
-				}
-			}
-			zipOut.closeEntry();
-			zipOut.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	/*
+	 * public static File zipDirectory(String directoryPath) { File directory =
+	 * new File(ROOT + directoryPath); File[] files = directory.listFiles(); if
+	 * (files == null || files.length == 0) { throw new
+	 * SEWMException("没有任务文件，无法打包下载"); } File zipFile = new File(ROOT +
+	 * directoryPath + "\\" + directoryPath + ".zip"); try { InputStream input =
+	 * null; ZipOutputStream zipOut = new ZipOutputStream(new
+	 * FileOutputStream(zipFile)); for (int i = 0; i < files.length; ++i) {
+	 * input = new FileInputStream(files[i]); zipOut.putNextEntry(new
+	 * ZipEntry(files[i].getName())); int temp = 0; while ((temp = input.read())
+	 * != -1) { zipOut.write(temp); } } zipOut.closeEntry(); zipOut.close(); }
+	 * catch (Exception e) { // TODO Auto-generated catch block
+	 * e.printStackTrace(); }
+	 * 
+	 * return zipFile; }
+	 */
 
-		return zipFile;
-	}*/
-	
 	/**
 	 * 20-课表.zip<br>
 	 * 基于文件任务文件夹压缩全部文件<br>
 	 * 返回z压缩文件字节数组
+	 * 
 	 * @param directoryPath
 	 * @return
 	 */
 	public static byte[] zipDirectory(String directoryPath) {
+		byte[] datas = null;
 		File directory = new File(ROOT + directoryPath);
 		File[] files = directory.listFiles();
 		if (files == null || files.length == 0) {
 			throw new SEWMException("没有任务文件，无法打包下载");
 		}
-		ByteArrayOutputStream os = null;
-		try {
-			os = new ByteArrayOutputStream();
+		try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
 			InputStream input = null;
 			ZipOutputStream zipOut = new ZipOutputStream(os);
 			for (int i = 0; i < files.length; ++i) {
@@ -251,12 +239,14 @@ public class FileTaskUtils {
 			}
 			zipOut.closeEntry();
 			zipOut.close();
-			
+			datas = os.toByteArray();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return os.toByteArray();
+		return datas;
+
 	}
 
 	/**
@@ -283,10 +273,7 @@ public class FileTaskUtils {
 	public static void transferTo(MultipartFile uploadFile, File file) {
 		try {
 			uploadFile.transferTo(file);
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			throw new SEWMException("文件保存至本地时失败；" + e.getMessage());
-		} catch (IOException e) {
+		} catch (IllegalStateException | IOException e) {
 			// TODO Auto-generated catch block
 			throw new SEWMException("文件保存至本地时失败；" + e.getMessage());
 		}
@@ -294,22 +281,17 @@ public class FileTaskUtils {
 
 	/**
 	 * 全局File封装为ResponseEntity<byte[]>，抽象下载实现
+	 * 
 	 * @param file
 	 * @return
 	 */
 	public static ResponseEntity<byte[]> toResponseEntity(File file) {
 		ResponseEntity<byte[]> entity = null;
-		String fileName = null;
 		try {
-			fileName = URLEncoder.encode(file.getName(), "UTF-8");
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		headers.setContentDispositionFormData("attachment", fileName);
-		try {
+			String fileName = URLEncoder.encode(file.getName(), "UTF-8");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			headers.setContentDispositionFormData("attachment", fileName);
 			entity = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.OK);
 			return entity;
 		} catch (IOException e) {
@@ -320,6 +302,7 @@ public class FileTaskUtils {
 
 	/**
 	 * 全局基于文件名称封装为ResponseEntity<byte[]>，抽象下载实现
+	 * 
 	 * @param fileName
 	 * @param datas
 	 * @return

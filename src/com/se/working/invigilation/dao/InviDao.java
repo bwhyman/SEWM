@@ -17,6 +17,7 @@ import com.se.working.invigilation.entity.Invigilation;
 @Repository
 public class InviDao extends GenericDao<Invigilation, Long> {
 	@SuppressWarnings("unchecked")
+	// 基于指定教师、指定监考状态，查询监考分配信息
 	public List<Invigilation> listInvisByUserIdAndTypeId(long userId, long typeId) {
 		String HQL = "FROM Invigilation i WHERE i.teacher.id=:userId AND i.invInfo.currentStatusType.id = :typeId ORDER BY i.invInfo.startTime";
 		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);

@@ -13,9 +13,11 @@ import com.se.working.entity.TeacherTitle.TeacherTitleType;
 import com.se.working.entity.UserAuthority.UserAuthorityLevel;
 import com.se.working.entity.UserAuthority.UserAuthorityType;
 import com.se.working.invigilation.dao.InviTypeDao;
+import com.se.working.invigilation.dao.MessageStatusTypeDao;
 import com.se.working.invigilation.dao.SpecialInviTypeDao;
 import com.se.working.invigilation.dao.TeacherInviDao;
 import com.se.working.invigilation.entity.InvigilationStatusType;
+import com.se.working.invigilation.entity.MessageStatusType;
 import com.se.working.invigilation.entity.SpecialInvigilationType;
 import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.task.dao.FileTaskStatusDao;
@@ -42,6 +44,8 @@ public class SuperAdminService extends GenericService<User, Long>{
 	private TeacherInviDao teacherInvigilationDao;
 	@Autowired
 	private SpecialInviTypeDao specialInviTypeDao;
+	@Autowired
+	private MessageStatusTypeDao messageStatusTypeDao;
 	@Autowired
 	private TeacherTaskDao teacherTaskDao;
 	@Autowired
@@ -103,15 +107,24 @@ public class SuperAdminService extends GenericService<User, Long>{
 			InvigilationStatusType ass = new InvigilationStatusType();
 			ass.setName("已分配");
 			invigilationStatusTypeDao.persist(ass);
-			InvigilationStatusType reminded = new InvigilationStatusType();
-			reminded.setName("已提醒");
-			invigilationStatusTypeDao.persist(reminded);
 			InvigilationStatusType done = new InvigilationStatusType();
 			done.setName("已完成");
 			invigilationStatusTypeDao.persist(done);
-			
 		}
-		
+	}
+	/**
+	 * 初始化监考消息类型
+	 */
+	public void initInviMessageType() {
+		if (messageStatusTypeDao.list().size() == 0) {
+			MessageStatusType notice = new MessageStatusType();
+			notice.setName("已通知");
+			messageStatusTypeDao.persist(notice);
+			
+			MessageStatusType reminded = new MessageStatusType();
+			reminded.setName("已提醒");
+			messageStatusTypeDao.persist(reminded);
+		}
 	}
 
 	/**

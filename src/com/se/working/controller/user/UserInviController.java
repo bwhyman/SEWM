@@ -126,6 +126,24 @@ public class UserInviController {
 		return basePath + "listinviinfo";
 	}
 	
+	/**
+	 * 监考分配详细信息
+	 * @param inviinfoid
+	 * @return
+	 */
+	@RequestMapping(path = "invinfodetail/{inviinfoid}", method = RequestMethod.GET)
+	public String listInviInfoDetail(@PathVariable long inviinfoid, Map<String, Object> vMap) {
+		InvigilationInfo info = inviService.findInviInfo(inviinfoid);
+		int week = DateUtils.getWeekRelativeBaseDate(info.getStartTime());
+		vMap.put("info", info);
+		vMap.put("week", week);
+		return basePath + "listinviinfodetail";
+	}
+	
+	/**
+	 * 下载监考分配详细表格
+	 * @return
+	 */
 	@RequestMapping("downloadinviinfoexcel")
 	public ResponseEntity<byte[]> downloadInviInfoExcel() {
 		return inviService.downloadInviInfoExcel();
