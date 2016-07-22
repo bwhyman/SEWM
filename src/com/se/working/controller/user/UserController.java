@@ -1,8 +1,14 @@
 package com.se.working.controller.user;
 
 import java.io.File;
+import java.util.Base64;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,37 +40,95 @@ public class UserController {
 	private UserService userService;
 
 	/**
-	 * 加载login页面
+	 * 加载login页面，清空session，加载cookie
 	 * 
 	 * @return
 	 */
 	@RequestMapping("/login")
-	public String login(HttpSession session) {
+	public String login(HttpSession session, HttpServletRequest request, Map<String, Object> vMap) {
 		session.invalidate();
+		String remember = null;
+		String name = null;
+		Cookie cookie = getCookie(request);
+		if (cookie != null) {
+			remember = "true";
+			String result = new String(Base64.getDecoder().decode(cookie.getValue()));
+			String result2 = new String(Base64.getDecoder().decode(result));
+			String regex = "(.*)/(.*)/(.*)/(.*)/";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(result2);
+			while (matcher.find()) {
+				name = matcher.group(4);
+			}
+			
+		}
+		vMap.put("remember", remember);
+		vMap.put("name", name);
 		return "login";
 	}
 
 	/**
 	 * 使用redirect重定向时参数会暴露在地址栏，使用RedirectAttributes接口隐藏参数
-	 * 
-	 * @param userName
+	 * 重定向回login时传递登录错误信息参数
+	 * @param employeeNumber
 	 * @param password
-	 * @param model
+	 * @param checked
+	 * @param session
+	 * @param response
 	 * @param errorMap
-	 *            重定向回login时传递登录错误信息参数
 	 * @return
-	 * @throws SEWMException
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(String employeeNumber, String password, HttpSession session, RedirectAttributes errorMap) {
-
+	public String login(String employeeNumber, String password, String checked, HttpSession session, HttpServletResponse response, RedirectAttributes errorMap) {
 		User user = userService.findByPassword(employeeNumber, password);
 		if (user != null) {
 			user.getUserAuthority().getLevel();
 			session.setAttribute(USER, user);
-
+			if (checked != null) {
+				createCookie(response, employeeNumber, password, user.getName());
+			}
 			return redirect + "main";
 		}
+		
+		errorMap.addFlashAttribute("exception", "员工号或密码错误！");
+		return redirect + "login";
+	}
+	
+	/**
+	 * 基于Cookie登录
+	 * @param session
+	 * @param request
+	 * @param errorMap
+	 * @return
+	 */
+	@RequestMapping(value = "/ilogin", method = RequestMethod.POST)
+	public String iLogin(HttpSession session, HttpServletRequest request, HttpServletResponse response,
+			RedirectAttributes errorMap) {
+
+		Cookie cookie = getCookie(request);
+		if (cookie != null) {
+			String result = new String(Base64.getDecoder().decode(cookie.getValue()));
+			String result2 = new String(Base64.getDecoder().decode(result));
+			String regex = "(.*)/(.*)/(.*)/(.*)/";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(result2);
+			String employeeNumber = null;
+			String password = null;
+			while (matcher.find()) {
+				employeeNumber = matcher.group(1);
+				password = matcher.group(3);
+			}
+			if (employeeNumber != null && password != null) {
+				User user = userService.findByPassword(employeeNumber, password);
+				if (user != null) {
+					user.getUserAuthority().getLevel();
+					session.setAttribute(USER, user);
+					return redirect + "main";
+				}
+			}
+		}
+		// 登录错误，清空Cookie
+		cleanCookie(request, response);
 		errorMap.addFlashAttribute("exception", "员工号或密码错误！");
 		return redirect + "login";
 	}
@@ -118,10 +182,6 @@ public class UserController {
 		return redirect + "login";
 	}
 
-	
-
-	
-
 	/**
 	 * 下载文件
 	 * 
@@ -142,7 +202,49 @@ public class UserController {
 		return FileTaskUtils.toResponseEntity(file);
 	}
 	
+	/**
+	 * 创建Cookie，时效1年，算法： 
+	 * @param response
+	 * @param employeeNumber
+	 * @param password
+	 */
+	private void createCookie(HttpServletResponse response, String employeeNumber, String password, String name) {
+		String base42 =  employeeNumber + "/" + "R28H22ZVTAL" + "/" + password + "/" + name + "/";
+		String result = Base64.getEncoder().encodeToString(base42.getBytes());
+		Cookie cookie = new Cookie("sewm", Base64.getEncoder().encodeToString(result.getBytes()));
+		int expiry = 60 * 60 * 24 * 365;
+		cookie.setMaxAge(expiry);
+		response.addCookie(cookie);
+	}
 	
+	/**
+	 * 获取Cookie
+	 * @param request
+	 * @return
+	 */
+	private Cookie getCookie(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		Cookie cookie = null;
+		if (cookies != null) {
+			for (Cookie c : cookies) {
+				if (c.getName().equals("sewm")) {
+					cookie = c;
+				}
+			}
+		}
+		return cookie;
+	}
+	
+	/**
+	 * 清空Cookie
+	 * @param request
+	 * @param response
+	 */
+	private void cleanCookie(HttpServletRequest request, HttpServletResponse response) {
+		Cookie cookie = getCookie(request);
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
+	}
 
 	/*
 	 * ==================================================

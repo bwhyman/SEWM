@@ -12,11 +12,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class InvigilationStatusDetail {
+public class InvigilationInfoStatusDetail {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
-	// 本次监考
+	// 监考信息
 	@ManyToOne
 	private InvigilationInfo invInfo;
 	// 本次状态
@@ -24,9 +24,10 @@ public class InvigilationStatusDetail {
 	private InvigilationStatusType invStatus;
 	//  本次状态改变时间
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	// 仅记录有更新是有效，无法仅更新时间
+	// @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 	private Date assignTime;
-	public InvigilationStatusDetail() {
+	public InvigilationInfoStatusDetail() {
 		// TODO Auto-generated constructor stub
 	}
 	public long getId() {

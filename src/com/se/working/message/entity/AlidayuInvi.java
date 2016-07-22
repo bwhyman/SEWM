@@ -3,6 +3,7 @@ package com.se.working.message.entity;
 public class AlidayuInvi {
 	// 监考信息
 	private String invi = "";
+	private String comment = "";
 	// 监考地点
 	private String location = "";
 	// 监考人员
@@ -44,5 +45,13 @@ public class AlidayuInvi {
 
 	public AlidayuInvi() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

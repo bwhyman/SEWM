@@ -5,7 +5,6 @@
 	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
@@ -46,6 +45,21 @@
 					<h6 class="modal-title" id="myModalLabel">请登录</h6>
 				</div>
 				<div class="modal-body">
+				
+				<div id="ilogin" hidden="">
+					<form class="form-signin" action="ilogin" method="post">
+						<button class="btn btn-lg btn-primary btn-block" type="submit">${name }老师，登录</button>
+						<!-- <a id="relogin">重新登录</a> -->
+						<label class="checkbox" for="relogin">
+								<input type="checkbox" id="relogin" name="checked" data-toggle="checkbox" />
+								<span class="text-info"><strong>重新登录</strong></span>
+							</label>
+					</form>
+				</div>
+				
+				<div id="a" hidden="" class="text-info">text-info</div>
+				
+				<div id="login" hidden="">
 					<form class="form-signin" action="login" method="post">
 						<div class="input-group ">
 							<label for="employeeNumber" class="sr-only">员工号</label>
@@ -54,7 +68,6 @@
 							</span>
 							<input type="text" name="employeeNumber" class="form-control" placeholder="员工号" required>
 						</div>
-
 						<div class="input-group">
 							<label for="password" class="sr-only">密码</label>
 							<span class="input-group-addon">
@@ -62,8 +75,19 @@
 							</span>
 							<input type="password" name="password" class="form-control" placeholder="密码" required>
 						</div>
-
-						<c:if test="${exception != null}">
+						
+						<div class="input-group">
+							<label for="password" class="sr-only"></label>
+							<label class="checkbox" for="checkbox1">
+								<input type="checkbox" id="checkbox1" name="checked" value="1" data-toggle="checkbox" />
+								<span class="text-info"><strong>记住密码</strong></span>
+							</label>
+						</div>
+						<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+					</form>
+				</div>
+				
+				<c:if test="${exception != null}">
 					&nbsp&nbsp
 							<div class="alert alert-danger alert-dismissable" role="alert">
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -73,9 +97,6 @@
 								${exception }
 							</div>
 						</c:if>
-
-						<button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
-					</form>
 				</div>
 			</div>
 			<!-- /.modal-content -->
@@ -90,10 +111,22 @@
 	<script src="resources/js/application.js"></script>
 	<script>
 		$(document).ready(function() {
+			/* 登录异常  */
 			if ('${exception}'.length > 0) {
 				$('#myModal').modal('show');
-
 			}
+			/* cookie是否存在 */
+			if('${remember}'.length > 0) {
+				$('#ilogin').show();
+			} else {
+				$('#login').show();
+			}
+			
+			/* 重新登录 */
+			$('#relogin').click(function() {
+				$('#login').slideToggle('slow');
+				$('#ilogin').slideUp();
+			})
 		})
 	</script>
 </body>

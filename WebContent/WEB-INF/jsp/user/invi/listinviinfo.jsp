@@ -42,38 +42,61 @@
 	</p>
 	</div>
 	</c:if>
+	<div>
+            <ul class="pagination">
+            <c:if test="${currentpage > 1 }">
+            	<li class="previous"><a href="invi/listinviinfo/${type}/${currentpage-1}" class="fui-arrow-left"></a></li>
+            </c:if>
+              <c:forEach var="x" begin="1" end="${countpages }" step="1">
+              	<li <c:if test="${x == currentpage }">class="active"</c:if>>
+              	<a href="invi/listinviinfo/${type}/${x }">${x }</a></li>
+              </c:forEach>
+              <c:if test="${currentpage < countpages }">
+            	<li class="next"><a href="invi/listinviinfo/${type}/${currentpage+1}" class="fui-arrow-right"></a></li>
+            </c:if>   
+            </ul>
+          </div>
 		 <div class="table-responsive">
 		 (${firstresult+1 } - ${firstresult + infos.size() } / ${typesize })
 		<table class="table table-striped table-condensed table-hover">
 		<thead>
 			<tr>
 				 <th>#</th>
-                  <th>日期</th>
                   <th>时间</th>
                   <th>地点</th>
                   <th>课程/备注</th>
                   <th>人数</th>
                   <th>分配</th>
                   <th>状态</th>
-                  <th>分配时间</th>
-                  <th>导入时间</th>
-                  <c:if test="${user.userAuthority.level>=15 }"></c:if>
+                  <th>详细</th>
+                  <c:if test="${user.userAuthority.level>=15 }">
                   <th>操作</th>
+                  </c:if>
 			</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${infos }" var="i" varStatus="s">
 				<tr>
 				<td>${s.count + firstresult }</td>
-				<td>第${weeks[s.index] }周
-				<fmt:formatDate pattern="yyyy-MM-dd E" value="${i.startTime.getTime() }"/></td>
-				<td><fmt:formatDate pattern="HH:mm" value="${i.startTime.getTime() }"/>
-					- <fmt:formatDate pattern="HH:mm" value="${i.endTime.getTime() }"/></td>
+				<td>${weeks[s.index] }周
+				<fmt:formatDate pattern="MM-dd E" value="${i.startTime.getTime() }"/>
+				<br>
+				<fmt:formatDate pattern="HH:mm" value="${i.startTime.getTime() }"/>
+					- <fmt:formatDate pattern="HH:mm" value="${i.endTime.getTime() }"/>
+				</td>
 				<td>${i.location }</td>
 				<td>${i.comment }</td>
 				<td>${i.requiredNumber }</td>
 				<td>
-					<c:forEach items="${i.invigilations }" var="t">${t.teacher.user.name }<br></c:forEach>
+					<c:forEach items="${i.invigilations }" var="t">
+						<c:if test="${t.currentMessageType == null }">
+							<span class="label label-danger checkboxspan"></c:if>
+						<c:if test="${t.currentMessageType != null }">
+							<span class="label label-success checkboxspan"></c:if>
+							${t.teacher.user.name }
+							</span>
+					<br>
+					</c:forEach>
 				</td>
 				
 				<td>
@@ -85,22 +108,15 @@
 						<span class="label label-success checkboxspan">
 				</c:if>
 				<c:if test="${i.currentStatusType.id == 3 }">
-						<span class="label label-success checkboxspan">
-				</c:if>
-				<c:if test="${i.currentStatusType.id == 4 }">
 						<span class="label label-info checkboxspan">
 				</c:if>
 				${i.currentStatusType.name }</span></td>
 				<%-- <td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.invigilations.size}" /></td> --%>
 				<td>
-				<c:if test="${i.invigilations.size() > 0}">
-				<fmt:formatDate pattern="MM-dd HH:mm" value="${i.invigilations.iterator().next().assignTime}" />
-				</c:if>
+				<a class="btn btn-primary" href="invi/invinfodetail/${i.id }" role="button">详细</a>
 				</td>
-				
-				<td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.insertTime }" /></td>
 				<c:if test="${user.userAuthority.level>=15 }">
-				<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>  
+				<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>
 						<a class="btn btn-primary"  href="admin/invi/assigninvi/${i.id }" role="button">分配</a></td>
 				</c:if>
 			</tr>

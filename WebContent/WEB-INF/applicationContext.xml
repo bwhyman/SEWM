@@ -66,6 +66,7 @@
 			<mvc:mapping path="/**" />
 			<!-- 排除login操作 -->
 			<mvc:exclude-mapping path="/login" />
+			<mvc:exclude-mapping path="/ilogin" />
 			<mvc:exclude-mapping path="/logout" />
 			<!-- 排除资源 -->
 			<mvc:exclude-mapping path="/resources/**" />

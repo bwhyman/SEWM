@@ -64,7 +64,7 @@
 	</div>
 	<div class="form-group">
 		<div class="col-sm-2 col-md-2 control-label"></div>
-		<div class="col-sm-10 col-md-4">
+		<div class="col-sm-10 col-md-10">
 			<p class="text-danger">
 			阶段考试，自动在备注/课程后追加"阶段"字样</p>
 		</div>
