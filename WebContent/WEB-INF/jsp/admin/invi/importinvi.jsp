@@ -46,7 +46,7 @@
 </div>
 </c:if>     
 	
- 	<form class="form-horizontal" enctype="multipart/form-data" action="admin/invi/importinvi" method="post">
+ 	<form class="form-horizontal" enctype="multipart/form-data" action="admin/invi/importinviinfos" method="post">
  	<c:forEach items="${infos }" var="i">
 		<input type="hidden" name="inviids" value="${i.id }">
 		</c:forEach>
@@ -99,8 +99,6 @@
                   <th>地点</th>
                   <th>人数</th>
                   <th>状态</th>
-                  <th>导入时间</th>
-                  <th>操作</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -114,26 +112,41 @@
 				<td>${i.location }</td>
 				<td>${i.requiredNumber }</td>
 				<td>
+				<c:if test="${i.currentStatusType != null }">
 					<c:if test="${i.currentStatusType.id == 1 }">
 						<span class="label label-danger checkboxspan">
+						未分配
+						</span>
 				</c:if>
 				<c:if test="${i.currentStatusType.id == 2 }">
 						<span class="label label-success checkboxspan">
+						已分配
+						</span>
 				</c:if>
 				<c:if test="${i.currentStatusType.id == 3 }">
 						<span class="label label-info checkboxspan">
+						已完成
+						</span>
 				</c:if>
-				${i.currentStatusType.name }</span></td>
-				<td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.insertTime }" /></td>
-				<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">
-				<span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span> 编辑</a>  
-						<a class="btn btn-primary"  href="admin/invi/assigninvi/${i.id }" role="button">分配</a></td>
+			
+				</c:if>
+				</td>
+				
 			</tr>
 			</c:forEach>
 			</tbody>
 	</table>
 	</div>
+	<div>
+		<form class="form-horizontal" action="admin/invi/saveinviinfos" method="post">
+		<div class="form-group">
+		<div class="col-sm-2 col-md-2 control-label"></div>
+		<div class="col-sm-10 col-md-4">
+			<button type="submit" class="btn btn-primary btn-wide">提交</button>
+		</div>
+		</div>
+		</form>
+	</div>
 	</c:if>
-	  
     </jsp:body>
 </myTemplate:template>

@@ -287,27 +287,10 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tzhaoyuming.setPoint(point);
 			teacherTaskDao.persist(tzhaoyuming);
 			
-			User wu = new User();
-			wu.setName("吴頔");
-			wu.setEmployeeNumber("1010");
-			wu.setPassword(MD5.generateMD5(wu.getEmployeeNumber()));
-			wu.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
-			wu.setPhoneNumber("15124506720");
-			wu.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
-			userDao.persist(wu);
-			TeacherInvigilation iwu = new TeacherInvigilation();
-			iwu.setUser(wu);
-			iwu.setSqecQuantity(sqnum);
-			teacherInvigilationDao.persist(iwu);
-			TeacherTask twu = new TeacherTask();
-			twu.setUser(wu);
-			twu.setPoint(point);
-			teacherTaskDao.persist(twu);
-	
 			
 			User bian = new User();
 			bian.setName("边继龙");
-			bian.setEmployeeNumber("1011");
+			bian.setEmployeeNumber("1010");
 			bian.setPassword(MD5.generateMD5(bian.getEmployeeNumber()));
 			bian.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
 			bian.setPhoneNumber("13274508193");
@@ -322,6 +305,22 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tbian.setPoint(point);
 			teacherTaskDao.persist(tbian);
 			
+			User shan = new User();
+			shan.setName("冯诚");
+			shan.setEmployeeNumber("15645102121");
+			shan.setPassword(MD5.generateMD5(shan.getEmployeeNumber()));
+			shan.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
+			shan.setPhoneNumber("");
+			shan.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			userDao.persist(shan);
+			TeacherInvigilation ishan = new TeacherInvigilation();
+			ishan.setUser(shan);
+			ishan.setSqecQuantity(sqnum);
+			teacherInvigilationDao.persist(ishan);
+			TeacherTask tshan = new TeacherTask();
+			tshan.setUser(shan);
+			tshan.setPoint(point);
+			teacherTaskDao.persist(tshan);
 		}
 	}
 	

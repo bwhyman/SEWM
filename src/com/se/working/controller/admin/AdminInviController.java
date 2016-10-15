@@ -9,9 +9,12 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -33,6 +36,7 @@ import com.se.working.util.StringUtils;
 
 @Controller
 @RequestMapping("/admin/invi/")
+@SessionAttributes("simportinviinfos")
 public class AdminInviController {
 
 	private String basePath = "/admin/invi/";
@@ -82,7 +86,7 @@ public class AdminInviController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(path = "/importinvi", method = RequestMethod.POST)
+	@RequestMapping(path = "/importinviinfos", method = RequestMethod.POST)
 	public String importInvigilation(MultipartFile uploadFile, boolean checked, RedirectAttributes vMap) {
 
 		if (uploadFile.isEmpty()) {
@@ -98,8 +102,20 @@ public class AdminInviController {
 		List<InvigilationInfo> infos = inviService.importInvi(uploadFile, checked);
 
 		vMap.addFlashAttribute("infos", infos);
+		// 置入@SessionAttributes
+		vMap.addFlashAttribute("simportinviinfos", infos);
 		uploadFile = null;
 		return redirect + "importinvi";
+	}
+	@RequestMapping(path = "/saveinviinfos", method = RequestMethod.POST)
+	public String saveInviInfos(@ModelAttribute("simportinviinfos") List<InvigilationInfo> infos, SessionStatus status) {
+		if (infos != null) {
+			inviService.saveInviInfos(infos);
+		}
+		
+		// 清空
+		status.setComplete();
+		return redirect + "/invi/listinviinfo/unassinvi";
 	}
 
 	/**

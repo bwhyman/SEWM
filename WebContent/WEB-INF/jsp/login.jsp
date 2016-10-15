@@ -30,6 +30,18 @@
     <link rel="shortcut icon" href="resources/images/favicon.png">
 </head>
 <body>
+
+<!--[if lte IE 8]>
+<script>
+alert('检测到您使用的是IE8或以下版本浏览器，将无法正常使用本系统功能'); 
+</script>
+<div class="ie_alert">
+    <p>检测到您使用的是IE8或以下版本浏览器，将无法正常使用本系统功能</p>
+    <p>建议使用Google Chrome最新版本浏览器访问本系统
+    <a href="http://rj.baidu.com/soft/lists/3" target="_blank">最新浏览器下载列表</a></p>
+</div>
+<![endif]-->
+
 	<div class="logindiv">
 		<!-- 按钮触发模态框 -->
 		<button class="btn btn-lg btn-info btn-block" data-toggle="modal" data-target="#myModal">专业工作管理平台</button>

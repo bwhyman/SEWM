@@ -20,7 +20,7 @@ public class TeacherInviDao extends GenericDao<TeacherInvigilation, Long>{
 		return getSessionFactory().getCurrentSession().createQuery(HQL).list();
 	}
 	/**
-	 * 获取所有可监考教师，按监考次数最少的正序，ID倒序
+	 * 获取所有可监考教师，按监考次数最少的正序，ID倒序 SIZE(t.invigilations)
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")

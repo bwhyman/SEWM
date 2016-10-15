@@ -48,6 +48,10 @@ public abstract class GenericDao<T, ID extends Serializable> {
 		// TODO Auto-generated method stub
 		sessionFactory.getCurrentSession().update(entity);
 	}
+	
+	public void merge(T entity) {
+		sessionFactory.getCurrentSession().merge(entity);
+	}
 
 	public T get(ID id) {
 		// TODO Auto-generated method stub
