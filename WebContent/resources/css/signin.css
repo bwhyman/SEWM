@@ -43,3 +43,7 @@ body {
 .modal-title {
 	color: #0080ff;
 }
+
+.ie_alert {
+	color: red;
+}

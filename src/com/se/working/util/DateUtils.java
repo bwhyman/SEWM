@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 public class DateUtils {
 	
-	private static String BASE_DATE = "2016-03-07";
 	private static Pattern pattern = Pattern.compile("(\\d+):(\\d+)");
 	private static Matcher matcher = null;
 	/**
@@ -62,7 +61,7 @@ public class DateUtils {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar calendar = Calendar.getInstance();
 		try {
-			calendar.setTime(simpleDateFormat.parse(BASE_DATE));
+			calendar.setTime(simpleDateFormat.parse(PropertyUtils.getBaseDate()));
 			calendar.set(Calendar.HOUR_OF_DAY, 0);
 			calendar.set(Calendar.MINUTE, 0);
 		} catch (ParseException e) {

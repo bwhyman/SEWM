@@ -2,7 +2,6 @@ package com.se.working.invigilation.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +23,7 @@ public class InvigilationInfoStatusDetail {
 	private InvigilationStatusType invStatus;
 	//  本次状态改变时间
 	@Temporal(TemporalType.TIMESTAMP)
-	// 仅记录有更新是有效，无法仅更新时间
+	// 仅更新有效，无法仅更新时间
 	// @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
 	private Date assignTime;
 	public InvigilationInfoStatusDetail() {

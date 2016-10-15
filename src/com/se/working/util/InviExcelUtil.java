@@ -46,6 +46,8 @@ public class InviExcelUtil {
 	private static String REGEX_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})";
 	// 匹配时间，较模糊，有待修正
 	private static String REGEX_TIME = "(.+)~(.+)";
+	
+	private static String CREATE_EXCEL_TITLE = "软件工程专业监考记录";
 
 	/**
 	 * 从表格中提取专业监考信息集<br>
@@ -326,12 +328,12 @@ public class InviExcelUtil {
 	 * @param workbook
 	 */
 	private static void createDetailTitle(Workbook workbook) {
-		String string = "软件工程专业监考记录";
+		
 		Sheet sheet = workbook.getSheetAt(0);
 		Row row = sheet.createRow(0);
 		Cell cell = row.createCell(0);
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-		cell.setCellValue(string + "  " + date.format(new Date()));
+		cell.setCellValue(CREATE_EXCEL_TITLE + "  " + date.format(new Date()));
 		CellStyle style = workbook.createCellStyle();
 		// 设置居中
 		style.setAlignment(CellStyle.ALIGN_CENTER);
@@ -356,7 +358,7 @@ public class InviExcelUtil {
 		POIXMLProperties xmlProps = workbook.getProperties();
 		POIXMLProperties.CoreProperties coreProps = xmlProps.getCoreProperties();
 		coreProps.setCreator("王波");
-		coreProps.setTitle("软件工程专业监考记录");
+		coreProps.setTitle(CREATE_EXCEL_TITLE);
 	}
 
 	/**
@@ -419,8 +421,7 @@ public class InviExcelUtil {
 	 * @return 字节数组流
 	 */
 	private static byte[] toFile(Workbook workbook) {
-		try {
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try(ByteArrayOutputStream os = new ByteArrayOutputStream()) {
 			workbook.write(os);
 			return os.toByteArray();
 		} catch (Exception e) {

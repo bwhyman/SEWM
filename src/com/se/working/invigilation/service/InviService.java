@@ -167,7 +167,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 	 */
 
 	/**
-	 * 导入监考信息
+	 * 导入监考信息，即使相同也不会修改原记录
 	 * 
 	 * @param uploadFile
 	 * @return
@@ -182,34 +182,28 @@ public class InviService extends GenericService<Invigilation, Long> {
 			}
 			List<InvigilationInfo> oldInfos = inviInfoDao.list();
 			for (InvigilationInfo i : infos) {
-				InvigilationInfo inviInfo = null;
 				boolean exists = false;
 				for (InvigilationInfo o : oldInfos) {
 					// 判断条件，同一时间同一地点不可能有2个监考，有则视为已存在
 					if (i.getLocation().equals(o.getLocation())
 							&& i.getStartTime().getTime().toString().equals(o.getStartTime().getTime().toString())) {
-
-						// 如果监考人数发生变化，重置监考人数，并删除原监考安排
+						// 如果相同，为导入的监考信息设置ID值，设置监考状态，此时对象不是持久化状态，前端无法从session中获取关联属性
+						i.setId(o.getId());
+						i.setCurrentStatusType(o.getCurrentStatusType());
+						
+						// 如果监考人数发生变化，置监考状态为未分配
 						if (o.getRequiredNumber() != i.getRequiredNumber()) {
-							o.setRequiredNumber(i.getRequiredNumber());
+							
 							// 重置状态
-							o.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
-							for (Invigilation invi : o.getInvigilations()) {
-								inviDao.delete(invi);
-							}
-							// 先刷新，在同步
-							inviInfoDao.flush();
-							inviInfoDao.refresh(o);
+							i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
+							
 						}
-						inviInfo = o;
 						exists = true;
 					}
 				}
 				// 不存在则保存
 				if (!exists) {
-					// 持久化时需关联延迟加载对象的创建
-					i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
-
+					
 					// 如果是阶段监考，添加阶段字样
 					if (phaseInviInfo) {
 						String comment = i.getComment();
@@ -218,14 +212,8 @@ public class InviService extends GenericService<Invigilation, Long> {
 							i.setComment(comment);
 						}
 					}
-
-					inviInfoDao.persist(i);
-					// 先刷新，在同步
-					inviInfoDao.flush();
-					inviInfoDao.refresh(i);
-					inviInfo = i;
 				}
-				newInfos.add(inviInfo);
+				newInfos.add(i);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -233,6 +221,21 @@ public class InviService extends GenericService<Invigilation, Long> {
 		}
 
 		return newInfos;
+	}
+	/**
+	 * 保存导入的监考信息
+	 * @param infos
+	 */
+	public void saveInviInfos(List<InvigilationInfo> infos) {
+		for (InvigilationInfo i : infos) {
+			// 判断是否为新监考信息
+			if (i.getId() == 0) {
+				i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
+			} else {
+				
+			}
+			inviInfoDao.merge(i);
+		}
 	}
 
 	/**
@@ -468,7 +471,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 	}
 
 	/**
-	 * 监考安排分配，监考安排更新。 直接更新交复杂。如果第一次人数为2人，后修改为3人，则需创建一个新对象，因此选择删除原记录，创建新纪录
+	 * 监考安排分配，监考安排更新
 	 * 
 	 * @param inviInfoId
 	 * @param tIds
@@ -636,15 +639,16 @@ public class InviService extends GenericService<Invigilation, Long> {
 	}
 
 	/**
-	 * 将从学期初至今的已分配监考置为已完成状态
+	 * 将从学期基点时间减20天，至今的已分配监考置为已完成状态
 	 */
 	public void setInviInfoDone() {
 		Calendar cDate = Calendar.getInstance();
 		cDate.setTime(new Date());
+		Calendar sDate = DateUtils.getBaseCalender();
+		// 基点时间减20天
+		sDate.add(Calendar.DAY_OF_MONTH, -20);
 		// 已分配状态
-		List<InvigilationInfo> infos = inviInfoDao.listInviInfos(DateUtils.getBaseCalender(), cDate,
-				InviStatusType.ASSIGNED);
-
+		List<InvigilationInfo> infos = inviInfoDao.listInviInfos(sDate, cDate,InviStatusType.ASSIGNED);
 		if (infos != null) {
 			for (InvigilationInfo i : infos) {
 				i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.DONE));
@@ -670,7 +674,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 	 * @param inviInfoType
 	 */
 	private void updateInviInfoTypeDetail(InvigilationInfo info, long inviInfoType) {
-		// 更新监考当前状态
+		// 更新监考信息当前状态
 		info.setCurrentStatusType(new InvigilationStatusType(inviInfoType));
 		inviInfoDao.flush();
 		inviInfoDao.refresh(info);
@@ -687,6 +691,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 		InvigilationInfoStatusDetail detail = new InvigilationInfoStatusDetail();
 		detail.setInvInfo(info);
 		detail.setInvStatus(new InvigilationStatusType(inviInfoType));
+		detail.setAssignTime(new Date());
 		inviDetailDao.persist(detail);
 	}
 	
