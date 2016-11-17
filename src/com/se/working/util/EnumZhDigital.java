@@ -1,5 +1,6 @@
 package com.se.working.util;
 
+@Deprecated
 public enum EnumZhDigital {
 	YI("一","1"), ER("二"," 2"), SAN("三", "3"), SI("四", "4"), WU("五", "5");
 	

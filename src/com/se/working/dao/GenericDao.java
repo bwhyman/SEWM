@@ -49,8 +49,15 @@ public abstract class GenericDao<T, ID extends Serializable> {
 		sessionFactory.getCurrentSession().update(entity);
 	}
 	
+	public void saveOrUpdate(T entity) {
+		sessionFactory.getCurrentSession().saveOrUpdate(entity);
+	}
+	
 	public void merge(T entity) {
 		sessionFactory.getCurrentSession().merge(entity);
+	}
+	public void clear() {
+		sessionFactory.getCurrentSession().clear();
 	}
 
 	public T get(ID id) {

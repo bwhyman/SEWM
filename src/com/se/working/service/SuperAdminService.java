@@ -274,7 +274,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			zhaoyuming.setName("赵玉茗");
 			zhaoyuming.setEmployeeNumber("1009");
 			zhaoyuming.setPassword(MD5.generateMD5(zhaoyuming.getEmployeeNumber()));
-			zhaoyuming.setPhoneNumber("");
+			zhaoyuming.setPhoneNumber("13796606560");
 			zhaoyuming.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
 			zhaoyuming.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
 			userDao.persist(zhaoyuming);
@@ -310,7 +310,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			shan.setEmployeeNumber("15645102121");
 			shan.setPassword(MD5.generateMD5(shan.getEmployeeNumber()));
 			shan.setTitle(new TeacherTitle(TeacherTitleType.LECTURER));
-			shan.setPhoneNumber("");
+			shan.setPhoneNumber("15645102121");
 			shan.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
 			userDao.persist(shan);
 			TeacherInvigilation ishan = new TeacherInvigilation();

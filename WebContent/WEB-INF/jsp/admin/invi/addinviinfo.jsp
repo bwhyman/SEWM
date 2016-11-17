@@ -51,6 +51,35 @@
                 	// 与input readonly搭配，禁止手动输入
                 	ignoreReadonly: false,
                 });
+                $('input:radio').click(function() {
+                	var stime;
+                	var etime;
+                	switch($(this).attr('id')) {
+                	case "section12":
+                		stime = "08:00";
+                		etime = "10:00";
+                	break;
+                	case "section34":
+                		stime = "10:05";
+                		etime = "12:00";
+                	break;
+                	case "section56":
+                		stime = "13:30";
+                		etime = "15:30";
+                	break;
+                	case "section78":
+                		stime = "15:35";
+                		etime = "17:35";
+                	break;
+                	case "section910":
+                		stime = "18:00";
+                		etime = "20:00";
+                		break;
+                	}
+                
+                	$('#stime-input').val(stime);
+                	$('#etime-input').val(etime);
+                });
             });
         </script>
 	</jsp:attribute>
@@ -72,12 +101,36 @@
 					</div>
 						</div>
 					</div>
-					
+					<div class="form-group">
+						<label for="name" class="col-sm-2 col-md-2 control-label">监考时间</label>
+						<div class="col-sm-10 col-md-4">
+						<label class=" radio" for="section12">
+							<input type="radio" name="section" id="section12" data-toggle="radio">
+							第一、二节
+						</label>
+						<label class=" radio" for="section34">
+							<input type="radio" name="section" id="section34" data-toggle="radio">
+							第三、四节
+						</label>
+						<label class=" radio" for="section56">
+							<input type="radio" name="section" id="section56" data-toggle="radio">
+							第五、六节
+						</label>
+						<label class=" radio" for="section78">
+							<input type="radio" name="section" id="section78" data-toggle="radio">
+							第七、八节
+						</label>
+						<label class=" radio" for="section910">
+							<input type="radio" name="section" id="section910" data-toggle="radio">
+							第九、十节
+						</label>
+						</div>
+					</div>
 					<div class="form-group">
 						<label for="name" class="col-sm-2 col-md-2 control-label">开始时间</label>
 						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="stime">
-						<input type='text' class="form-control" name="stime" required />
+						<input type='text' class="form-control" name="stime" required id="stime-input" />
 						<span class="input-group-addon"> <span
 							class="glyphicon glyphicon-calendar"></span>
 						</span>
@@ -88,7 +141,7 @@
 						<label for="name" class="col-sm-2 col-md-2 control-label">结束时间</label>
 						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="etime">
-						<input type='text' class="form-control"  name="etime" required />
+						<input type='text' class="form-control"  name="etime" required id="etime-input" />
 						<span class="input-group-addon"> <span
 							class="glyphicon glyphicon-calendar"></span>
 						</span>
@@ -99,7 +152,13 @@
 					<div class="form-group">
 						<label for="name" class="col-sm-2 col-md-2 control-label">地点</label>
 						<div class="col-sm-10 col-md-4">
-							<input type="text" class="form-control" placeholder="地点" required name="location">
+							<input type="text" class="form-control" list="location" required name="location">
+							<datalist id="location">
+								<option value="丹青楼">
+								<option value="成栋楼">
+								<option value="锦绣楼">
+								<option value="研究生楼">
+							</datalist>
 						</div>
 					</div>
 					

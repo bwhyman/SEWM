@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 /**
- * 系统初始化
+ * 系统初始化，不能直接调用dao层，必须调用其他service，由其他service调用dao???
  * @author BO
  *
  */

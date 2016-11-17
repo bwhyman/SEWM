@@ -3,6 +3,7 @@ package com.se.working.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -90,6 +91,15 @@ public class DateUtils {
 		// 没有第0周
 		iWeek = iWeek + 1;
 		return iWeek;
+	}
+	/**
+	 * 返回yyyy-MM-dd HH:mm字符串
+	 * @param date
+	 * @return
+	 */
+	public static String transformDateTimetoString(Date date) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		return simpleDateFormat.format(date);
 	}
 	
 	public static Map<Integer, String> weeksZh = new HashMap<>();

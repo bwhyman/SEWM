@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.poi.POIXMLProperties;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -37,17 +38,23 @@ import com.se.working.invigilation.entity.TeacherInvigilation;
  */
 public class InviExcelUtil {
 
-	private static String REGEX_NUMBER = "软件(.+)人";
 	// 匹配地址
 	private static String REGEX_LOCATION = "(丹青楼.\\d+|锦绣楼.\\d+|成栋楼.\\d+|研究生楼.\\d+)";
 	// 独立的监考开始结束时间，日期与时间分别获取
-	private static String REGEX_IND_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2}).*(\\d{2}:\\d{2})";
+	/**
+	 * 独立的监考开始结束时间，日期与时间分别获取<br>
+	 */
+	private static String REGEX_IND_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})\\s+(\\d{2}:\\d{2})";
 	// 仅匹配日期，不会匹配班级
+	/**
+	 * 仅匹配日期，不会匹配班级<br>
+	 */
 	private static String REGEX_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})";
 	// 匹配时间，较模糊，有待修正
 	private static String REGEX_TIME = "(.+)~(.+)";
+	// 匹配课程名称，去掉[]
+	private static String REGEX_COURSE = "(.*)\\[";
 	
-	private static String CREATE_EXCEL_TITLE = "软件工程专业监考记录";
 
 	/**
 	 * 从表格中提取专业监考信息集<br>
@@ -71,7 +78,7 @@ public class InviExcelUtil {
 
 	private static List<InvigilationInfo> getRow(Sheet sheet) throws ParseException {
 		List<InvigilationInfo> infos = new ArrayList<>();
-		Pattern pNum = Pattern.compile(REGEX_NUMBER);
+		Pattern pNum = Pattern.compile(PropertyUtils.getInviRegexNumber());
 		Matcher mNum = null;
 		for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
 			Row row = sheet.getRow(rowIndex);
@@ -106,17 +113,18 @@ public class InviExcelUtil {
 	 */
 	private static InvigilationInfo getRowInfos(Row row) throws ParseException {
 		InvigilationInfo info = new InvigilationInfo();
-		Pattern pNum = Pattern.compile(REGEX_NUMBER);
+		Pattern pNum = Pattern.compile(PropertyUtils.getInviRegexNumber());
 		Pattern pLocation = Pattern.compile(REGEX_LOCATION);
 		Pattern pDate = Pattern.compile(REGEX_DATE);
 		Pattern pTime = Pattern.compile(REGEX_TIME);
 		Pattern pDtime = Pattern.compile(REGEX_IND_DATE);
+		Pattern pCourse = Pattern.compile(REGEX_COURSE);
 		Matcher mNum = null;
 		Matcher mLocation = null;
 		Matcher mDate = null;
 		Matcher mTime = null;
-		
 		Matcher mDTime = null;
+		Matcher mCourse = null;
 		boolean indTime = false;
 
 		String sNumber = null;
@@ -130,27 +138,43 @@ public class InviExcelUtil {
 			if (cell == null) {
 				continue;
 			}
-			// 强制设置全局cell类型为string
-			cell.setCellType(Cell.CELL_TYPE_STRING);
-
-			// 默认第1列为考试课程
-			if (cellIndex == 0) {
-				sCourse = cell.getStringCellValue();
-				continue;
+			
+			String cellInfo = "";
+			switch (cell.getCellType()) {
+			case Cell.CELL_TYPE_NUMERIC:
+				Date date = HSSFDateUtil.getJavaDate(cell.getNumericCellValue());
+				cellInfo = DateUtils.transformDateTimetoString(date);
+				break;
+			default:
+				// 强制设置全局cell类型为string
+				cell.setCellType(Cell.CELL_TYPE_STRING);
+				cellInfo = cell.getStringCellValue();
+				break;
 			}
-			if (!StringUtils.isEmpty(StringUtils.trimAllWhitespace(cell.getStringCellValue()))) {
-
-				String cellInfo = cell.getStringCellValue().trim();
+			if (!StringUtils.isEmpty(StringUtils.trimAllWhitespace(cellInfo))) {
+				cellInfo = StringUtils.getStandardDate(cellInfo);
+				
+				// 默认第1列为考试课程
+				if (cellIndex == 0) {
+					mCourse = pCourse.matcher(cellInfo);
+					// 是否包含[]，有则去掉
+					if (mCourse.find()) {
+						cellInfo = mCourse.group(1);
+					}
+					sCourse = cellInfo;
+					continue;
+				}
+				
 				mNum = pNum.matcher(cellInfo);
 				// 获取监考人数
 				if (mNum.find()) {
 					sNumber = mNum.group(1);
 					// 判断人数是否为中文数字，是则转为整型字符串
-					for (EnumZhDigital e : EnumZhDigital.values()) {
+					/*for (EnumZhDigital e : EnumZhDigital.values()) {
 						if (e.getZh().equals(sNumber)) {
 							sNumber = e.getDigital();
 						}
-					}
+					}*/
 					continue;
 				}
 				// 获取监考地点
@@ -159,14 +183,7 @@ public class InviExcelUtil {
 					sLocation = mLocation.group(1);
 					continue;
 				}
-
-				// 获取监考日期，先不处理，与监考时间整合后封装
-				cellInfo = cellInfo.replace(".", "-");
-				// 获取监考时间
-				// 如果是中文，转换
-				cellInfo = cellInfo.replace("～", "~");
-				cellInfo = cellInfo.replace("：", ":");
-				
+		
 				/**
 				 * 开始起止时间分别在2个段的获取方法，在日期，时间段前必配
 				 */
@@ -201,6 +218,7 @@ public class InviExcelUtil {
 		Calendar end = Calendar.getInstance();
 		sStartTime = sDate + " " + sStartTime;
 		sEndTime = sDate + " " + sEndTime;
+		
 		start = DateUtils.getCalendar(sStartTime);
 		end = DateUtils.getCalendar(sEndTime);
 
@@ -333,7 +351,7 @@ public class InviExcelUtil {
 		Row row = sheet.createRow(0);
 		Cell cell = row.createCell(0);
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-		cell.setCellValue(CREATE_EXCEL_TITLE + "  " + date.format(new Date()));
+		cell.setCellValue(PropertyUtils.getInviExcelFileTitle() + "  " + date.format(new Date()));
 		CellStyle style = workbook.createCellStyle();
 		// 设置居中
 		style.setAlignment(CellStyle.ALIGN_CENTER);
@@ -358,7 +376,7 @@ public class InviExcelUtil {
 		POIXMLProperties xmlProps = workbook.getProperties();
 		POIXMLProperties.CoreProperties coreProps = xmlProps.getCoreProperties();
 		coreProps.setCreator("王波");
-		coreProps.setTitle(CREATE_EXCEL_TITLE);
+		coreProps.setTitle(PropertyUtils.getInviExcelFileTitle());
 	}
 
 	/**

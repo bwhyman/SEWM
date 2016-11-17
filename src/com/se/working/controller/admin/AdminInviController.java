@@ -88,7 +88,6 @@ public class AdminInviController {
 	 */
 	@RequestMapping(path = "/importinviinfos", method = RequestMethod.POST)
 	public String importInvigilation(MultipartFile uploadFile, boolean checked, RedirectAttributes vMap) {
-
 		if (uploadFile.isEmpty()) {
 			throw new SEWMException("上传文件为空");
 		}
@@ -98,8 +97,7 @@ public class AdminInviController {
 				|| StringUtils.getFilenameExtension(fileName).equals("xlsx"))) {
 			throw new SEWMException("不是Excel表格文件");
 		}
-
-		List<InvigilationInfo> infos = inviService.importInvi(uploadFile, checked);
+		List<InvigilationInfo> infos = inviService.importInviInfos(uploadFile, checked);
 
 		vMap.addFlashAttribute("infos", infos);
 		// 置入@SessionAttributes
@@ -110,7 +108,7 @@ public class AdminInviController {
 	@RequestMapping(path = "/saveinviinfos", method = RequestMethod.POST)
 	public String saveInviInfos(@ModelAttribute("simportinviinfos") List<InvigilationInfo> infos, SessionStatus status) {
 		if (infos != null) {
-			inviService.saveInviInfos(infos);
+			inviService.addInviInfos(infos);
 		}
 		
 		// 清空
