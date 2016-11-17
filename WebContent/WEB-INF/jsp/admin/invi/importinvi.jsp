@@ -59,7 +59,7 @@
 		<label for="name" class="col-sm-2 col-md-2 control-label">阶段考试</label>
 	<div class="col-sm-10 col-md-4">
 		<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default" class="myswitch" 
-		name="checked" value="true" />
+		name="checked" />
 	</div>
 	</div>
 	<div class="form-group">
@@ -79,6 +79,7 @@
 			<div class="col-sm-2col-md-12">
 				<p class="text-danger">说明: 监考表格太过随意，字段规则模糊，
 				因此默认将<span class="label label-danger checkboxspan">表格第一列设为考试课程</span>，请修改表格后加载；<br>
+				如果导入考试时间不正确，需<span class="label label-danger checkboxspan">将excel时间列变为文本格式</span>，=TEXT(E11,"yyyy-mm-dd HH:MM")；<br>
 				导入监考文件不会对数据库中已包含的监考信息做出修改<br>
 				判定规则：与系统原数据比对，考试时间地点相同，即判定为同一考试，因同一地点不可能同时有2个考试<br>
 				因此，如果同一课程监考信息发生重大改变，如修改了考试地点或时间，则系统无法检测，将生成一个新监考信息；因此，需在监考编辑中修改信息<br>

@@ -24,6 +24,18 @@ public class StringUtils {
 	}
 	
 	/**
+	 * 替换日期中的 / . 为-，替换中文引号为英文引号
+	 * @param string
+	 * @return
+	 */
+	public static String getStandardDate(String string) {
+		string = string.replaceAll("/|\\.", "-");
+		string = string.replaceAll("～", "~");
+		string = string.replaceAll("：", ":");
+		return string;
+	}
+	
+	/**
 	 * 
 	 * @param path 文件路径
 	 * @return 文件扩展名
