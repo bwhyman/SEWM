@@ -11,8 +11,6 @@ import com.se.working.dao.UserDao;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
 import com.se.working.entity.UserAuthority;
-import com.se.working.entity.UserAuthority.UserAuthorityLevel;
-import com.se.working.entity.UserAuthority.UserAuthorityType;
 import com.se.working.invigilation.dao.TeacherInviDao;
 import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.util.MD5;
@@ -41,7 +39,7 @@ public class AdminService extends GenericService<User, Long> {
 	@Override
 	public void add(User user) {
 		// TODO Auto-generated method stub
-		user.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+		user.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
 		// user.setPassword(MD5.generateMD5(user.getEmployeeNumber()));
 		userDao.persist(user);
 		TeacherInvigilation teacherInvigilation = new TeacherInvigilation();
@@ -68,15 +66,15 @@ public class AdminService extends GenericService<User, Long> {
 	 */
 	public void updateAdmins(long[] newAdmins) {
 		for (User teacher : userDao.list()) {
-			if (teacher.getUserAuthority().getLevel() <= UserAuthorityLevel.ADAMIN) {
-				teacher.setUserAuthority(new UserAuthority(UserAuthorityType.TEACHER));
+			if (teacher.getUserAuthority().getLevel() <= UserAuthority.ADAMIN_LEVEL) {
+				teacher.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
 			}
 
 		}
 		for (int i = 0; i < newAdmins.length; i++) {
 			User user = userDao.get(newAdmins[i]);
-			if (user.getUserAuthority().getLevel() < UserAuthorityLevel.SUPERADMIN) {
-				user.setUserAuthority(new UserAuthority(UserAuthorityType.ADAMIN));
+			if (user.getUserAuthority().getLevel() < UserAuthority.SUPERADMIN_LEVEL) {
+				user.setUserAuthority(new UserAuthority(UserAuthority.ADAMIN_LEVEL));
 			}
 		}
 	}

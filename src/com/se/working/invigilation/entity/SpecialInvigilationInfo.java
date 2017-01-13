@@ -2,6 +2,7 @@ package com.se.working.invigilation.entity;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -38,6 +39,29 @@ public class SpecialInvigilationInfo {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof SpecialInvigilationInfo)) {
+			return false;
+		}
+		SpecialInvigilationInfo o = (SpecialInvigilationInfo) obj;
+		return Objects.equals(id, o.getId());
+	}
 	public SpecialInvigilationInfo() {
 		// TODO Auto-generated constructor stub
 	}

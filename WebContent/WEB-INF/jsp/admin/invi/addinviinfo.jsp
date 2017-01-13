@@ -171,8 +171,9 @@
 					<div class="form-group">
 						<label for="name" class="col-sm-2 col-md-2 control-label">课程/备注</label>
 						<div class="col-sm-10 col-md-4">
-							<textarea class="form-control" rows="5" placeholder="课程/备注" name="comment"></textarea>
+							<textarea class="form-control" rows="5" placeholder="课程/备注" name="comment" maxlength="15"></textarea>
 						</div>
+						<div class="col-sm-10 col-md-3"><p class="text-danger">限制在15字符</p></div>
 					</div>
 						
 					<div class="form-group">

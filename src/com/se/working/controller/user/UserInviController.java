@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.se.working.entity.User;
 import com.se.working.invigilation.entity.InvigilationInfo;
-import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
+import com.se.working.invigilation.entity.InvigilationStatusType;
 import com.se.working.invigilation.service.InviService;
 import com.se.working.util.DateUtils;
 
@@ -43,10 +43,10 @@ public class UserInviController {
 		User user = (User) session.getAttribute(USER);
 		switch (invitype) {
 		case "undone":
-			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.ASSIGNED);
+			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InvigilationStatusType.ASSIGNED);
 			break;
 		case "done":
-			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InviStatusType.DONE);
+			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InvigilationStatusType.DONE);
 			break;
 		case "all":
 			infos = inviService.findInviInfosByUserId(user.getId());
@@ -85,13 +85,13 @@ public class UserInviController {
 		
 		switch (invitype) {
 		case "unassinvi":
-			inviTypeId = InviStatusType.UNASSIGNED;
+			inviTypeId = InvigilationStatusType.UNASSIGNED;
 			break;
 		case "assinvi":
-			inviTypeId = InviStatusType.ASSIGNED;
+			inviTypeId = InvigilationStatusType.ASSIGNED;
 			break;
 		case "done":
-			inviTypeId = InviStatusType.DONE;
+			inviTypeId = InvigilationStatusType.DONE;
 			break;
 		case "all":
 			inviTypeId = 0;

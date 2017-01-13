@@ -16,7 +16,6 @@ import com.se.working.invigilation.entity.Invigilation;
 import com.se.working.invigilation.entity.InvigilationInfo;
 import com.se.working.invigilation.entity.InvigilationInfoStatusDetail;
 import com.se.working.invigilation.entity.InvigilationStatusType;
-import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
 import com.se.working.invigilation.entity.MessageStatusDetail;
 import com.se.working.invigilation.entity.MessageStatusType;
 import com.se.working.message.AlidayuMessage;
@@ -46,7 +45,7 @@ public class InviTimer {
 		endTime.add(Calendar.DAY_OF_MONTH, 1);
 		
 		// 基于已分配，发送监考提醒
-		List<InvigilationInfo> infos = infoDao.listInviInfos(startTime, endTime, InviStatusType.ASSIGNED);
+		List<InvigilationInfo> infos = infoDao.listInviInfos(startTime, endTime, InvigilationStatusType.ASSIGNED);
 		
 		
 		for (InvigilationInfo i : infos) {

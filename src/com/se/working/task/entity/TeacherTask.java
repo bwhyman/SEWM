@@ -1,5 +1,6 @@
 package com.se.working.task.entity;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -35,6 +36,29 @@ public class TeacherTask {
 	@ManyToMany(mappedBy = "teachers")
 	@OrderBy("id ASC")
 	private Set<Notification> notifications;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof TeacherTask)) {
+			return false;
+		}
+		TeacherTask o = (TeacherTask) obj;
+		return Objects.equals(id, o.getId());
+	}
 	public long getId() {
 		return id;
 	}

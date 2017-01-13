@@ -1,6 +1,7 @@
 package com.se.working.invigilation.entity;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -32,6 +33,29 @@ public class SpecialInvigilationType {
 	private Date insertTime;
 	// 备注
 	private String comment;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof SpecialInvigilationType)) {
+			return false;
+		}
+		SpecialInvigilationType o = (SpecialInvigilationType) obj;
+		return Objects.equals(id, o.getId());
+	}
 	public SpecialInvigilationType() {
 		// TODO Auto-generated constructor stub
 	}

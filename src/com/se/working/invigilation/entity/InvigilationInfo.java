@@ -2,6 +2,7 @@ package com.se.working.invigilation.entity;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -55,7 +56,29 @@ public class InvigilationInfo {
 	private String location;
 	// 备注
 	private String comment;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof InvigilationInfo)) {
+			return false;
+		}
+		InvigilationInfo o = (InvigilationInfo) obj;
+		return Objects.equals(id, o.getId());
+	}
 	public long getId() {
 		return id;
 	}

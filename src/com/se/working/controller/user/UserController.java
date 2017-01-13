@@ -24,6 +24,7 @@ import com.se.working.entity.User;
 import com.se.working.exception.SEWMException;
 import com.se.working.service.UserService;
 import com.se.working.util.FileTaskUtils;
+import com.se.working.util.PropertyUtils;
 
 /**
  * 用户操作
@@ -211,7 +212,7 @@ public class UserController {
 	private void createCookie(HttpServletResponse response, String employeeNumber, String password, String name) {
 		String base42 =  employeeNumber + "/" + "R28H22ZVTAL" + "/" + password + "/" + name + "/";
 		String result = Base64.getEncoder().encodeToString(base42.getBytes());
-		Cookie cookie = new Cookie("sewm", Base64.getEncoder().encodeToString(result.getBytes()));
+		Cookie cookie = new Cookie(PropertyUtils.getCookieName(), Base64.getEncoder().encodeToString(result.getBytes()));
 		int expiry = 60 * 60 * 24 * 365;
 		cookie.setMaxAge(expiry);
 		response.addCookie(cookie);
@@ -227,7 +228,7 @@ public class UserController {
 		Cookie cookie = null;
 		if (cookies != null) {
 			for (Cookie c : cookies) {
-				if (c.getName().equals("sewm")) {
+				if (c.getName().equals(PropertyUtils.getCookieName())) {
 					cookie = c;
 				}
 			}

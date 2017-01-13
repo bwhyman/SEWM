@@ -1,6 +1,7 @@
 package com.se.working.entity;
 
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,26 +17,47 @@ public class TeacherTitle {
 	private String name;
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
+	/**
+	 * 讲师
+	 */
+	public final static long LECTURER = 1;
+	/**
+	 * 副教授
+	 */
+	public final static long AP = 2;
+	/**
+	 * 教授
+	 */
+	public final static int PROF = 3;
+	/**
+	 * 助教
+	 */
+	public final static long ASSISTANT = 4;
 	
-	public interface TeacherTitleType {
-		/**
-		 * 讲师
-		 */
-		public static long LECTURER = 1;
-		/**
-		 * 副教授
-		 */
-		public static long AP = 2;
-		/**
-		 * 教授
-		 */
-		public static int PROF = 3;
-		/**
-		 * 助教
-		 */
-		public static long ASSISTANT = 4;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
 	}
 
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof TeacherTitle)) {
+			return false;
+		}
+		TeacherTitle o = (TeacherTitle) obj;
+		return Objects.equals(id, o.getId());
+	}
 	
 	public TeacherTitle(long id) {
 		super();

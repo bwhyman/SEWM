@@ -32,13 +32,13 @@ public class BaseController {
 	  return "redirect:" + request.getHeader("Referer");
 	}  
 	
-	/*@ExceptionHandler(Exception.class)  
+	@ExceptionHandler(Throwable.class)  
 	public String  handlerException(Exception e, HttpServletRequest request) {
 		FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
 		flashMap.put("exception", e.getMessage());
 		// e.printStackTrace();
 		return "redirect:" + request.getHeader("Referer");
-	}  */
+	}  
 	
 	public BaseController() {
 		// TODO Auto-generated constructor stub

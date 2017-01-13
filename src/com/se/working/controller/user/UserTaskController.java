@@ -19,7 +19,7 @@ import com.se.working.entity.User;
 import com.se.working.exception.SEWMException;
 import com.se.working.task.entity.FileTask;
 import com.se.working.task.entity.FileTaskDetail;
-import com.se.working.task.entity.FileTaskStatus.FileTaskStatusType;
+import com.se.working.task.entity.FileTaskStatus;
 import com.se.working.task.service.TaskService;
 import com.se.working.util.FileTaskUtils;
 
@@ -44,13 +44,13 @@ public class UserTaskController {
 		List<FileTask> fileTasks = new ArrayList<>();
 		switch (tasktype) {
 		case "started":
-			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatusType.STARTED);
+			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatus.STARTED);
 			break;
 		case "expired":
-			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatusType.EXPIRED);
+			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatus.EXPIRED);
 			break;
 		case "closed":
-			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatusType.CLOSED);
+			fileTasks = taskService.findFileTasksByStatusId(FileTaskStatus.CLOSED);
 			break;
 		case "all":
 			fileTasks = taskService.findFileTasks();
@@ -80,15 +80,15 @@ public class UserTaskController {
 		switch (tasktype) {
 		case "undone":
 			// 开启状态，未完成
-			details = taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.STARTED);
+			details = taskService.findFileTaskDetails(user.getId(), false, FileTaskStatus.STARTED);
 			// 过期状态，未完成
-			details.addAll(taskService.findFileTaskDetails(user.getId(), false, FileTaskStatusType.EXPIRED));
+			details.addAll(taskService.findFileTaskDetails(user.getId(), false, FileTaskStatus.EXPIRED));
 			break;
 		case "done":
 			// 开启状态，已完成
-			details = taskService.findFileTaskDetails(user.getId(), true, FileTaskStatusType.STARTED);
+			details = taskService.findFileTaskDetails(user.getId(), true, FileTaskStatus.STARTED);
 			// 过期状态，已完成
-			details.addAll(taskService.findFileTaskDetails(user.getId(), true, FileTaskStatusType.EXPIRED));
+			details.addAll(taskService.findFileTaskDetails(user.getId(), true, FileTaskStatus.EXPIRED));
 			break;
 		}
 		Collections.reverse(details);

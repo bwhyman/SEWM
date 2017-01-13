@@ -1,6 +1,7 @@
 package com.se.working.invigilation.entity;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -39,10 +40,34 @@ public class InvigilationStatusType {
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
 	
-	public interface InviStatusType {
-		public static long UNASSIGNED = 1;
-		public static long ASSIGNED = 2;
-		public static long DONE = 3;
+	/**
+	 * 
+	 */
+	public final static long UNASSIGNED = 1;
+	public final static long ASSIGNED = 2;
+	public final static long DONE = 3;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof InvigilationStatusType)) {
+			return false;
+		}
+		InvigilationStatusType o = (InvigilationStatusType) obj;
+		return Objects.equals(id, o.getId());
 	}
 	public InvigilationStatusType(long id) {
 		super();

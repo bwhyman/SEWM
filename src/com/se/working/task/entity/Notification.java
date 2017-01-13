@@ -2,6 +2,7 @@ package com.se.working.task.entity;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -48,7 +49,30 @@ public class Notification {
 						inverseJoinColumns = @JoinColumn(name = "teacher_id", referencedColumnName="user_id"))
 	@OrderBy("id ASC")
 	private Set<TeacherTask> teachers;
-
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Notification)) {
+			return false;
+		}
+		Notification o = (Notification) obj;
+		return Objects.equals(id, o.getId());
+	}
+	
 	public long getId() {
 		return id;
 	}

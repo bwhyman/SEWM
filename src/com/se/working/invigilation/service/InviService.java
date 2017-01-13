@@ -34,7 +34,6 @@ import com.se.working.invigilation.entity.InvigilationInfo;
 import com.se.working.invigilation.entity.InvigilationInfoStatusDetail;
 import com.se.working.invigilation.entity.InvigilationStatusType;
 import com.se.working.invigilation.entity.TeacherInvigilation;
-import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
 import com.se.working.invigilation.entity.MessageStatusDetail;
 import com.se.working.invigilation.entity.MessageStatusType;
 import com.se.working.message.AlidayuMessage;
@@ -56,6 +55,9 @@ import com.se.working.util.TimetableExcelUtil;
 @Service
 @Transactional
 public class InviService extends GenericService<Invigilation, Long> {
+
+	private int MESSAGE_LENGTH = 15;
+
 	@Autowired
 	private InviInfoDao inviInfoDao;
 	@Autowired
@@ -191,7 +193,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 						// 如果监考人数发生变化，置监考状态为未分配
 						if (o.getRequiredNumber() != info.getRequiredNumber()) {
 							info.setRequiredNumber(o.getRequiredNumber());
-							info.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
+							info.setCurrentStatusType(new InvigilationStatusType(InvigilationStatusType.UNASSIGNED));
 						}
 						// 如果存在，则使用原监考信息
 						newInfos.set(i, o);
@@ -200,20 +202,31 @@ public class InviService extends GenericService<Invigilation, Long> {
 				}
 				// 不存在
 				if (!exist) {
+					String comment = info.getComment();
 					// 如果是阶段监考，添加阶段字样
 					if (phaseInviInfo) {
-						String comment = info.getComment();
-						if (!comment.contains("阶段")) {
-							comment = comment + "阶段";
-							info.setComment(comment);
+						// 如果包含阶段，先去掉
+						if (comment.contains("阶段")) {
+							comment = comment.substring(0, comment.lastIndexOf("阶段"));
+						}
+						// 取前13位
+						if (comment.length() > MESSAGE_LENGTH - 2) {
+							comment = comment.substring(0, MESSAGE_LENGTH - 2);
+						}
+						// 添加阶段
+						comment = comment + "阶段";
+					} else {
+						if (comment.length() > 15) {
+							comment = comment.substring(0, 15);
 						}
 					}
+					info.setComment(comment);
 				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			throw new SEWMException("读取监考信息错误！" + e.getMessage());
-		} 
+		}
 		/**
 		 * 清空session，不可同步
 		 */
@@ -230,8 +243,9 @@ public class InviService extends GenericService<Invigilation, Long> {
 		for (InvigilationInfo i : infos) {
 			// 判断是否为新监考信息
 			if (i.getId() == 0) {
-				i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
+				i.setCurrentStatusType(new InvigilationStatusType(InvigilationStatusType.UNASSIGNED));
 			}
+			// 新信息则创建，原信息则更新
 			inviInfoDao.saveOrUpdate(i);
 		}
 	}
@@ -477,7 +491,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 	public InvigilationInfo addinvi(long inviInfoId, long[] tIds) {
 		InvigilationInfo info = inviInfoDao.get(inviInfoId);
 		List<Invigilation> oldInvigilations = new ArrayList<>(info.getInvigilations());
-		// 原分配与新分配均包含的
+		// 原分配与新分配均包含的教师id
 		List<Long> oldTIds = new ArrayList<>();
 		// 判断原监考分配中，新分配中是否存在，不存在则删除
 		for (int i = 0; i < oldInvigilations.size(); i++) {
@@ -511,7 +525,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 		}
 
 		// 更新监考状态
-		updateInviInfoTypeDetail(info, InvigilationStatusType.InviStatusType.ASSIGNED);
+		updateInviInfoTypeDetail(info, InvigilationStatusType.ASSIGNED);
 		return info;
 	}
 
@@ -545,7 +559,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 		if (newInfo.getRequiredNumber() != info.getRequiredNumber()) {
 			// updateInviInfoTypeDetail(info,
 			// InvigilationStatusType.InviStatusType.UNASSIGNED);
-			info.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
+			info.setCurrentStatusType(new InvigilationStatusType(InvigilationStatusType.UNASSIGNED));
 		}
 
 		info.setRequiredNumber(newInfo.getRequiredNumber());
@@ -606,7 +620,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 	 * @param info
 	 */
 	public long addInviInfo(InvigilationInfo info) {
-		info.setCurrentStatusType(new InvigilationStatusType(InviStatusType.UNASSIGNED));
+		info.setCurrentStatusType(new InvigilationStatusType(InvigilationStatusType.UNASSIGNED));
 		inviInfoDao.persist(info);
 		inviInfoDao.flush();
 		inviInfoDao.refresh(info);
@@ -626,7 +640,7 @@ public class InviService extends GenericService<Invigilation, Long> {
 		endTime.add(Calendar.DAY_OF_MONTH, 1);
 
 		// 基于已分配，发送监考提醒
-		List<InvigilationInfo> infos = inviInfoDao.listInviInfos(startTime, endTime, InviStatusType.ASSIGNED);
+		List<InvigilationInfo> infos = inviInfoDao.listInviInfos(startTime, endTime, InvigilationStatusType.ASSIGNED);
 
 		for (InvigilationInfo i : infos) {
 			aMessage.sendInviRemind(i);
@@ -647,10 +661,10 @@ public class InviService extends GenericService<Invigilation, Long> {
 		// 基点时间减20天
 		sDate.add(Calendar.DAY_OF_MONTH, -20);
 		// 已分配状态
-		List<InvigilationInfo> infos = inviInfoDao.listInviInfos(sDate, cDate, InviStatusType.ASSIGNED);
+		List<InvigilationInfo> infos = inviInfoDao.listInviInfos(sDate, cDate, InvigilationStatusType.ASSIGNED);
 		if (infos != null) {
 			for (InvigilationInfo i : infos) {
-				i.setCurrentStatusType(new InvigilationStatusType(InviStatusType.DONE));
+				i.setCurrentStatusType(new InvigilationStatusType(InvigilationStatusType.DONE));
 			}
 		}
 	}
