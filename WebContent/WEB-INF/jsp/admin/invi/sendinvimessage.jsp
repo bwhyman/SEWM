@@ -59,5 +59,21 @@
 						</div>
 					</div>
 	</form>
+	监考通知信息
+	<br>
+	<table class="table table-striped table-condensed table-hover">
+			<tbody>
+				<c:forEach items="${invis  }" var="i">
+				<tr>
+				 	<td>${i.teacher.user.name }</td>
+					<c:forEach items="${i.messageDetails }" var="m">
+						<td>${m.type.name }</td>
+						<td><fmt:formatDate pattern="MM-dd HH:mm" value="${m.insertTime }"/></td>
+					</c:forEach>
+				</tr>
+				</c:forEach>
+			
+			</tbody>
+	</table>
     </jsp:body>
 </myTemplate:template>

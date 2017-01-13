@@ -29,7 +29,6 @@ import com.se.working.task.entity.FileTaskStatus;
 import com.se.working.task.entity.FileType;
 import com.se.working.task.entity.Notification;
 import com.se.working.task.entity.TeacherTask;
-import com.se.working.task.entity.FileTaskStatus.FileTaskStatusType;
 import com.se.working.util.FileTaskUtils;
 import com.se.working.util.StringUtils;
 
@@ -76,7 +75,7 @@ public class TaskService extends GenericService<FileTask, Long> {
 		
 		fileTask.setCreateUser(new TeacherTask(userId));
 		fileTask.setFileType(new FileType(filetypeid));
-		fileTask.setCurrentStatus(new FileTaskStatus(FileTaskStatusType.STARTED));
+		fileTask.setCurrentStatus(new FileTaskStatus(FileTaskStatus.STARTED));
 		fileTaskDao.persist(fileTask);
 		fileTaskDao.flush();
 		fileTaskDao.refresh(fileTask);
@@ -201,7 +200,7 @@ public class TaskService extends GenericService<FileTask, Long> {
 		calendar.setTime(new Date());
 		detail.setCompleteTime(calendar);
 		// 当前为开启状态
-		if (task.getCurrentStatus().getId() == FileTaskStatusType.STARTED) {
+		if (task.getCurrentStatus().getId() == FileTaskStatus.STARTED) {
 			detail.setDone(true);
 		}
 		if (!uploadFile.isEmpty()) {
@@ -322,7 +321,7 @@ public class TaskService extends GenericService<FileTask, Long> {
 				d.setCompleteTime(completeTime);
 			}
 		}
-		task.setCurrentStatus(new FileTaskStatus(FileTaskStatusType.CLOSED));
+		task.setCurrentStatus(new FileTaskStatus(FileTaskStatus.CLOSED));
 		
 		if (undoneUserId.length >  0) {
 			for (int i = 0; i < undoneUserId.length; i++) {

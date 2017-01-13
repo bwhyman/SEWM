@@ -1,5 +1,6 @@
 package com.se.working.invigilation.entity;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,7 +44,29 @@ public class TeacherInvigilation {
 	@OneToMany(mappedBy = "teacher")
 	@OrderBy(value ="id ASC")
 	private Set<SpecialInvigilation> specialInvigilations;
-
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof TeacherInvigilation)) {
+			return false;
+		}
+		TeacherInvigilation o = (TeacherInvigilation) obj;
+		return Objects.equals(id, o.getId());
+	}
 	public long getId() {
 		return id;
 	}

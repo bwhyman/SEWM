@@ -25,7 +25,9 @@ public class PropertyUtils {
 	private static String INVI_REGEX_NUMBER_KEY = "invi_regex_number";
 	private static String INVI_REGEX_LOCATION_KEY = "invi_regex_location";
 	private static String INVI_EXCELFILE_TITLE_KEY = "invi_excelfile_title";
+	private static String COOKIE_NAME_KEY = "cookie_name";
 	private static String BASEDATE_VALUE = getProperty(BASEDATE_KEY);
+	private static String COOKIE_NAME_VALUE = getProperty(COOKIE_NAME_KEY);
 	private static String INVI_REGEX_NUMBER_VALUE = getProperty(INVI_REGEX_NUMBER_KEY);
 	private static String INVI_REGEX_LOCATION_VALUE = getProperty(INVI_REGEX_LOCATION_KEY);
 	private static String INVI_EXCELFILE_TITLE_VALUE = getProperty(INVI_EXCELFILE_TITLE_KEY);
@@ -37,6 +39,13 @@ public class PropertyUtils {
 	 */
 	public static String getBaseDate() {
 		return BASEDATE_VALUE;
+	}
+	/**
+	 * 获取cookie name属性值
+	 * @return
+	 */
+	public static String getCookieName() {
+		return COOKIE_NAME_VALUE;
 	}
 	
 	public static String getInviRegexNumber() {
@@ -64,13 +73,14 @@ public class PropertyUtils {
 	}
 
 	/**
-	 * 
+	 * 抽象获取属性值方法
 	 * @param propKey
 	 * @return
 	 */
 	private static String getProperty(String propKey) {
 		return getproperties().getProperty(propKey);
 	}
+	
 
 	/**
 	 * 

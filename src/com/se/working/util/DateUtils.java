@@ -84,7 +84,7 @@ public class DateUtils {
 		// 判断是否跨年
 		if (date.getWeekYear() > DateUtils.getBaseCalender().getWeekYear()) {
 			iWeek = date.get(Calendar.WEEK_OF_YEAR) - getBaseCalender().get(Calendar.WEEK_OF_YEAR)
-					+ DateUtils.getBaseCalender().getWeeksInWeekYear();
+					+ DateUtils.getBaseCalender().getWeeksInWeekYear() - 1;
 		} else {
 			iWeek = date.get(Calendar.WEEK_OF_YEAR) - DateUtils.getBaseCalender().get(Calendar.WEEK_OF_YEAR);
 		}

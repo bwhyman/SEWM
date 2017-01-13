@@ -1,5 +1,6 @@
 package com.se.working.entity;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -26,27 +27,45 @@ public class UserAuthority {
 	
 	/**
 	 * 用户权限值
-	 * @author BO
-	 *
 	 */
-	public interface UserAuthorityLevel {
-		public static int STUDENT = 5;
-		public static int TEACHER = 10;
-		public static int ADAMIN = 15;
-		public static int SUPERADMIN = 20;
-	}
+	public final static int STUDENT_LEVEL = 5;
+	public final static int TEACHER_LEVEL = 10;
+	public final static int ADAMIN_LEVEL = 15;
+	public final static int SUPERADMIN_LEVEL = 20;
 	/**
 	 * 用户权限ID
 	 * @author BO
 	 *
 	 */
-	public interface UserAuthorityType{
-		
-		public static long TEACHER = 1;
-		public static long ADAMIN = 2;
-		public static long SUPERADMIN = 3;
-		public static long STUDENT = 4;
+	public static long TEACHER = 1;
+	public static long ADAMIN = 2;
+	public static long SUPERADMIN = 3;
+	public static long STUDENT = 4;
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
 	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof UserAuthority)) {
+			return false;
+		}
+		UserAuthority o = (UserAuthority) obj;
+		return Objects.equals(id, o.getId());
+	}
+	
 	
 	public UserAuthority(long id) {
 		super();

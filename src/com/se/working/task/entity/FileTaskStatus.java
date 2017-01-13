@@ -1,6 +1,7 @@
 package com.se.working.task.entity;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -27,23 +28,40 @@ public class FileTaskStatus {
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
 	
-	public interface FileTaskStatusType {
-		/**
-		 * 开启状态
-		 */
-		public static long STARTED = 1;
-		/**
-		 * 过期状态
-		 */
-		public static long EXPIRED = 2;
-		/**
-		 * 关闭状态
-		 */
-		public static long CLOSED = 3;
-		
+	/**
+	 * 开启状态
+	 */
+	public final static long STARTED = 1;
+	/**
+	 * 过期状态
+	 */
+	public final static long EXPIRED = 2;
+	/**
+	 * 关闭状态
+	 */
+	public final static long CLOSED = 3;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return String.valueOf(this.getId());
 	}
-	
-	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return Objects.hash(id);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof FileTaskStatus)) {
+			return false;
+		}
+		FileTaskStatus o = (FileTaskStatus) obj;
+		return Objects.equals(id, o.getId());
+	}
 	public long getId() {
 		return id;
 	}

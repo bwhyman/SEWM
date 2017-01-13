@@ -29,7 +29,7 @@ import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.invigilation.service.InviService;
 import com.se.working.invigilation.service.SpecInviService;
 import com.se.working.service.AdminService;
-import com.se.working.task.entity.FileTaskStatus.FileTaskStatusType;
+import com.se.working.task.entity.FileTaskStatus;
 import com.se.working.task.service.TaskService;
 import com.se.working.util.DateUtils;
 import com.se.working.util.StringUtils;
@@ -368,7 +368,7 @@ public class AdminInviController {
 		// 当前所有课程信息
 		vMap.put("teachers", inviService.findTeacherInvigilations());
 		// 所有已关闭文件任务
-		vMap.put("tasks", taskService.findFileTasksByStatusId(FileTaskStatusType.CLOSED));
+		vMap.put("tasks", taskService.findFileTasksByStatusId(FileTaskStatus.CLOSED));
 	}
 	/**
 	 * 使用课表任务导入课表

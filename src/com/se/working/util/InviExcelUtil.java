@@ -27,7 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.se.working.exception.SEWMException;
 import com.se.working.invigilation.entity.Invigilation;
 import com.se.working.invigilation.entity.InvigilationInfo;
-import com.se.working.invigilation.entity.InvigilationStatusType.InviStatusType;
+import com.se.working.invigilation.entity.InvigilationStatusType;
 import com.se.working.invigilation.entity.TeacherInvigilation;
 
 /**
@@ -319,11 +319,11 @@ public class InviExcelUtil {
 			CellStyle style = getCellStyle(workbook);
 			Font font = workbook.createFont();
 			short color = 0;
-			if (infos.get(i).getCurrentStatusType().getId() == InviStatusType.UNASSIGNED) {
+			if (infos.get(i).getCurrentStatusType().getId() == InvigilationStatusType.UNASSIGNED) {
 				color = IndexedColors.RED.index;
-			} else if (infos.get(i).getCurrentStatusType().getId() == InviStatusType.ASSIGNED) {
+			} else if (infos.get(i).getCurrentStatusType().getId() == InvigilationStatusType.ASSIGNED) {
 				color = IndexedColors.GREEN.index;
-			} else if (infos.get(i).getCurrentStatusType().getId() == InviStatusType.DONE) {
+			} else if (infos.get(i).getCurrentStatusType().getId() == InvigilationStatusType.DONE) {
 				color = IndexedColors.SKY_BLUE.index;
 			}
 			font.setColor(color);

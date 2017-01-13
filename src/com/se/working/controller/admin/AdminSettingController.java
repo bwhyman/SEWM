@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
-import com.se.working.entity.UserAuthority.UserAuthorityType;
+import com.se.working.entity.UserAuthority;
 import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.invigilation.service.InviService;
 import com.se.working.service.AdminService;
@@ -118,7 +118,7 @@ public class AdminSettingController {
 		// 全部用户
 		List<User> users = adminService.findAll();
 		// 管理员权限ID
-		long adminId = UserAuthorityType.ADAMIN;
+		long adminId = UserAuthority.ADAMIN;
 		vMap.put("users", users);
 		vMap.put("adminId", adminId);
 	}
