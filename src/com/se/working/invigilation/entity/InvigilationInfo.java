@@ -17,6 +17,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.se.working.entity.Groups;
+
 
 
 /**
@@ -29,6 +31,8 @@ public class InvigilationInfo {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
+	@ManyToOne
+	private Groups groups;
 	// 监考人数
 	private int requiredNumber;
 	// 监考安排
@@ -67,18 +71,6 @@ public class InvigilationInfo {
 		return Objects.hash(id);
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof InvigilationInfo)) {
-			return false;
-		}
-		InvigilationInfo o = (InvigilationInfo) obj;
-		return Objects.equals(id, o.getId());
-	}
 	public long getId() {
 		return id;
 	}
@@ -162,4 +154,11 @@ public class InvigilationInfo {
 	public InvigilationInfo() {
 		// TODO Auto-generated constructor stub
 	}
+	public Groups getGroups() {
+		return groups;
+	}
+	public void setGroups(Groups groups) {
+		this.groups = groups;
+	}
+	
 }

@@ -1,7 +1,6 @@
 package com.se.working.task.entity;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,24 +34,6 @@ public class FileTaskDetail {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return String.valueOf(this.getId());
-	}
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return Objects.hash(id);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof FileTaskDetail)) {
-			return false;
-		}
-		FileTaskDetail o = (FileTaskDetail) obj;
-		return Objects.equals(id, o.getId());
 	}
 	
 	public long getId() {

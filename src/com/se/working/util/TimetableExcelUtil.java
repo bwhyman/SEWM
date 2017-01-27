@@ -90,22 +90,20 @@ public class TimetableExcelUtil {
 					/**
 					 * 每次获取的片段
 					 */
-					List<CourseSection> cs = new ArrayList<>();
+					
 					while (matcher.find()) {
+						// 置于循环内，一个课程，便于统计
+						List<CourseSection> cs = new ArrayList<>();
 						// 课程名称
 						courseName = matcher.group(1);
 						// 课程起止
 						String weekString = matcher.group(2);
 						Pattern pWeek = Pattern.compile(REGEX_STARTEND_WEEKS);
 						Matcher mWeek = pWeek.matcher(weekString);
-						int a = 0;
 						while (mWeek.find()) {
-							if (a % 2 == 0) {
-								a = 0;
-							}
 							int startWeek = Integer.valueOf(mWeek.group(1));
 							int endWeek = Integer.valueOf(mWeek.group(2));
-
+							
 							for (int week = startWeek; week <= endWeek; week++) {
 								CourseSection section = new CourseSection();
 								// 开始时间。第3行为12节(从0行算)，列数为星期

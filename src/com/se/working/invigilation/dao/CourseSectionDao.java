@@ -10,7 +10,7 @@ import com.se.working.dao.GenericDao;
 import com.se.working.invigilation.entity.CourseSection;
 
 @Repository
-public class CourseSectionDao extends GenericDao<CourseSection, Long> {
+public class CourseSectionDao extends GenericDao<CourseSection> {
 
 	/**
 	 * 基于日期查找相应授课片段<br>
@@ -20,14 +20,14 @@ public class CourseSectionDao extends GenericDao<CourseSection, Long> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<CourseSection> listSections(Calendar startTime, Calendar endTime) {
-		String HQL = "FROM CourseSection c WHERE (:st>=c.startTime AND :st<=c.endTime) "
+	public List<CourseSection> list(Calendar startTime, Calendar endTime, long groupId) {
+		String HQL = "FROM CourseSection c WHERE (c.course.teacher.user.groups.id=:groupId) AND ((:st>=c.startTime AND :st<=c.endTime) "
 				+ "OR (:et>=c.startTime AND :et<=c.endTime) "
-				+ "OR(:st<=c.startTime AND :et>=c.endTime)";
-		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+				+ "OR(:st<=c.startTime AND :et>=c.endTime))";
+		Query query = getCurrentSession().createQuery(HQL);
 		query.setCalendar("st", startTime);
 		query.setCalendar("et", endTime);
-		
+		query.setLong("groupId", groupId);
 		return query.list();
 	}
 	/**
@@ -36,7 +36,7 @@ public class CourseSectionDao extends GenericDao<CourseSection, Long> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<CourseSection> listSectionsByDate(Calendar date) {
+	public List<CourseSection> list(Calendar date, long groupId) {
 		Calendar cDate = Calendar.getInstance();
 		cDate.setTime(date.getTime());
 		cDate.set(Calendar.HOUR_OF_DAY, 0);
@@ -45,10 +45,11 @@ public class CourseSectionDao extends GenericDao<CourseSection, Long> {
 		nDate.setTime(cDate.getTime());
 		nDate.add(Calendar.DATE, 1);
 		
-		String HQL = "FROM CourseSection c WHERE c.startTime >= :date AND c.endTime<=:nextDate";
-		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+		String HQL = "FROM CourseSection c WHERE c.course.teacher.user.groups.id=:groupId AND c.startTime >= :date AND c.endTime<=:nextDate";
+		Query query = getCurrentSession().createQuery(HQL);
 		query.setCalendar("date", cDate);
 		query.setCalendar("nextDate", nDate);
+		query.setLong("groupId", groupId);
 		return query.list();
 	}
 	

@@ -1,15 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="myTemplate" tagdir="/WEB-INF/tags/"%>
+<%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
 
-<myTemplate:template>
+<mybase:base>
 <jsp:attribute name="footer">
 	<script>
 		$(function() {
@@ -73,7 +68,7 @@
 						<span class="label label-info checkboxspan">
 				</c:if>
 				${i.currentStatusType.name }</span></td>
-				<c:if test="${user.userAuthority.level>=15 }">
+				<c:if test="${sessionScope.user.userAuthority.level>=15 }">
 				<td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.insertTime }" /></td>
 				<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>  
 						<a class="btn btn-primary"  href="admin/invi/assigninvi/${i.id }" role="button">分配</a></td>
@@ -84,4 +79,4 @@
 	</table>
 	</div>
     </jsp:body>
-</myTemplate:template>
+</mybase:base>

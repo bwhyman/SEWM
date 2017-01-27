@@ -3,13 +3,13 @@ package com.se.working.controller.admin;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,17 +41,17 @@ public class AdminTaskController {
 	/**
 	 * 加载创建任务
 	 * 
-	 * @param vMap
+	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/addfiletask")
-	public String addTask(Map<String, Object> vMap) {
-		List<User> users = userService.findAbledUsers();
+	/*@RequestMapping("/addfiletask")
+	public String addTask(Model model) {
+		List<User> users = userService.findEnabledUsers();
 		List<FileType> fileTypes = taskService.findFileTypes();
-		vMap.put("filetypes", fileTypes);
-		vMap.put("users", users);
+		model.addAttribute("filetypes", fileTypes);
+		model.addAttribute("users", users);
 		return basePath + "addfiletask";
-	}
+	}*/
 
 	/**
 	 * 创建任务
@@ -91,21 +91,21 @@ public class AdminTaskController {
 	/**
 	 * 列出文件任务更新内容
 	 * @param id
-	 * @param vMap
+	 * @param model
 	 * @return
 	 */
-	@RequestMapping(path = "/updatefiletask/{id}", method = RequestMethod.GET)
-	public String updateFileTask(@PathVariable long id, Map<String, Object> vMap) {
+	/*@RequestMapping(path = "/updatefiletask/{id}", method = RequestMethod.GET)
+	public String updateFileTask(@PathVariable long id, Model model) {
 		FileTask task = taskService.findById(id);
-		List<User> users = userService.findAbledUsers();
+		List<User> users = userService.findEnabledUsers();
 		List<FileType> fileTypes = taskService.findFileTypes();
 		List<TeacherTask> teachers = taskService.findTeachersByFileTaskId(id);
-		vMap.put("task", task);
-		vMap.put("filetypes", fileTypes);
-		vMap.put("users", users);
-		vMap.put("teachers", teachers);
+		model.addAttribute("task", task);
+		model.addAttribute("filetypes", fileTypes);
+		model.addAttribute("users", users);
+		model.addAttribute("teachers", teachers);
 		return basePath + "updatefiletask";
-	}
+	}*/
 	/**
 	 * 更新文件任务
 	 * @param fileTask
@@ -166,14 +166,14 @@ public class AdminTaskController {
 	
 	/**
 	 * 加载创建通知
-	 * @param vMap
+	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/addnotification")
-	public String addNotifcation(Map<String, Object> vMap) {
-		vMap.put("users", userService.findAbledUsers());
+	/*@RequestMapping("/addnotification")
+	public String addNotifcation(Model model) {
+		model.addAttribute("users", userService.findEnabledUsers());
 		return basePath + "addnotification";
-	}
+	}*/
 	
 	/**
 	 * 

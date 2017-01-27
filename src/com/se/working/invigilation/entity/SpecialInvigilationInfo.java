@@ -50,18 +50,6 @@ public class SpecialInvigilationInfo {
 		return Objects.hash(id);
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof SpecialInvigilationInfo)) {
-			return false;
-		}
-		SpecialInvigilationInfo o = (SpecialInvigilationInfo) obj;
-		return Objects.equals(id, o.getId());
-	}
 	public SpecialInvigilationInfo() {
 		// TODO Auto-generated constructor stub
 	}

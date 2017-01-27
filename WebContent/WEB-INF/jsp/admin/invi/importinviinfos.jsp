@@ -1,15 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="myTemplate" tagdir="/WEB-INF/tags/"%>
+<%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
-
-<myTemplate:template>
+<mybase:base>
 <jsp:attribute name="header">
 	<link href="resources/css/fileinput.min.css"  rel="stylesheet">
 </jsp:attribute>
@@ -36,20 +30,7 @@
   <li class="active">导入监考信息</li>
 </ol>
 	
-	<c:if test="${exception != null}">
-		&nbsp&nbsp
-		<div class="alert alert-danger alert-dismissable" role="alert">
-  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-			</button><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <strong>错误！</strong> ${exception }
-</div>
-</c:if>     
-	
  	<form class="form-horizontal" enctype="multipart/form-data" action="admin/invi/importinviinfos" method="post">
- 	<c:forEach items="${infos }" var="i">
-		<input type="hidden" name="inviids" value="${i.id }">
-		</c:forEach>
 		<div class="form-group">
 			<div class="col-sm-10 col-md-8">
 				<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="1" accept=".xls,.xlsx">
@@ -150,4 +131,4 @@
 	</div>
 	</c:if>
     </jsp:body>
-</myTemplate:template>
+</mybase:base>

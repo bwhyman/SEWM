@@ -6,11 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.se.working.entity.UserAuthority;
 
 @Repository
-public class UserAuthorityDao extends GenericDao<UserAuthority, Long>{
-
-	
-	public UserAuthorityDao() {
-		// TODO Auto-generated constructor stub
-	}
+public class UserAuthorityDao extends GenericDao<UserAuthority>{
 
 }

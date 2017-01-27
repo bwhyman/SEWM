@@ -1,7 +1,6 @@
 package com.se.working.entity;
 
 import java.util.Date;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +22,8 @@ public class User {
 	private String name;
 	private String employeeNumber;
 	private String password;
+	@ManyToOne
+	private Groups groups;
 	// 职称
 	@ManyToOne
 	private TeacherTitle title;
@@ -44,24 +45,6 @@ public class User {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return String.valueOf(this.getId());
-	}
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return Objects.hash(id);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof User)) {
-			return false;
-		}
-		User o = (User) obj;
-		return Objects.equals(id, o.getId());
 	}
 	
 	public User() {
@@ -131,6 +114,12 @@ public class User {
 	}
 	public void setEnabledMessage(boolean enabledMessage) {
 		this.enabledMessage = enabledMessage;
+	}
+	public Groups getGroups() {
+		return groups;
+	}
+	public void setGroups(Groups groups) {
+		this.groups = groups;
 	}
 	
 }

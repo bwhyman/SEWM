@@ -1,13 +1,16 @@
 package com.se.working.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.se.working.dao.GroupsDao;
 import com.se.working.dao.TeacherTitleDao;
 import com.se.working.dao.UserDao;
+import com.se.working.entity.Groups;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
 import com.se.working.entity.UserAuthority;
@@ -25,9 +28,11 @@ import com.se.working.util.MD5;
  */
 @Service
 @Transactional
-public class AdminService extends GenericService<User, Long> {
+public class AdminService extends GenericService<User> {
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private GroupsDao groupsDao;
 	@Autowired
 	private TeacherInviDao teacherInviDao;
 	@Autowired
@@ -59,23 +64,18 @@ public class AdminService extends GenericService<User, Long> {
 	}
 
 	/**
-	 * 除超级管理员全部修改为普通权限<br>
+	 * 原管理员全部修改为普通权限<br>
 	 * 再将新管理员修改为管理员权限
-	 * 
 	 * @param newAdmins
+	 * @param groupId
 	 */
-	public void updateAdmins(long[] newAdmins) {
-		for (User teacher : userDao.list()) {
-			if (teacher.getUserAuthority().getLevel() <= UserAuthority.ADAMIN_LEVEL) {
-				teacher.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
-			}
-
+	public void updateAdmins(long[] newAdmins, long groupId) {
+		List<User> oldAdmins = userDao.list(UserAuthority.ADAMIN, groupId);
+		for (User u : oldAdmins) {
+			u.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
 		}
 		for (int i = 0; i < newAdmins.length; i++) {
-			User user = userDao.get(newAdmins[i]);
-			if (user.getUserAuthority().getLevel() < UserAuthority.SUPERADMIN_LEVEL) {
-				user.setUserAuthority(new UserAuthority(UserAuthority.ADAMIN_LEVEL));
-			}
+			 userDao.get(newAdmins[i]).setUserAuthority(new UserAuthority(UserAuthority.ADAMIN));
 		}
 	}
 
@@ -87,15 +87,20 @@ public class AdminService extends GenericService<User, Long> {
 		return teacherTitleDao.list();
 	}
 
+	public List<User> findUsers(long groupId) {
+		Groups groups = groupsDao.get(groupId);
+		return new ArrayList<>(groups.getUsers());
+	}
 
 	/**
 	 * 
 	 * @param invqs 特殊监考次数
 	 * @param checkeds 开启推荐用户IDs
+	 * @param groupId
 	 */
-	public void updateTeacherInviSetting(int[] invqs, long[] checkeds) {
+	public void updateTeacherInviSetting(int[] invqs, long[] checkeds, long groupId) {
 		for (int i = 0; i < invqs.length; i++) {
-			teacherInviDao.list().get(i).setSqecQuantity((invqs[i]));
+			teacherInviDao.list(groupId).get(i).setSqecQuantity((invqs[i]));
 		}
 		for (TeacherInvigilation t : teacherInviDao.list()) {
 			boolean checked = false;
@@ -108,39 +113,37 @@ public class AdminService extends GenericService<User, Long> {
 			t.setEnabledRecommend(checked);
 		}
 	}
-
+	
 	/**
 	 * 修改用户通知设置，同时修改用户监考推荐设置
-	 * @param checkeds 开启通知用户IDs
+	 * @param enabled
+	 * @param groupId
 	 */
-	public void updateUserNotifSetting(long[] checkeds) {
-		for (User u : userDao.list()) {
-			boolean checked = false;
-			for (int i = 0; i < checkeds.length; i++) {
-				if (u.getId() == checkeds[i]) {
-					checked = true;
-					break;
+	public void updateUserNotifSetting(long[] enabled, long groupId) {
+		
+		for (User u : userDao.list(groupId)) {
+			boolean message = false;
+			for (int i = 0; i < enabled.length; i++) {
+				if (u.getId() == enabled[i]) {
+					message = true;
 				}
 			}
-			u.setEnabledMessage(checked);
-		}
-		// 修改监考推荐设置
-		for (TeacherInvigilation t : teacherInviDao.list()) {
-			boolean checked = false;
-			for (int i = 0; i < checkeds.length; i++) {
-				if (t.getId() == checkeds[i]) {
-					checked = true;
-					break;
-				}
+			// 如果在开启中
+			if (message) {
+				u.setEnabledMessage(true);
+			} else {
+				// 不在则关闭，并置推荐为关闭
+				u.setEnabledMessage(false);
+				teacherInviDao.get(u.getId()).setEnabledRecommend(false);
 			}
-			t.setEnabledRecommend(checked);
 		}
+		
 	}
 	/**
-	 * 所有通知关闭用户
+	 * 所有通知设置用户
 	 * @return
 	 */
-	public List<User> findDisabledUsers() {
-		return userDao.listDisableds();
+	public List<User> findUsers(boolean enabledMessage, long groupId) {
+		return userDao.list(enabledMessage, groupId);
 	}
 }

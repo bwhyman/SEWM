@@ -18,7 +18,7 @@ import com.se.working.service.GenericService;
 
 @Service
 @Transactional
-public class SpecInviService extends GenericService<SpecialInvigilation, Long> {
+public class SpecInviService extends GenericService<SpecialInvigilation> {
 
 	@Autowired
 	private SpecialInviTypeDao specTypeDao;

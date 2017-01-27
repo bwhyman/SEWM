@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.se.working.dao.GenericDao;
 import com.se.working.task.entity.FileTaskDetail;
 @Repository
-public class FileTaskDetailDao extends GenericDao<FileTaskDetail, Long> {
+public class FileTaskDetailDao extends GenericDao<FileTaskDetail> {
 
 	/**
 	 * 指定用户、指定任务的任务详细信息

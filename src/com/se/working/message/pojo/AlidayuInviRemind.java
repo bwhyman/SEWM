@@ -1,4 +1,4 @@
-package com.se.working.message.entity;
+package com.se.working.message.pojo;
 
 
 /**

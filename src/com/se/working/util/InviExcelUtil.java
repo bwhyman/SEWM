@@ -37,23 +37,24 @@ import com.se.working.invigilation.entity.TeacherInvigilation;
  *
  */
 public class InviExcelUtil {
-
+	
+	private static final String REGEX_INVI_SUFFIX = "(\\d+)";
 	// 匹配地址
-	private static String REGEX_LOCATION = "(丹青楼.\\d+|锦绣楼.\\d+|成栋楼.\\d+|研究生楼.\\d+)";
+	// private static final String REGEX_LOCATION = "(丹青楼.\\d+|锦绣楼.\\d+|成栋楼.\\d+|研究生楼.\\d+)";
 	// 独立的监考开始结束时间，日期与时间分别获取
 	/**
 	 * 独立的监考开始结束时间，日期与时间分别获取<br>
 	 */
-	private static String REGEX_IND_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})\\s+(\\d{2}:\\d{2})";
+	private static final String REGEX_IND_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})\\s+(\\d{2}:\\d{2})";
 	// 仅匹配日期，不会匹配班级
 	/**
 	 * 仅匹配日期，不会匹配班级<br>
 	 */
-	private static String REGEX_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})";
+	private static final String REGEX_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})";
 	// 匹配时间，较模糊，有待修正
-	private static String REGEX_TIME = "(.+)~(.+)";
+	private static final String REGEX_TIME = "(.+)~(.+)";
 	// 匹配课程名称，去掉[]
-	private static String REGEX_COURSE = "(.*)\\[";
+	private static final String REGEX_COURSE = "(.*)\\[";
 	
 
 	/**
@@ -63,11 +64,11 @@ public class InviExcelUtil {
 	 * @param is
 	 * @return 专业监考信息集
 	 */
-	public static List<InvigilationInfo> getExcel(InputStream is) {
+	public static List<InvigilationInfo> getExcel(InputStream is, String inviRegex) {
 		List<InvigilationInfo> info;
 		try {
 			Workbook workbook = WorkbookFactory.create(is);
-			info = getRow(workbook.getSheetAt(0));
+			info = getRow(workbook.getSheetAt(0), inviRegex);
 			return info;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -76,9 +77,10 @@ public class InviExcelUtil {
 		}
 	}
 
-	private static List<InvigilationInfo> getRow(Sheet sheet) throws ParseException {
+	private static List<InvigilationInfo> getRow(Sheet sheet, String inviRegex) throws ParseException {
 		List<InvigilationInfo> infos = new ArrayList<>();
-		Pattern pNum = Pattern.compile(PropertyUtils.getInviRegexNumber());
+		Pattern pNum = Pattern.compile(inviRegex + REGEX_INVI_SUFFIX);
+		
 		Matcher mNum = null;
 		for (int rowIndex = 0; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
 			Row row = sheet.getRow(rowIndex);
@@ -94,7 +96,8 @@ public class InviExcelUtil {
 						// 判断是否为专业监考信息
 						mNum = pNum.matcher(cell.getStringCellValue());
 						if (mNum.find()) {
-							infos.add(getRowInfos(row));
+							// 传递人数匹配
+							infos.add(getRowInfos(row, pNum));
 							break;
 						}
 					}
@@ -111,10 +114,10 @@ public class InviExcelUtil {
 	 * @return
 	 * @throws ParseException
 	 */
-	private static InvigilationInfo getRowInfos(Row row) throws ParseException {
+	private static InvigilationInfo getRowInfos(Row row, Pattern pNum) throws ParseException {
 		InvigilationInfo info = new InvigilationInfo();
-		Pattern pNum = Pattern.compile(PropertyUtils.getInviRegexNumber());
-		Pattern pLocation = Pattern.compile(REGEX_LOCATION);
+		
+		Pattern pLocation = Pattern.compile(PropertyUtils.getInviRegexLocation());
 		Pattern pDate = Pattern.compile(REGEX_DATE);
 		Pattern pTime = Pattern.compile(REGEX_TIME);
 		Pattern pDtime = Pattern.compile(REGEX_IND_DATE);
@@ -247,7 +250,7 @@ public class InviExcelUtil {
 	 * @param infos
 	 * @return
 	 */
-	public static byte[] createInviDetailExcel(List<InvigilationInfo> infos, List<TeacherInvigilation> teachers) {
+	public static byte[] createInviDetailExcel(List<InvigilationInfo> infos, List<TeacherInvigilation> teachers, String title) {
 		byte[] datas = null;
 		try {
 			XSSFWorkbook workbook = new XSSFWorkbook();
@@ -264,12 +267,12 @@ public class InviExcelUtil {
 			// 创建列标题
 			createDetailColTitle(workbook);
 			// 创建标题，基于列标题合并第一行列，因此必须在创建列标题后创建
-			createDetailTitle(workbook);
+			createDetailTitle(workbook, title);
 			// 创建内容
 			createDetailBody(infos, workbook);
 			createCount(workbook, teachers);
 			// 创建文档属性
-			createProperties(workbook);
+			createProperties(workbook, title);
 			datas = toFile(workbook);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -345,13 +348,13 @@ public class InviExcelUtil {
 	 * 
 	 * @param workbook
 	 */
-	private static void createDetailTitle(Workbook workbook) {
+	private static void createDetailTitle(Workbook workbook, String title) {
 		
 		Sheet sheet = workbook.getSheetAt(0);
 		Row row = sheet.createRow(0);
 		Cell cell = row.createCell(0);
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-		cell.setCellValue(PropertyUtils.getInviExcelFileTitle() + "  " + date.format(new Date()));
+		cell.setCellValue(title + "  " + date.format(new Date()));
 		CellStyle style = workbook.createCellStyle();
 		// 设置居中
 		style.setAlignment(CellStyle.ALIGN_CENTER);
@@ -372,11 +375,11 @@ public class InviExcelUtil {
 	 * 
 	 * @param workbook
 	 */
-	private static void createProperties(XSSFWorkbook workbook) {
+	private static void createProperties(XSSFWorkbook workbook, String title) {
 		POIXMLProperties xmlProps = workbook.getProperties();
 		POIXMLProperties.CoreProperties coreProps = xmlProps.getCoreProperties();
 		coreProps.setCreator("王波");
-		coreProps.setTitle(PropertyUtils.getInviExcelFileTitle());
+		coreProps.setTitle(title);
 	}
 
 	/**

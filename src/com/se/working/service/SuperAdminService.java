@@ -3,9 +3,12 @@ package com.se.working.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.se.working.dao.GroupsDao;
 import com.se.working.dao.TeacherTitleDao;
 import com.se.working.dao.UserAuthorityDao;
 import com.se.working.dao.UserDao;
+import com.se.working.entity.Groups;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
 import com.se.working.entity.UserAuthority;
@@ -27,7 +30,7 @@ import com.se.working.util.MD5;
 
 @Service
 @Transactional
-public class SuperAdminService extends GenericService<User, Long>{
+public class SuperAdminService extends GenericService<User>{
 	
 	@Autowired
 	private TeacherTitleDao teacherTitleDao;
@@ -37,6 +40,8 @@ public class SuperAdminService extends GenericService<User, Long>{
 	private InviTypeDao invigilationStatusTypeDao;
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private GroupsDao groupsDao;
 	@Autowired
 	private TeacherInviDao teacherInvigilationDao;
 	@Autowired
@@ -123,6 +128,19 @@ public class SuperAdminService extends GenericService<User, Long>{
 			messageStatusTypeDao.persist(reminded);
 		}
 	}
+	
+	public void initGroup() {
+		if (groupsDao.list().size() == 0) {
+			Groups group = new Groups();
+			group.setName("软件工程专业");
+			group.setInviRegexPrefix("软件");
+			groupsDao.persist(group);
+			Groups group2 = new Groups();
+			group2.setName("会计专业");
+			group2.setInviRegexPrefix("会计");
+			groupsDao.persist(group2);
+		}
+	}
 
 	/**
 	 * 初始化用户
@@ -138,6 +156,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			luo.setTitle(new TeacherTitle(TeacherTitle.AP));
 			luo.setPhoneNumber("13304507766");
 			luo.setUserAuthority(new UserAuthority(UserAuthority.ADAMIN));
+			luo.setGroups(new Groups(Groups.SE));
 			userDao.persist(luo);
 			TeacherInvigilation iluo = new TeacherInvigilation();
 			iluo.setUser(luo);
@@ -155,6 +174,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			lili.setTitle(new TeacherTitle(TeacherTitle.AP));
 			lili.setPhoneNumber("15046066917");
 			lili.setUserAuthority(new UserAuthority(UserAuthority.ADAMIN));
+			lili.setGroups(new Groups(Groups.SE));
 			userDao.persist(lili);
 			TeacherInvigilation ilili = new TeacherInvigilation();
 			ilili.setUser(lili);
@@ -172,6 +192,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			wangjian.setTitle(new TeacherTitle(TeacherTitle.AP));
 			wangjian.setPhoneNumber("13845082633");
 			wangjian.setUserAuthority(new UserAuthority(UserAuthority.ADAMIN));
+			wangjian.setGroups(new Groups(Groups.SE));
 			userDao.persist(wangjian);
 			TeacherInvigilation iwangjian = new TeacherInvigilation();
 			iwangjian.setUser(wangjian);
@@ -189,6 +210,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			sujianmin.setTitle(new TeacherTitle(TeacherTitle.PROF));
 			sujianmin.setPhoneNumber("13394513177");
 			sujianmin.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
+			sujianmin.setGroups(new Groups(Groups.SE));
 			userDao.persist(sujianmin);
 			TeacherInvigilation isujianmin = new TeacherInvigilation();
 			isujianmin.setUser(sujianmin);
@@ -206,6 +228,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			zhangxiying.setTitle(new TeacherTitle(TeacherTitle.AP));
 			zhangxiying.setPhoneNumber("13100969429");
 			zhangxiying.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
+			zhangxiying.setGroups(new Groups(Groups.SE));
 			userDao.persist(zhangxiying);
 			TeacherInvigilation izhangxiying = new TeacherInvigilation();
 			izhangxiying.setUser(zhangxiying);
@@ -223,6 +246,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			qiuzhaowen.setTitle(new TeacherTitle(TeacherTitle.AP));
 			qiuzhaowen.setPhoneNumber("13903601207");
 			qiuzhaowen.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
+			qiuzhaowen.setGroups(new Groups(Groups.SE));
 			userDao.persist(qiuzhaowen);
 			TeacherInvigilation iqiuzhaowen = new TeacherInvigilation();
 			iqiuzhaowen.setUser(qiuzhaowen);
@@ -240,6 +264,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			bo.setTitle(new TeacherTitle(TeacherTitle.LECTURER));
 			bo.setPhoneNumber("15104548299");
 			bo.setUserAuthority(new UserAuthority(UserAuthority.SUPERADMIN));
+			bo.setGroups(new Groups(Groups.SE));
 			userDao.persist(bo);
 			TeacherInvigilation ibo = new TeacherInvigilation();
 			ibo.setUser(bo);
@@ -257,6 +282,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			liyan.setPhoneNumber("13936130520");
 			liyan.setTitle(new TeacherTitle(TeacherTitle.LECTURER));
 			liyan.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
+			liyan.setGroups(new Groups(Groups.SE));
 			userDao.persist(liyan);
 			TeacherInvigilation iliyan = new TeacherInvigilation();
 			iliyan.setUser(liyan);
@@ -274,6 +300,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			zhaoyuming.setPhoneNumber("13796606560");
 			zhaoyuming.setTitle(new TeacherTitle(TeacherTitle.LECTURER));
 			zhaoyuming.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
+			zhaoyuming.setGroups(new Groups(Groups.SE));
 			userDao.persist(zhaoyuming);
 			TeacherInvigilation izhaoyuming = new TeacherInvigilation();
 			izhaoyuming.setUser(zhaoyuming);
@@ -284,7 +311,6 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tzhaoyuming.setPoint(point);
 			teacherTaskDao.persist(tzhaoyuming);
 			
-			
 			User bian = new User();
 			bian.setName("边继龙");
 			bian.setEmployeeNumber("1010");
@@ -292,6 +318,7 @@ public class SuperAdminService extends GenericService<User, Long>{
 			bian.setTitle(new TeacherTitle(TeacherTitle.LECTURER));
 			bian.setPhoneNumber("13274508193");
 			bian.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
+			bian.setGroups(new Groups(Groups.SE));
 			userDao.persist(bian);
 			TeacherInvigilation ibian = new TeacherInvigilation();
 			ibian.setUser(bian);
@@ -302,20 +329,21 @@ public class SuperAdminService extends GenericService<User, Long>{
 			tbian.setPoint(point);
 			teacherTaskDao.persist(tbian);
 			
-			User shan = new User();
-			shan.setName("冯诚");
-			shan.setEmployeeNumber("15645102121");
-			shan.setPassword(MD5.generateMD5(shan.getEmployeeNumber()));
-			shan.setTitle(new TeacherTitle(TeacherTitle.LECTURER));
-			shan.setPhoneNumber("15645102121");
-			shan.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
-			userDao.persist(shan);
+			User shanying = new User();
+			shanying.setName("单颖");
+			shanying.setEmployeeNumber("1");
+			shanying.setPassword(MD5.generateMD5(shanying.getEmployeeNumber()));
+			shanying.setTitle(new TeacherTitle(TeacherTitle.LECTURER));
+			shanying.setPhoneNumber("1");
+			shanying.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
+			shanying.setGroups(new Groups(Groups.SE));
+			userDao.persist(shanying);
 			TeacherInvigilation ishan = new TeacherInvigilation();
-			ishan.setUser(shan);
+			ishan.setUser(shanying);
 			ishan.setSqecQuantity(sqnum);
 			teacherInvigilationDao.persist(ishan);
 			TeacherTask tshan = new TeacherTask();
-			tshan.setUser(shan);
+			tshan.setUser(shanying);
 			tshan.setPoint(point);
 			teacherTaskDao.persist(tshan);
 		}
@@ -368,9 +396,4 @@ public class SuperAdminService extends GenericService<User, Long>{
 			fileTaskStatusDao.persist(closed);
 		}
 	}
-	
-	public SuperAdminService() {
-		// TODO Auto-generated constructor stub
-	}
-
 }

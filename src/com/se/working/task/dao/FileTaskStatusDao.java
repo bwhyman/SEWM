@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import com.se.working.dao.GenericDao;
 import com.se.working.task.entity.FileTaskStatus;
 @Repository
-public class FileTaskStatusDao extends GenericDao<FileTaskStatus, Long> {
+public class FileTaskStatusDao extends GenericDao<FileTaskStatus> {
 
 }

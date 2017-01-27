@@ -13,9 +13,9 @@ import com.google.gson.Gson;
 import com.se.working.exception.SEWMException;
 import com.se.working.invigilation.entity.Invigilation;
 import com.se.working.invigilation.entity.InvigilationInfo;
-import com.se.working.message.entity.AlidayuInvi;
-import com.se.working.message.entity.AlidayuInviRemind;
-import com.se.working.message.entity.AlidayuNotification;
+import com.se.working.message.pojo.AlidayuInvi;
+import com.se.working.message.pojo.AlidayuInviRemind;
+import com.se.working.message.pojo.AlidayuNotification;
 import com.se.working.task.entity.Notification;
 import com.se.working.task.entity.TeacherTask;
 import com.se.working.util.DateUtils;
@@ -202,7 +202,7 @@ public class AlidayuMessage {
 	 * @param smsTemplateCode
 	 */
 	private boolean sendSMS(String smsParamString, String recNum, String smsTemplateCode) {
-		boolean result = false;
+		/*boolean result = false;
 		TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
 		AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
 		req.setSmsType("normal");
@@ -232,9 +232,9 @@ public class AlidayuMessage {
 			client = null;
 			req = null;
 			rsp = null;
-		}
+		}*/
 		
-		return result;
+		return true;
 	}
 
 	private void sendError(String smsParamString, String smsTemplateCode) {

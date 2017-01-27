@@ -1,7 +1,6 @@
 package com.se.working.invigilation.entity;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,24 +32,7 @@ public class CourseSection {
 		// TODO Auto-generated method stub
 		return String.valueOf(this.getId());
 	}
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return Objects.hash(id);
-	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof CourseSection)) {
-			return false;
-		}
-		CourseSection o = (CourseSection) obj;
-		return Objects.equals(id, o.getId());
-	}
 	public CourseSection() {
 		// TODO Auto-generated constructor stub
 	}

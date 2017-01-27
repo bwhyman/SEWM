@@ -34,7 +34,7 @@ import com.se.working.util.StringUtils;
 
 @Service
 @Transactional
-public class TaskService extends GenericService<FileTask, Long> {
+public class TaskService extends GenericService<FileTask> {
 
 	@Autowired
 	private TeacherTaskDao teacherTaskDao;

@@ -1,7 +1,6 @@
 package com.se.working.invigilation.entity;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -41,24 +40,7 @@ public class MessageStatusType {
 		// TODO Auto-generated method stub
 		return String.valueOf(this.getId());
 	}
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return Objects.hash(id);
-	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof MessageStatusType)) {
-			return false;
-		}
-		MessageStatusType o = (MessageStatusType) obj;
-		return Objects.equals(id, o.getId());
-	}
 	public MessageStatusType() {
 		// TODO Auto-generated constructor stub
 	}

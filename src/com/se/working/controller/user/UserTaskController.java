@@ -3,13 +3,13 @@ package com.se.working.controller.user;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,11 +35,11 @@ public class UserTaskController {
 	/**
 	 * 列出任务
 	 * 
-	 * @param vMap
+	 * @param model
 	 * @return
 	 */
 	@RequestMapping(path = "/list/{tasktype}", method = RequestMethod.GET)
-	public String listTasks(@PathVariable String tasktype, Map<String, Object> vMap, HttpSession session) {
+	public String listTasks(@PathVariable String tasktype, Model model, HttpSession session) {
 
 		List<FileTask> fileTasks = new ArrayList<>();
 		switch (tasktype) {
@@ -60,20 +60,20 @@ public class UserTaskController {
 
 		}
 		Collections.reverse(fileTasks);
-		vMap.put("tasks", fileTasks);
-		vMap.put("type", tasktype);
+		model.addAttribute("tasks", fileTasks);
+		model.addAttribute("type", tasktype);
 		return basePath + "listtask";
 	}
 
 	/**
 	 * 
 	 * @param tasktype
-	 * @param vMap
+	 * @param model
 	 * @param session
 	 * @return
 	 */
 	@RequestMapping(path = "/listmytask/{tasktype}", method = RequestMethod.GET)
-	public String listMyTasks(@PathVariable String tasktype, Map<String, Object> vMap, HttpSession session) {
+	public String listMyTasks(@PathVariable String tasktype, Model model, HttpSession session) {
 		User user = (User) session.getAttribute(USER);
 
 		List<FileTaskDetail> details = new ArrayList<>();
@@ -92,8 +92,8 @@ public class UserTaskController {
 			break;
 		}
 		Collections.reverse(details);
-		vMap.put("details", details);
-		vMap.put("type", tasktype);
+		model.addAttribute("details", details);
+		model.addAttribute("type", tasktype);
 		return basePath + "listmytask";
 	}
 
@@ -127,13 +127,13 @@ public class UserTaskController {
 	 * 列出任务详细信息
 	 * 
 	 * @param filetaskId
-	 * @param vMap
+	 * @param model
 	 * @return
 	 */
 	@RequestMapping(path = "/filetaskdetail/{filetaskId}", method = RequestMethod.GET)
-	public String getFileTaskDetail(@PathVariable long filetaskId, Map<String, Object> vMap) {
+	public String getFileTaskDetail(@PathVariable long filetaskId, Model model) {
 		FileTask task = taskService.findById(filetaskId);
-		vMap.put("task", task);
+		model.addAttribute("task", task);
 		return basePath + "filetaskdetail";
 	}
 
