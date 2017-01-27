@@ -50,7 +50,7 @@
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
 					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<strong>${user.name }, 老师</strong>
+							<strong>${sessionScope.user.name }, 老师</strong>
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
@@ -87,7 +87,7 @@
 						<li><a href="invi/listmyinviinfo/undone">我的监考</a></li>
 					<li><a href="invi/listinviinfo/unassinvi">监考信息</a></li>
 				</ul>
-				<c:if test="${user.userAuthority.level >=15 }">
+				<c:if test="${sessionScope.user.userAuthority.level >=15 }">
 				<ul class="nav nav-sidebar">
 					<li class="active"><a href="#">
 							工作管理
@@ -95,10 +95,10 @@
 						</a></li>
 					<li><a href="admin/invi/invimanagement">监考管理</a></li>
 					<li><a href="admin/task/taskmanagement">任务管理</a></li>
-					<li><a href="admin/setting/usersetting">用户管理</a></li>
+					<li><a href="admin/setting/usermanagement">用户管理</a></li>
 				</ul>
 				</c:if>
-				<c:if test="${user.userAuthority.level >=20 }">
+				<c:if test="${sessionScope.user.userAuthority.level >=20 }">
 				<ul class="nav nav-sidebar">
 					<li class="active"><a href="#">
 							系统管理
@@ -116,7 +116,28 @@
 			</div>
 		</div>
 	</div>
-
+	<!-- 全局异常显示  -->
+	<c:if test="${exception != null}">
+		<div class="modal fade" id="exception" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content" >
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h6 class="modal-title" id="myModalLabel">异常</h6>
+				</div>
+				<div class="modal-body">
+						<div class="text-danger"><strong>${exception }</strong></div>
+				</div>
+		<div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+	</c:if>
+	<!-- footer -->
 	<footer class="footer">
 		<div class="container">
 			<p class="text-muted">东北林业大学 软件工程专业. &copy; 2016</p>
@@ -127,7 +148,14 @@
 	<script src="resources/js/jquery.min.js"></script>
 	<script src="resources/js/flat-ui.min.js"></script>
 	<script src="resources/js/application.js"></script>
-	
+	<script>
+		$(document).ready(function() {
+			/* 全局异常显示  */
+			if ('${exception}'.length > 0) {
+				$('#exception').modal('show'); 
+			}
+		})
+	</script>
 	<!--Private JS  -->
 	<jsp:invoke fragment="footer" />
 </body>

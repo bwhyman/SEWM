@@ -10,23 +10,33 @@ import com.se.working.dao.GenericDao;
 import com.se.working.invigilation.entity.InvigilationInfo;
 
 @Repository
-public class InviInfoDao extends GenericDao<InvigilationInfo, Long> {
+public class InviInfoDao extends GenericDao<InvigilationInfo> {
+	
+	public InvigilationInfo get(long inviinfoId, long groupId) {
+		String HQL = "FROM InvigilationInfo i WHERE i.id=:inviinfoId AND i.groups.id=:groupId";
+		Query query = getCurrentSession().createQuery(HQL);
+		query.setLong("inviinfoId", inviinfoId);
+		query.setLong("groupId", groupId);
+		return (InvigilationInfo) query.uniqueResult();
+	}
+	
 	/**
 	 * 基于时间查找相应监考，全部监考状态<br>
+	 * 基于组<br>
 	 * 查询条件：开始时间在监考时间内，或，结束时间在监考时间内，或，开始时间在监考时间前同时结束时间在监考时间后
-	 * 
 	 * @param startTime
 	 * @param endTime
+	 * @param groupId
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<InvigilationInfo> listInviInfos(Calendar startTime, Calendar endTime) {
-		String HQL = "FROM InvigilationInfo i WHERE (:st>=i.startTime AND :st<=i.endTime) "
+	public List<InvigilationInfo> list(Calendar startTime, Calendar endTime, long groupId) {
+		String HQL = "FROM InvigilationInfo i WHERE (i.groups.id=:groupId) AND (:st>=i.startTime AND :st<=i.endTime) "
 				+ "OR (:et>=i.startTime AND :et<=i.endTime) " + "OR(:st<=i.startTime AND :et>=i.endTime)";
-		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+		Query query = getCurrentSession().createQuery(HQL);
 		query.setCalendar("st", startTime);
 		query.setCalendar("et", endTime);
-
+		query.setLong("groupId", groupId);
 		return query.list();
 	}
 
@@ -38,17 +48,17 @@ public class InviInfoDao extends GenericDao<InvigilationInfo, Long> {
 	 * @param typeId
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<InvigilationInfo> listInviInfos(Calendar startTime, Calendar endTime, long typeId) {
+	/*@SuppressWarnings("unchecked")
+	public List<InvigilationInfo> listInviInfos(Calendar startTime, Calendar endTime, long groupId, long typeId) {
 		String HQL = "FROM InvigilationInfo i WHERE (:st>=i.startTime AND :st<=i.endTime) "
 				+ "OR (:et>=i.startTime AND :et<=i.endTime) "
 				+ "OR(:st<=i.startTime AND :et>=i.endTime) AND i.currentStatusType.id = :typeId";
-		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+		Query query = getCurrentSession().createQuery(HQL);
 		query.setCalendar("st", startTime);
 		query.setCalendar("et", endTime);
 		query.setLong("typeId", typeId);
 		return query.list();
-	}
+	}*/
 
 	/**
 	 * 基于指定监考信息状态，分页查询
@@ -59,30 +69,38 @@ public class InviInfoDao extends GenericDao<InvigilationInfo, Long> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<InvigilationInfo> listInviInfos(long inviTypeId, int firstResult, int maxResults) {
-		String HQL = "FROM InvigilationInfo i WHERE i.currentStatusType.id = :typeId ORDER BY startTime";
-		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+	public List<InvigilationInfo> list(long groupId , long inviTypeId, int firstResult, int maxResults) {
+		String HQL = "FROM InvigilationInfo i WHERE i.groups.id=:groupId AND i.currentStatusType.id = :typeId ORDER BY startTime";
+		Query query = getCurrentSession().createQuery(HQL);
 		query.setFirstResult(firstResult);
 		query.setMaxResults(maxResults);
 		query.setLong("typeId", inviTypeId);
+		query.setLong("groupId", groupId);
 		return query.list();
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public List<InvigilationInfo> list(int firstResult, int maxResults) {
+	public List<InvigilationInfo> list(long groupId, int firstResult, int maxResults) {
 		// TODO Auto-generated method stub
-		return getSessionFactory().getCurrentSession().createCriteria(InvigilationInfo.class)
+		String HQL = "FROM InvigilationInfo i WHERE i.groups.id=:groupId ORDER BY startTime";
+		Query query = getCurrentSession().createQuery(HQL);
+		query.setFirstResult(firstResult);
+		query.setMaxResults(maxResults);
+		query.setLong("groupId", groupId);
+		return query.list();
+		
+		/*return getSessionFactory().getCurrentSession().createCriteria(InvigilationInfo.class)
 				.addOrder(org.hibernate.criterion.Order.asc("startTime")).setFirstResult(firstResult)
-				.setMaxResults(maxResults).list();
+				.setMaxResults(maxResults).list();*/
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public List<InvigilationInfo> list() {
+	public List<InvigilationInfo> list(long groupId) {
 		// TODO Auto-generated method stub
-		return getSessionFactory().getCurrentSession().createCriteria(InvigilationInfo.class)
-				.addOrder(org.hibernate.criterion.Order.asc("startTime")).list();
+		String HQL = "FROM InvigilationInfo i WHERE i.groups.id=:groupId ORDER BY startTime";
+		Query query = getCurrentSession().createQuery(HQL);
+		query.setLong("groupId", groupId);
+		return (List<InvigilationInfo>) query.list();
 	}
 
 }

@@ -14,7 +14,7 @@ import com.se.working.exception.SEWMException;
  *
  */
 @ControllerAdvice
-public class BaseController {
+public class ExceptionController {
 
 	/**
 	 * 异常页面重定向，携带参数，可以刷新
@@ -26,9 +26,11 @@ public class BaseController {
 	 */
 	@ExceptionHandler(SEWMException.class)  
 	public String  handleSEWMException(Exception e, HttpServletRequest request) {
+		
 		FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
 		flashMap.put("exception", e.getMessage());
 		e.printStackTrace();
+		
 	  return "redirect:" + request.getHeader("Referer");
 	}  
 	
@@ -40,7 +42,7 @@ public class BaseController {
 		return "redirect:" + request.getHeader("Referer");
 	}  
 	
-	public BaseController() {
+	public ExceptionController() {
 		// TODO Auto-generated constructor stub
 	}
 

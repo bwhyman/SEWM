@@ -1,15 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="myTemplate" tagdir="/WEB-INF/tags/"%>
+<%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
 
-<myTemplate:template>
+<mybase:base>
 	<jsp:attribute name="header">
 		<!-- datetimepicker -->
 	<link href="resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
@@ -59,15 +54,7 @@
   <li><a href="admin/usersetting">任务管理</a></li>
   <li class="active">添加文件任务信息</li>
 </ol>
-<c:if test="${exception != null}">
-		&nbsp&nbsp
-		<div class="alert alert-danger alert-dismissable" role="alert">
-  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-			</button><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <strong>错误！</strong> ${exception }
-</div>
-</c:if>
+
 	<form class="form-horizontal" action="admin/task/addfiletask" enctype="multipart/form-data" method="POST">
 		<div class="form-group">
 			<label for="name" class="col-sm-2 col-md-2 control-label">截止时间</label>
@@ -191,4 +178,4 @@
 				通知：同时发送短信通知<br>
 				</p>
     </jsp:body>
-</myTemplate:template>
+</mybase:base>

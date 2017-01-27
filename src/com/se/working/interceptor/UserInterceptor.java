@@ -32,7 +32,7 @@ public class UserInterceptor implements HandlerInterceptor{
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
 		// TODO Auto-generated method stub
@@ -46,5 +46,19 @@ public class UserInterceptor implements HandlerInterceptor{
 		}
 		return true;
 	}
+
+	/*@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
+		// TODO Auto-generated method stub
+		User user = (User) request.getSession().getAttribute("user");
+		if (user == null) {
+			String path = request.getContextPath();
+			String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ path + "/";
+			response.sendRedirect(basePath + "login");
+			return false;
+		}
+		return true;
+	}*/
 
 }

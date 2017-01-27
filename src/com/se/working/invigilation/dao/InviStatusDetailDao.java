@@ -5,10 +5,6 @@ import org.springframework.stereotype.Repository;
 import com.se.working.dao.GenericDao;
 import com.se.working.invigilation.entity.InvigilationInfoStatusDetail;
 @Repository
-public class InviStatusDetailDao extends GenericDao<InvigilationInfoStatusDetail, Long>{
-
-	public InviStatusDetailDao() {
-		// TODO Auto-generated constructor stub
-	}
+public class InviStatusDetailDao extends GenericDao<InvigilationInfoStatusDetail>{
 
 }

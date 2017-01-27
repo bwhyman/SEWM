@@ -6,14 +6,6 @@ import com.se.working.dao.GenericDao;
 import com.se.working.invigilation.entity.Course;
 
 @Repository
-public class CourseDao extends GenericDao<Course, Long>{
-
-	
-	
-	private CourseDao() {
-		// TODO Auto-generated constructor stub
-	}
-
-	
+public class CourseDao extends GenericDao<Course>{
 
 }

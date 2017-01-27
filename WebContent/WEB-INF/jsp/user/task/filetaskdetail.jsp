@@ -1,14 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="myTemplate" tagdir="/WEB-INF/tags/"%>
+<%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
 
-<myTemplate:template>
+<mybase:base>
 	<jsp:attribute name="header">
 	<link href="resources/css/fileinput.min.css" rel="stylesheet">
 	</jsp:attribute>
@@ -252,4 +247,4 @@
 		</tbody>
 	</table>
     </jsp:body>
-</myTemplate:template>
+</mybase:base>

@@ -1,8 +1,5 @@
 package com.se.working.service;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +16,9 @@ import com.se.working.dao.GenericDao;
  */
 @Service
 @Transactional
-public abstract class GenericService<T, ID extends Serializable> {
+public abstract class GenericService<T> {
 	@Autowired
-	private GenericDao<T, ID> genericDao;
+	private GenericDao<T> genericDao;
 	
 	/**
 	 * 添加
@@ -50,23 +47,16 @@ public abstract class GenericService<T, ID extends Serializable> {
 	 * @param id
 	 * @return
 	 */
-	public T findById(ID id) {
+	public T findById(long id) {
 		return genericDao.get(id);
 	}
-	/**
-	 * 
-	 * @return
-	 */
-	public List<T> findAll() {
-		return genericDao.list();
-	}
 	
 	
-	public GenericDao<T, ID> getGenericDao() {
+	public GenericDao<T> getGenericDao() {
 		return genericDao;
 	}
 
-	public void setGenericDao(GenericDao<T, ID> genericDao) {
+	public void setGenericDao(GenericDao<T> genericDao) {
 		this.genericDao = genericDao;
 	}
 

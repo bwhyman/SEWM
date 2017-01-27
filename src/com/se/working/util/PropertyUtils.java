@@ -22,15 +22,11 @@ public class PropertyUtils {
 	private static String PROPERTY_FILE = "property.properties";
 	
 	private static String BASEDATE_KEY = "basedate";
-	private static String INVI_REGEX_NUMBER_KEY = "invi_regex_number";
 	private static String INVI_REGEX_LOCATION_KEY = "invi_regex_location";
-	private static String INVI_EXCELFILE_TITLE_KEY = "invi_excelfile_title";
 	private static String COOKIE_NAME_KEY = "cookie_name";
 	private static String BASEDATE_VALUE = getProperty(BASEDATE_KEY);
 	private static String COOKIE_NAME_VALUE = getProperty(COOKIE_NAME_KEY);
-	private static String INVI_REGEX_NUMBER_VALUE = getProperty(INVI_REGEX_NUMBER_KEY);
 	private static String INVI_REGEX_LOCATION_VALUE = getProperty(INVI_REGEX_LOCATION_KEY);
-	private static String INVI_EXCELFILE_TITLE_VALUE = getProperty(INVI_EXCELFILE_TITLE_KEY);
 	
 	/**
 	 * 获取property中的basedate属性值
@@ -48,18 +44,10 @@ public class PropertyUtils {
 		return COOKIE_NAME_VALUE;
 	}
 	
-	public static String getInviRegexNumber() {
-		return INVI_REGEX_NUMBER_VALUE;
-	}
-	
 	public static String getInviRegexLocation() {
 		return INVI_REGEX_LOCATION_VALUE;
 	}
 	
-	public static String getInviExcelFileTitle() {
-		return INVI_EXCELFILE_TITLE_VALUE;
-	}
-
 	/**
 	 * 设置property中的basedate，同时更新内存中的basedate值<br />
 	 * Spring不提供封装好的保存property方法？

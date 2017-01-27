@@ -1,15 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="myTemplate" tagdir="/WEB-INF/tags/"%>
+<%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
-
-<myTemplate:template>
+<mybase:base>
 	<jsp:body>
 	<ol class="breadcrumb">
   <li><a href="">主页</a></li>
@@ -17,7 +11,7 @@
   <li class="active">用户通知设置</li>
 </ol>
 
-	<form class="form-horizontal" action="admin/setting/usernotifsetting" method="POST">
+	<form class="form-horizontal" action="admin/setting/updatenotif" method="POST">
 	<div class="form-group">
 			<label class="col-md-2 control-label">姓名</label>
 			<label class="col-md-1 control-label">通知</label>
@@ -52,4 +46,4 @@
 	</form>
 	
     </jsp:body>
-</myTemplate:template>
+</mybase:base>

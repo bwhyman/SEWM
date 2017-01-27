@@ -10,6 +10,7 @@
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   
   <mapping class="com.se.working.entity.User"/>
+  <mapping class="com.se.working.entity.Groups"/>
   <mapping class="com.se.working.entity.TeacherTitle"/>
   <mapping class="com.se.working.entity.UserAuthority"/>
   

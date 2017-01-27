@@ -17,7 +17,7 @@ import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.util.MD5;
 @Service
 @Transactional
-public class UserService extends GenericService<User, Long>{
+public class UserService extends GenericService<User>{
 
 	@Autowired
 	private TeacherInviDao teacherInviDao;
@@ -82,9 +82,9 @@ public class UserService extends GenericService<User, Long>{
 	 * 所有通知开启用户
 	 * @return
 	 */
-	public List<User> findAbledUsers() {
-		return userDao.listAbleds();
-	}
+	/*public List<User> findEnabledUsers() {
+		return userDao.listEnabled(true);
+	}*/
 	
 	public UserService() {
 		// TODO Auto-generated constructor stub

@@ -1,6 +1,5 @@
 package com.se.working.entity;
 
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -47,25 +46,6 @@ public class UserAuthority {
 		// TODO Auto-generated method stub
 		return String.valueOf(this.getId());
 	}
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return Objects.hash(id);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof UserAuthority)) {
-			return false;
-		}
-		UserAuthority o = (UserAuthority) obj;
-		return Objects.equals(id, o.getId());
-	}
-	
 	
 	public UserAuthority(long id) {
 		super();

@@ -1,8 +1,8 @@
 package com.se.working.dao;
 
-import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -13,10 +13,9 @@ import java.lang.reflect.Type;
  * @author BO
  *
  * @param <T>
- * @param <ID>
  */
 @Repository
-public abstract class GenericDao<T, ID extends Serializable> {
+public abstract class GenericDao<T> {
 	@Autowired
 	private SessionFactory sessionFactory;
 	private Class<T> clazz;
@@ -60,7 +59,7 @@ public abstract class GenericDao<T, ID extends Serializable> {
 		sessionFactory.getCurrentSession().clear();
 	}
 
-	public T get(ID id) {
+	public T get(long id) {
 		// TODO Auto-generated method stub
 		return (T) sessionFactory.getCurrentSession().get(clazz, id);
 	}
@@ -98,5 +97,7 @@ public abstract class GenericDao<T, ID extends Serializable> {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-	
+	public Session getCurrentSession() {
+		return this.sessionFactory.getCurrentSession();
+	}
 }

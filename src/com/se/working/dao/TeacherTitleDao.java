@@ -5,10 +5,7 @@ import org.springframework.stereotype.Repository;
 import com.se.working.entity.TeacherTitle;
 
 @Repository
-public class TeacherTitleDao extends GenericDao<TeacherTitle, Long>{
+public class TeacherTitleDao extends GenericDao<TeacherTitle>{
 
-	public TeacherTitleDao() {
-		// TODO Auto-generated constructor stub
-	}
 
 }

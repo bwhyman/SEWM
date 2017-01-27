@@ -1,7 +1,6 @@
 package com.se.working.entity;
 
 import java.util.Date;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,31 +32,12 @@ public class TeacherTitle {
 	 * 助教
 	 */
 	public final static long ASSISTANT = 4;
-	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		return String.valueOf(this.getId());
 	}
-
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return Objects.hash(id);
-	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof TeacherTitle)) {
-			return false;
-		}
-		TeacherTitle o = (TeacherTitle) obj;
-		return Objects.equals(id, o.getId());
-	}
 	
 	public TeacherTitle(long id) {
 		super();

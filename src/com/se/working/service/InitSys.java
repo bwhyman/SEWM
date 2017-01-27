@@ -19,6 +19,7 @@ public class InitSys implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO Auto-generated method stub
+		superAdminService.initGroup();
 		superAdminService.initTeacherTitle();
 		superAdminService.initUserAuthority();
 		superAdminService.initInviStatusType();

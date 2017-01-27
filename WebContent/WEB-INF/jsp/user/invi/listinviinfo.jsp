@@ -1,15 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="myTemplate" tagdir="/WEB-INF/tags/"%>
+<%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-%>
 
-<myTemplate:template>
+
+<mybase:base>
 <jsp:attribute name="footer">
 	<script>
 		$(function() {
@@ -26,12 +22,7 @@
 <div class="pull-right">
 	<a class="btn btn-primary" href="invi/downloadinviinfoexcel" role="button">下载监考记录</a>
 	</div>
-<div>
-	<a id="unassinvi" class="btn btn-primary" href="invi/listinviinfo/unassinvi" role="button">未分配</a>
-	<a id="assinvi" class="btn btn-primary" href="invi/listinviinfo/assinvi" role="button">已分配</a>
-	<a id="done" class="btn btn-primary" href="invi/listinviinfo/done" role="button">已完成</a>
-	<a id="all" class="btn btn-primary" href="invi/listinviinfo/all" role="button">全部</a>
-	</div>
+	<c:import url="/WEB-INF/jsp/common/navinvilist.jsp"></c:import>
 	
 	</div>
 	<c:if test="${user.userAuthority.level>=15 }">
@@ -115,7 +106,7 @@
 				<td>
 				<a class="btn btn-primary" href="invi/invinfodetail/${i.id }" role="button">详细</a>
 				</td>
-				<c:if test="${user.userAuthority.level>=15 }">
+				<c:if test="${sessionScope.user.userAuthority.level>=15 }">
 				<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>
 						<a class="btn btn-primary"  href="admin/invi/assigninvi/${i.id }" role="button">分配</a></td>
 				</c:if>
@@ -140,4 +131,4 @@
             </ul>
           </div>
     </jsp:body>
-</myTemplate:template>
+</mybase:base>

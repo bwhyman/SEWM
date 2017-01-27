@@ -2,7 +2,6 @@ package com.se.working.task.entity;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -62,24 +61,6 @@ public class FileTask {
 	public String toString() {
 		// TODO Auto-generated method stub
 		return String.valueOf(this.getId());
-	}
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return Objects.hash(id);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof FileTask)) {
-			return false;
-		}
-		FileTask o = (FileTask) obj;
-		return Objects.equals(id, o.getId());
 	}
 	
 	public FileTask() {

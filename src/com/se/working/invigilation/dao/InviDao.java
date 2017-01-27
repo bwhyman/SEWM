@@ -15,12 +15,12 @@ import com.se.working.invigilation.entity.Invigilation;
  *
  */
 @Repository
-public class InviDao extends GenericDao<Invigilation, Long> {
+public class InviDao extends GenericDao<Invigilation> {
 	@SuppressWarnings("unchecked")
 	// 基于指定教师、指定监考状态，查询监考分配信息
-	public List<Invigilation> listInvisByUserIdAndTypeId(long userId, long typeId) {
+	public List<Invigilation> list(long userId, long typeId) {
 		String HQL = "FROM Invigilation i WHERE i.teacher.id=:userId AND i.invInfo.currentStatusType.id = :typeId ORDER BY i.invInfo.startTime";
-		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
+		Query query = getCurrentSession().createQuery(HQL);
 		query.setLong("userId", userId);
 		query.setLong("typeId", typeId);
 		return query.list();

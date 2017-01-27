@@ -19,12 +19,13 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<!-- 使用GBLIB，基于类创建代理对象，用于业务层事务 -->
 	<aop:aspectj-autoproxy proxy-target-class="true" />
+	
+	<!-- <aop:config proxy-target-class="true" /> -->
 	<!-- SpringMVC使用注释 -->
 	<mvc:annotation-driven />
 	<!-- 过滤静态资源请求 -->
 	<mvc:default-servlet-handler />
 	<task:annotation-driven/>
-	
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
@@ -72,6 +73,7 @@
 			<mvc:exclude-mapping path="/resources/**" />
 			<bean class="com.se.working.interceptor.UserInterceptor"></bean>
 		</mvc:interceptor>
+		
 		<!-- 管理员操作 -->
 		<mvc:interceptor>
 			<mvc:mapping path="/admin/**" />

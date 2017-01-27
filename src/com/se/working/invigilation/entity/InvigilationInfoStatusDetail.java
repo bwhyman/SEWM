@@ -1,7 +1,6 @@
 package com.se.working.invigilation.entity;
 
 import java.util.Date;
-import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,24 +31,7 @@ public class InvigilationInfoStatusDetail {
 		// TODO Auto-generated method stub
 		return String.valueOf(this.getId());
 	}
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return Objects.hash(id);
-	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof InvigilationInfoStatusDetail)) {
-			return false;
-		}
-		InvigilationInfoStatusDetail o = (InvigilationInfoStatusDetail) obj;
-		return Objects.equals(id, o.getId());
-	}
 	
 	public InvigilationInfoStatusDetail() {
 		// TODO Auto-generated constructor stub
