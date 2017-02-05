@@ -28,7 +28,7 @@ import com.se.working.util.MD5;
  */
 @Service
 @Transactional
-public class AdminService extends GenericService<User> {
+public class AdminService {
 	@Autowired
 	private UserDao userDao;
 	@Autowired
@@ -41,7 +41,6 @@ public class AdminService extends GenericService<User> {
 	/**
 	 * 添加用户，需重写 单向关系，没有级联，需手动创建关联对象
 	 */
-	@Override
 	public void add(User user) {
 		// TODO Auto-generated method stub
 		user.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
@@ -70,12 +69,12 @@ public class AdminService extends GenericService<User> {
 	 * @param groupId
 	 */
 	public void updateAdmins(long[] newAdmins, long groupId) {
-		List<User> oldAdmins = userDao.list(UserAuthority.ADAMIN, groupId);
+		List<User> oldAdmins = userDao.list(UserAuthority.ADMIN, groupId);
 		for (User u : oldAdmins) {
 			u.setUserAuthority(new UserAuthority(UserAuthority.TEACHER));
 		}
 		for (int i = 0; i < newAdmins.length; i++) {
-			 userDao.get(newAdmins[i]).setUserAuthority(new UserAuthority(UserAuthority.ADAMIN));
+			 userDao.get(newAdmins[i]).setUserAuthority(new UserAuthority(UserAuthority.ADMIN));
 		}
 	}
 

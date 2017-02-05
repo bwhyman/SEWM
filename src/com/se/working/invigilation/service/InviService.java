@@ -39,9 +39,8 @@ import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.invigilation.entity.MessageStatusDetail;
 import com.se.working.invigilation.entity.MessageStatusType;
 import com.se.working.message.AlidayuMessage;
-import com.se.working.service.GenericService;
 import com.se.working.util.DateUtils;
-import com.se.working.util.FileTaskUtils;
+import com.se.working.util.FileUtils;
 import com.se.working.util.InviExcelUtil;
 import com.se.working.util.TimetableExcelUtil;
 
@@ -53,7 +52,7 @@ import com.se.working.util.TimetableExcelUtil;
  */
 @Service
 @Transactional
-public class InviService extends GenericService<Invigilation> {
+public class InviService {
 
 	private int MESSAGE_LENGTH = 15;
 
@@ -128,20 +127,12 @@ public class InviService extends GenericService<Invigilation> {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new SEWMException("课表文件读取错误！" + e.getMessage());
 		} finally {
 			uploadFile = null;
 		}
 
 		return courses;
-	}
-
-	/**
-	 * 查询所有课程
-	 * 
-	 * @return
-	 */
-	public List<Course> findCourses() {
-		return courseDao.list();
 	}
 
 	/**
@@ -679,7 +670,7 @@ public class InviService extends GenericService<Invigilation> {
 		byte[] datas = InviExcelUtil.createInviDetailExcel(infos, findTeacherInvigilations(groupId), title);
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
 		String fileName = title + "-" + date.format(new Date()) + ".xlsx";
-		ResponseEntity<byte[]> entity = FileTaskUtils.toResponseEntity(fileName, datas);
+		ResponseEntity<byte[]> entity = FileUtils.toResponseEntity(fileName, datas);
 		return entity;
 	}
 

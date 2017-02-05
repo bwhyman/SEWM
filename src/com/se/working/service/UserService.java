@@ -17,7 +17,7 @@ import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.util.MD5;
 @Service
 @Transactional
-public class UserService extends GenericService<User>{
+public class UserService {
 
 	@Autowired
 	private TeacherInviDao teacherInviDao;
@@ -40,6 +40,13 @@ public class UserService extends GenericService<User>{
 	
 	/**
 	 * 
+	 */
+	public User findById(long id) {
+		return userDao.get(id);
+	}
+	
+	/**
+	 * 
 	 * @return 所有职称
 	 */
 	public List<TeacherTitle> findTeacherTitles() {
@@ -48,7 +55,6 @@ public class UserService extends GenericService<User>{
 	/**
 	 * 重写update方法，重新封装
 	 */
-	@Override
 	public void update(User newUser) {
 		// TODO Auto-generated method stub
 		User user = userDao.get(newUser.getId());

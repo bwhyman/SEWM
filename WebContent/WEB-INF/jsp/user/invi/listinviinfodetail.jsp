@@ -1,6 +1,6 @@
+<%@page import="com.se.working.invigilation.entity.InvigilationStatusType" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
@@ -13,8 +13,8 @@
 	  <li><a href="invi/listinviinfo/unassinvi">监考信息</a></li>
 	  <li class="active">监考详细信息</li>
 	</ol>
+	监考信息<br>
 	<table class="table table-striped table-condensed table-hover">
-			监考信息<br>
 			<tbody>
 				<tr>
 					<td>时间</td>
@@ -48,10 +48,10 @@
 			<td><fmt:formatDate pattern="MM-dd HH:mm" value="${info.insertTime}"/></td>
 				<c:forEach items="${info.invStatusDetail }" var="i">
 				 	<td>
-				 	<c:if test="${i.invStatus.id == 2}">
+				 	<c:if test="${i.invStatus.id == InvigilationStatusType.ASSIGNED}">
 				 		分配时间
 				 	</c:if>
-				 	<c:if test="${i.invStatus.id == 3}">
+				 	<c:if test="${i.invStatus.id == InvigilationStatusType.DONE}">
 				 		完成时间
 				 	</c:if>
 				 	</td>

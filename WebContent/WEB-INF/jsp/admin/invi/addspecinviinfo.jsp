@@ -1,13 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <mybase:base>
 	<jsp:attribute name="header">
 		<!-- datetimepicker -->
-<link href="resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+		<link href="resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 	</jsp:attribute>
 	<jsp:attribute name="footer">
 	<script src="resources/js/moment-with-locales.js"></script>
@@ -38,21 +37,20 @@
 						<label for="title" class="col-sm-2 col-md-2 control-label">类型</label>
 						<div class="col-sm-10 col-md-4">
 						<select data-toggle="select" class="select select-primary mrs mbm" name="typeId">
-					<c:forEach items="${types }" var="t">
-						<option value="${t.id }">${t.name }
-					
-						</c:forEach>
-				</select>
+							<c:forEach items="${types }" var="t">
+								<option value="${t.id }">${t.name }
+							</c:forEach>
+						</select>
 						</div>
 					</div>
 					<div class="form-group">
 						<label for="name" class="col-sm-2 col-md-2 control-label">日期</label>
 						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="date">
-						<input type='text' class="form-control" name="date" required />
-						<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
-						</span>
-					</div>
+								<input type='text' class="form-control" name="date" required />
+								<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
 						</div>
 					</div>
 
@@ -80,7 +78,6 @@
 						</div>
 					</div>
 					
-						
 					<div class="form-group">
 						<div class="col-sm-2 col-md-2 control-label"></div>
 						<div class="col-sm-10 col-md-4">

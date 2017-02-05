@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+	<description>My tld</description>
+	<tlib-version>1.0</tlib-version>
+	<short-name>Mytld</short-name>
+	<uri>/Mytld</uri>
+	<tag>
+		<description>基于HTTPSession中的权限显示内容</description>
+		<name>authorize</name>
+		<tag-class>com.se.working.tld.MyAuthorize</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description>Set集合类型，可基于EL 3.0表达式直接创建Set集合对象</description>
+			<name>access</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+	<description>加载指定类，基于EL表达式可直接使用类中的常量，例如${User.LEVEL}</description>
+		<name>constant</name>
+		<tag-class>com.se.working.tld.MyConstant</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>clazz</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+</taglib>

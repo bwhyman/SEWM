@@ -45,12 +45,12 @@ public class InviExcelUtil {
 	/**
 	 * 独立的监考开始结束时间，日期与时间分别获取<br>
 	 */
-	private static final String REGEX_IND_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})\\s+(\\d{2}:\\d{2})";
+	private static final String REGEX_IND_DATE = "(^\\d{4}(-|/)\\d{1,2}(-|/)\\d{1,2})\\s+(\\d{2}:\\d{2})";
 	// 仅匹配日期，不会匹配班级
 	/**
 	 * 仅匹配日期，不会匹配班级<br>
 	 */
-	private static final String REGEX_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})";
+	private static final String REGEX_DATE = "(^\\d{4}(-|/)\\d{1,2}(-|/)\\d{1,2})";
 	// 匹配时间，较模糊，有待修正
 	private static final String REGEX_TIME = "(.+)~(.+)";
 	// 匹配课程名称，去掉[]

@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -21,10 +20,13 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.se.working.controller.ControllerMap;
+import com.se.working.controller.ControllerMap.UserInviReponseMap;
 import com.se.working.controller.ControllerMap.UserRequestMap;
 import com.se.working.controller.ControllerMap.UserResponseMap;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
+import com.se.working.interceptor.MyAuthorize;
+import com.se.working.interceptor.MyAuthorize.Authorize;
 import com.se.working.service.UserService;
 import com.se.working.util.PropertyUtils;
 
@@ -36,10 +38,8 @@ import com.se.working.util.PropertyUtils;
  */
 @Controller
 @SessionAttributes(value = ControllerMap.USER)
+@MyAuthorize({Authorize.SUPERADMIN, Authorize.TEACHER, Authorize.ADMIN})
 public class UserController {
-
-	private String basePath = "/user/";
-
 	@Autowired
 	private UserService userService;
 
@@ -276,26 +276,14 @@ public class UserController {
 		}
 		return user;
 	}
-
-	/*
-	 * ==================================================
-	 */
+	
 	/**
-	 * 直接加载页面时的通配方法 不会覆盖显式声明的请求 仅对一级目录有效
-	 * 
-	 * @param viewpath
-	 * @return 视图路径
+	 * 静态页面
+	 * =============================
 	 */
-	@RequestMapping(path = "/{viewpath}", method = RequestMethod.GET)
-	public String getView(@PathVariable String viewpath) {
-
-		return basePath + viewpath;
+	@RequestMapping(value = {UserRequestMap.MAIN, "/"})
+	public String main() {
+		return UserResponseMap.MAIN;
 	}
-
-	@RequestMapping(path = "/{root}/{viewpath}", method = RequestMethod.GET)
-	public String getView(@PathVariable String root, @PathVariable String viewpath) {
-
-		return basePath + root + "/" + viewpath;
-	}
-
+	
 }

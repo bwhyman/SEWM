@@ -1,14 +1,12 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <mybase:base>
 	<jsp:attribute name="header">
 		<!-- datetimepicker -->
-<link href="resources/css/bootstrap-datetimepicker.min.css"
-	rel="stylesheet">
+<link href="resources/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 	</jsp:attribute>
 	<jsp:attribute name="footer">
 	<script src="resources/js/moment-with-locales.js"></script>
@@ -72,8 +70,8 @@
                 		break;
                 	}
                 
-                	$('#stime-input').val(stime);
-                	$('#etime-input').val(etime);
+                	$('input[name=stime]').val(stime);
+                	$('input[name=etime]').val(etime);
                 });
             });
         </script>
@@ -89,11 +87,10 @@
 						<label for="name" class="col-sm-2 col-md-2 control-label">监考日期</label>
 						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="date">
-						<input type='text' class="form-control" name="date" required />
-						<span class="input-group-addon"> <span
-							class="glyphicon glyphicon-calendar"></span>
-						</span>
-					</div>
+							<input type='text' class="form-control" name="date" required />
+							<span class="input-group-addon"> <span class="glyphicon glyphicon-calendar"></span>
+							</span>
+							</div>
 						</div>
 					</div>
 					<div class="form-group">
@@ -125,7 +122,7 @@
 						<label for="name" class="col-sm-2 col-md-2 control-label">开始时间</label>
 						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="stime">
-						<input type='text' class="form-control" name="stime" required id="stime-input" />
+						<input type='text' class="form-control" name="stime" required />
 						<span class="input-group-addon"> <span
 							class="glyphicon glyphicon-calendar"></span>
 						</span>
@@ -136,7 +133,7 @@
 						<label for="name" class="col-sm-2 col-md-2 control-label">结束时间</label>
 						<div class="col-sm-10 col-md-4">
 							<div class='input-group date' id="etime">
-						<input type='text' class="form-control"  name="etime" required id="etime-input" />
+						<input type='text' class="form-control"  name="etime" required />
 						<span class="input-group-addon"> <span
 							class="glyphicon glyphicon-calendar"></span>
 						</span>

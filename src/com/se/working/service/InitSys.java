@@ -14,22 +14,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class InitSys implements InitializingBean {
 
 	@Autowired
-	private SuperAdminService superAdminService;
+	private InitService initService;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO Auto-generated method stub
-		superAdminService.initGroup();
-		superAdminService.initTeacherTitle();
-		superAdminService.initUserAuthority();
-		superAdminService.initInviStatusType();
-		superAdminService.initUser();
-		superAdminService.initInviMessageType();
-		superAdminService.initSpecInviType();
-		superAdminService.initFileType();
-		superAdminService.initFileTaskStatus();
+		initService.initGroup();
+		initService.initTeacherTitle();
+		initService.initUserAuthority();
+		initService.initInviStatusType();
+		// initService.initUser();
+		initService.initInviMessageType();
+		initService.initSpecInviType();
+		initService.initFileType();
+		initService.initFileTaskStatus();
+		initService.importUser();
 	}
-	public InitSys() {
-		// TODO Auto-generated constructor stub
-	}
+	
+	
 }

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
@@ -40,11 +41,7 @@
 			<div class="col-sm-10 col-md-4">
 				<select data-toggle="select" class="select select-primary mrs mbm" name="titleId">
 					<c:forEach items="${titles }" var="t">
-						<c:set value="" var="titleselected"></c:set>
-						<c:if test="${user.title == t}">
-							<c:set value="selected" var="titleselected"></c:set>
-						</c:if> 
-						<option value="${t }" ${titleselected }>${t.name }
+						<option value="${t }" <c:if test="${user.title == t}"> selected='selected'</c:if>>${t.name }
 					</c:forEach>
 				</select>
 			</div>

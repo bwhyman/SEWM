@@ -14,11 +14,10 @@ import com.se.working.invigilation.entity.SpecialInvigilation;
 import com.se.working.invigilation.entity.SpecialInvigilationInfo;
 import com.se.working.invigilation.entity.SpecialInvigilationType;
 import com.se.working.invigilation.entity.TeacherInvigilation;
-import com.se.working.service.GenericService;
 
 @Service
 @Transactional
-public class SpecInviService extends GenericService<SpecialInvigilation> {
+public class SpecInviService {
 
 	@Autowired
 	private SpecialInviTypeDao specTypeDao;

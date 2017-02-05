@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
@@ -18,18 +17,21 @@
 			<div class="col-sm-10 col-md-5">
 				<select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info" name="newAdmins">
 					<c:forEach items="${users }" var="u">
-						<option value="${u.id }" <c:if test="${u.userAuthority.id ==  adminId}">selected="selected"</c:if>>${u.name }	
+						<c:set value="" var="sadmin"></c:set>
+						<c:if test="${u.userAuthority.id ==  adminId}">
+							<c:set value="selected" var="sadmin"></c:set>
+						</c:if>
+						<option value="${u.id }" ${sadmin }>${u.name }	
 					</c:forEach>
 				</select>
 			</div>
 		</div>
 		<div class="form-group">
-						<div class="col-sm-2 col-md-1 control-label"></div>
-						<div class="col-sm-10 col-md-3">
-							
-							<button type="submit" class="btn btn-primary btn-wide">提交</button>			
-						</div>
-					</div>
+				<div class="col-sm-2 col-md-1 control-label"></div>
+				<div class="col-sm-10 col-md-3">
+					<button type="submit" class="btn btn-primary btn-wide">提交</button>			
+				</div>
+		</div>
 	</form>
 			
     </jsp:body>
