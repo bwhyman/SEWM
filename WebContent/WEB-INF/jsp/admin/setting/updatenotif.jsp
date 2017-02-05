@@ -20,21 +20,25 @@
 		<div class="form-group">
 			<label class="col-md-2 control-label">${u.name }</label>
 			<div class="col-md-3">
+			<c:set var="checked" value="" ></c:set>
+			<c:if test="${u.enabledMessage=='true' }">
+					<c:set var="checked"  value="checked" ></c:set>
+				</c:if>
 				<input type="checkbox" data-toggle="switch" data-on-color="primary" data-off-color="default" class="myswitch"
-							<c:if test="${u.enabledMessage=='true' }">checked='checked'</c:if> name="checkeds"  value="${u.id }"/>
+							${checked } name="checkeds"  value="${u.id }"/>
 				</div>
 		</div>
 		
 		</c:forEach>
 		<div class="form-group">
-	<div class="col-md-1">
+			<div class="col-sm-2 col-md-2 control-label"></div>
+			<div class="col-md-4">
 			<button type="submit" class="btn btn-primary btn-wide">提交</button>
 		</div>
 	</div>
 		<div class="form-group">
-						<div class="col-sm-2 col-md-2 control-label"><p class="text-danger">说明</p></div>
 						<div class="col-sm-10 col-md-10">
-							<p class="text-danger">
+							<p class="text-danger">说明: 
 							该功能的关闭意味着教师无法接收任何专业通知，不会推荐监考分配<br>
 							不存在正常参加监考分配，却无需接收专业通知的可能，因此，通知功能
 							<span class="label label-warning">单向</span>自动关联监考推荐功能，

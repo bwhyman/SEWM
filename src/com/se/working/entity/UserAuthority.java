@@ -37,7 +37,7 @@ public class UserAuthority {
 	 *
 	 */
 	public static long TEACHER = 1;
-	public static long ADAMIN = 2;
+	public static long ADMIN = 2;
 	public static long SUPERADMIN = 3;
 	public static long STUDENT = 4;
 	

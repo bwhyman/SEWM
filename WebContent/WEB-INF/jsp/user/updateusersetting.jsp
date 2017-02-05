@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
@@ -8,7 +7,7 @@
 <jsp:attribute name="footer">
 	<script>
 		$(function() {
-			$('#pwdsubmit').click(function() {
+			$('input[name=pwd]').click(function() {
 				if($('#pwd1').val() != $('#pwd2').val()) {
 					alert('密码不一致');
 					return false;
@@ -76,7 +75,12 @@
 		<div class="col-sm-10 col-md-4">
 			<select data-toggle="select" class="select select-primary mrs mbm" name="titleId">
 				<c:forEach items="${titles }" var="t">
-					<option value="${t }" <c:if test="${user.title == t}"> selected='selected'</c:if>>${t.name }
+					<c:set value="" var="tselected"></c:set>
+				<c:if test="${user.title == t}">
+					<c:set value="selected" var="tselected"></c:set>
+				</c:if>
+				
+					<option value="${t }" ${tselected }>${t.name }
 				</c:forEach>
 			</select>
 		</div>

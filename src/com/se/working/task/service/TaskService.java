@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.se.working.exception.SEWMException;
 import com.se.working.message.AlidayuMessage;
-import com.se.working.service.GenericService;
 import com.se.working.task.dao.FileTaskDao;
 import com.se.working.task.dao.FileTaskDetailDao;
 import com.se.working.task.dao.FileTaskStatusDao;
@@ -29,12 +28,12 @@ import com.se.working.task.entity.FileTaskStatus;
 import com.se.working.task.entity.FileType;
 import com.se.working.task.entity.Notification;
 import com.se.working.task.entity.TeacherTask;
-import com.se.working.util.FileTaskUtils;
+import com.se.working.util.FileUtils;
 import com.se.working.util.StringUtils;
 
 @Service
 @Transactional
-public class TaskService extends GenericService<FileTask> {
+public class TaskService {
 
 	@Autowired
 	private TeacherTaskDao teacherTaskDao;
@@ -80,7 +79,7 @@ public class TaskService extends GenericService<FileTask> {
 		fileTaskDao.flush();
 		fileTaskDao.refresh(fileTask);
 		// 创建任务文件夹，同时返回任务任务文件夹名称
-		fileTask.setDirectory(FileTaskUtils.getOrCreateTaskDirectory(fileTask.getId(), fileTask.getName()));
+		fileTask.setDirectory(FileUtils.getOrCreateTaskDirectory(fileTask.getId(), fileTask.getName()));
 
 		// 创建模板文件
 		if (!uploadFile.isEmpty()) {
@@ -89,13 +88,13 @@ public class TaskService extends GenericService<FileTask> {
 			String fileName = null;
 			// 基于单文件、普通任务文件命名模板文件
 			if (fileTask.isSingleFile()) {
-				fileName = FileTaskUtils.getSingalFileTaskTemplateName(fileTask.getName(), ext);
+				fileName = FileUtils.getSingalFileTaskTemplateName(fileTask.getName(), ext);
 			} else {
-				fileName = FileTaskUtils.getFileTaskTemplateName(fileTask.getName(), ext);
+				fileName = FileUtils.getFileTaskTemplateName(fileTask.getName(), ext);
 			}
 			fileTask.setTempleteFile(fileName);
-			File file = FileTaskUtils.getOrCreateFileTaskFile(fileTask.getDirectory(), fileName);
-			FileTaskUtils.transferTo(uploadFile, file);
+			File file = FileUtils.getOrCreateFileTaskFile(fileTask.getDirectory(), fileName);
+			FileUtils.transferTo(uploadFile, file);
 		}
 
 		// 创建任务及任务细节
@@ -210,27 +209,27 @@ public class TaskService extends GenericService<FileTask> {
 			// 单一文件直接基于模板文件修改，不再为每位教师生成单独的文件
 			if (task.isSingleFile()) {
 				// 单一文件名称
-				String fileName = FileTaskUtils.getSingalFileTaskTemplateName(task.getName(), ext);
-				File file = FileTaskUtils.getOrCreateFileTaskFile(task.getDirectory(), fileName);
-				FileTaskUtils.transferTo(uploadFile, file);
+				String fileName = FileUtils.getSingalFileTaskTemplateName(task.getName(), ext);
+				File file = FileUtils.getOrCreateFileTaskFile(task.getDirectory(), fileName);
+				FileUtils.transferTo(uploadFile, file);
 				// 删除原模板文件
-				FileTaskUtils.deleteFileTaskFile(task.getDirectory(), task.getTempleteFile());
+				FileUtils.deleteFileTaskFile(task.getDirectory(), task.getTempleteFile());
 				// 更新模板文件名称
 				task.setTempleteFile(fileName);
 			} else {
 				// 上传任务教师姓名
 				String userName = detail.getTeacher().getUser().getName();
 				// 任务文件名称
-				String fileName = FileTaskUtils.getFileTaskName(task.getName(), userName, ext);
+				String fileName = FileUtils.getFileTaskName(task.getName(), userName, ext);
 				detail.setFile(fileName);
-				File file = FileTaskUtils.getOrCreateFileTaskFile(task.getDirectory(), fileName);
-				FileTaskUtils.transferTo(uploadFile, file);
+				File file = FileUtils.getOrCreateFileTaskFile(task.getDirectory(), fileName);
+				FileUtils.transferTo(uploadFile, file);
 			}
 
 		} else {
 			// 如果上传空文件，并且曾经上传过文件，则删除原上传文件
 			if (detail.getFile() != null) {
-				FileTaskUtils.deleteFileTaskFile(task.getDirectory(), detail.getFile());
+				FileUtils.deleteFileTaskFile(task.getDirectory(), detail.getFile());
 				//  清空file字段
 				detail.setFile(null);
 			}
@@ -262,7 +261,7 @@ public class TaskService extends GenericService<FileTask> {
 	public void deleteFileTask(long id) {
 		FileTask task = findById(id);
 		// 删除任务文件夹
-		FileTaskUtils.deleteDirectory(task.getDirectory());
+		FileUtils.deleteDirectory(task.getDirectory());
 		// 删除数据信息
 		fileTaskDao.delete(findById(id));
 	}
@@ -286,9 +285,9 @@ public class TaskService extends GenericService<FileTask> {
 
 		// 创建模板文件
 		if (!uploadFile.isEmpty()) {
-			File file = FileTaskUtils.getOrCreateFileTaskFile(fileTask.getDirectory(), fileTask.getTempleteFile());
+			File file = FileUtils.getOrCreateFileTaskFile(fileTask.getDirectory(), fileTask.getTempleteFile());
 			
-			FileTaskUtils.transferTo(uploadFile, file);
+			FileUtils.transferTo(uploadFile, file);
 		}
 
 		// 删除原人员
@@ -352,5 +351,9 @@ public class TaskService extends GenericService<FileTask> {
 		notificationDao.refresh(notification);
 		alidayuMessage.sendNotification(notification);
 		return notification;
+	}
+	
+	public FileTask findById(long id) {
+		return fileTaskDao.get(id);
 	}
 }

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration status="OFF">  
-  <appenders>  
-    <Console name="Console" target="SYSTEM_OUT">  
-      <PatternLayout pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %C.%M(%L) - %msg%n}"/>  
-    </Console>  
-  </appenders>  
-  <loggers>  
-    <root level="info">  
-      <appender-ref ref="Console"/>  
-    </root>  
-  </loggers>  
+<configuration status="OFF">
+	<appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %C.%M(%L) - %msg%n}" />
+		</Console>
+	</appenders>
+	<loggers>
+		<logger name="com.se.working" level="info">
+		</logger>
+		<logger name="test" level="info">
+		</logger>
+		<root level="warn">
+			<appender-ref ref="Console" />
+		</root>
+	</loggers>
 </configuration>

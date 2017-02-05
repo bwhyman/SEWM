@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
@@ -9,7 +8,7 @@
 <jsp:attribute name="footer">
 	<script>
 	$(document).ready(function() {
-		$('#select_userupdate').change(function() {
+		$('select[name=userId]').change(function() {
 			if($(this).val() == 0) {
 				$('#div_userupdate').hide();
 				return;
@@ -66,7 +65,7 @@
       <div class="form-group">
 						<label for="select_userupdate" class="col-sm-2 col-md-2 control-label">用户</label>
 						<div class="col-sm-10 col-md-4">
-							<select data-toggle="select" class="select select-primary mrs mbm" name="userId" id="select_userupdate">
+							<select data-toggle="select" class="select select-primary mrs mbm" name="userId">
 							<option value="0">用户</option>
 							<c:forEach items="${users}" var="u">
 								<option value="${u.id}">${u.name }</option>

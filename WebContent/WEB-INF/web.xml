@@ -5,13 +5,29 @@
 	id="WebApp_ID" version="3.1">
 	<display-name>SEWM</display-name>
 	<welcome-file-list>
+		<!-- 定义为空，由mvc重定向 -->
 		<welcome-file></welcome-file>
 	</welcome-file-list>
+	<!-- 排除静态资源，web-inf下无效 -->
+	<servlet-mapping>
+       <servlet-name>default</servlet-name>
+       <url-pattern>/resources/*</url-pattern>
+   </servlet-mapping>
 	<!-- 当不同工程均使用webAppRootKey获取根目录时，使用不同的value避免冲突 -->
 	<context-param>
 		<param-name>webAppRootKey</param-name>
 		<param-value>SEWM.root</param-value>
 	</context-param>
+	<!-- 去除jsp中的空行 -->  
+<servlet>  
+    <servlet-name>jsp</servlet-name>  
+    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>  
+    <init-param>  
+        <param-name>trimSpaces</param-name>  
+        <param-value>true</param-value>  
+    </init-param>  
+    <load-on-startup>3</load-on-startup>  
+</servlet>  
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -62,10 +78,15 @@
 		<error-code>400</error-code>
 		<location>/resources/error/400.jsp</location>
 	</error-page>
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/resources/error/404.jsp</location>
+	</error-page>
 	<listener>
 		<listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
 	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
 </web-app>

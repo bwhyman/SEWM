@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
@@ -11,7 +10,7 @@
 	<jsp:attribute name="footer">
 <script>
 	$(function() {
-		$('#file-1').fileinput({
+		$('input[name=uploadFile]').fileinput({
 			showPreview : false,
 			/* browseClass: "btn btn-primary", */
 			initialCaption : "上传课表文件",
@@ -31,7 +30,7 @@
  	<form class="form-horizontal" enctype="multipart/form-data" action="admin/invi/importtimetable" method="post">
 		<div class="form-group">
 			<div class="col-sm-10 col-md-8">
-				<input id="file-1" type="file" name="uploadFile" multiple data-min-file-count="1" accept=".xls,.xlsx">
+				<input type="file" name="uploadFile" multiple data-min-file-count="1" accept=".xls,.xlsx">
 			</div>
 		</div>
 		<div class="form-group">

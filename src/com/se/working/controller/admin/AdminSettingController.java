@@ -7,17 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.se.working.controller.ControllerMap;
 import com.se.working.controller.ControllerMap.AdminSettingRequestMap;
-import com.se.working.controller.ControllerMap.AdminSettingResponseMap;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
 import com.se.working.entity.UserAuthority;
+import com.se.working.interceptor.MyAuthorize;
+import com.se.working.interceptor.MyAuthorize.Authorize;
 import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.invigilation.service.InviService;
 import com.se.working.service.AdminService;
@@ -31,6 +31,7 @@ import com.se.working.service.UserService;
  */
 @Controller
 @SessionAttributes(value = ControllerMap.USER)
+@MyAuthorize(value = {Authorize.SUPERADMIN, Authorize.ADMIN})
 public class AdminSettingController {
 	
 	@Autowired
@@ -46,9 +47,8 @@ public class AdminSettingController {
 	 * @param model
 	 */
 	@RequestMapping(path = AdminSettingRequestMap.ADD_USER)
-	public String adduser(Model model) {
+	public void adduser(Model model) {
 		model.addAttribute("titles", userService.findTeacherTitles());
-		return AdminSettingResponseMap.ADD_USER;
 	}
 	
 	/**
@@ -71,9 +71,9 @@ public class AdminSettingController {
 	 * @return
 	 */
 	@RequestMapping(path = AdminSettingRequestMap.UPDATE_USER)
-	public String updateUser(@ModelAttribute(ControllerMap.USER) User user, Model model) {
+	public void updateUser(@ModelAttribute(ControllerMap.USER) User user, Model model) {
 		model.addAttribute("users", adminService.findUsers(user.getGroups().getId()));
-		return AdminSettingResponseMap.UPDATE_USER;
+		
 	}
 	/**
 	 * 密码重置
@@ -120,7 +120,7 @@ public class AdminSettingController {
 		// 全部用户
 		List<User> users = adminService.findUsers(user.getGroups().getId());
 		// 管理员权限ID
-		long adminId = UserAuthority.ADAMIN;
+		long adminId = UserAuthority.ADMIN;
 		model.addAttribute("users", users);
 		model.addAttribute("adminId", adminId);
 	}
@@ -181,27 +181,12 @@ public class AdminSettingController {
 		adminService.updateUserNotifSetting(checkeds, user.getGroups().getId());
 		return ControllerMap.REDIRECT + AdminSettingRequestMap.UPDATE_NOTIF;
 	}
-	
-
-	
-	
 	/**
-	 * 直接加载页面时的通配方法
-	 * 不会覆盖显式声明的请求
-	 * 仅对一级目录有效
-	 * @param viewpath
-	 * @return 视图路径
+	 * 静态页面
+	 * =====================
 	 */
-	@RequestMapping(path = "/admin/setting/{viewpath}", method = RequestMethod.GET)
-	public String getView(@PathVariable String viewpath) {
+	@RequestMapping(path = AdminSettingRequestMap.USER_MANAGERMENT)
+	public void userManagement() {
 		
-		return "/admin/setting/" + viewpath;
 	}
-	
-	@RequestMapping(path = "/admin/setting/{root}/{viewpath}", method = RequestMethod.GET)
-	public String getView(@PathVariable String root, @PathVariable String viewpath) {
-		
-		return "/admin/setting/" + root + "/" + viewpath;
-	}
-	
 }

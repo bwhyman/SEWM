@@ -11,7 +11,8 @@ import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,8 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.se.working.exception.SEWMException;
 
-public class FileTaskUtils {
-
+public class FileUtils {
+	private static Logger logger = LogManager.getLogger(FileUtils.class);
 	private static String ROOT = setUploadDirectory();
 	private static String TIMETABLE = setTimetableDirectory();
 	private static String INVIGILATION = setInviDirectory();
@@ -163,7 +164,7 @@ public class FileTaskUtils {
 		try {
 			File file = new File(ROOT + directory);
 			if (file.exists() && file.isDirectory()) {
-				FileUtils.deleteDirectory(file);
+				org.apache.commons.io.FileUtils.deleteDirectory(file);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -292,7 +293,8 @@ public class FileTaskUtils {
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			headers.setContentDispositionFormData("attachment", fileName);
-			entity = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.OK);
+			entity = new ResponseEntity<byte[]>(org.apache.commons.io.FileUtils.readFileToByteArray(file), headers,
+					HttpStatus.OK);
 			return entity;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -322,8 +324,23 @@ public class FileTaskUtils {
 		return entity;
 	}
 
-	public FileTaskUtils() {
-		// TODO Auto-generated constructor stub
+	/**
+	 * 
+	 * @return
+	 * @throws IOException 
+	 */
+	public static InputStream getInitUsersExcel() throws IOException {
+		InputStream inputStream = null;
+		File file = new File(ROOT + "initusers.xlsx");
+		if (!file.exists()) {
+			logger.debug(ROOT + "initusers.xlsx");
+			file = new File(ROOT + "initusers.xls");
+		}
+		if (!file.exists()) {
+			throw new SEWMException("初始化用户表格不存在!" + "initusers.xlsx");
+		}
+		inputStream = org.apache.commons.io.FileUtils.openInputStream(file);
+		return inputStream;
 	}
 
 }

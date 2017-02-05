@@ -21,7 +21,7 @@ import com.se.working.task.entity.FileTask;
 import com.se.working.task.entity.FileTaskDetail;
 import com.se.working.task.entity.FileTaskStatus;
 import com.se.working.task.service.TaskService;
-import com.se.working.util.FileTaskUtils;
+import com.se.working.util.FileUtils;
 
 @Controller
 @RequestMapping("/task")
@@ -146,13 +146,8 @@ public class UserTaskController {
 	@RequestMapping(path = "/downloadzip/{directory}/", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> getFileZip(@PathVariable String directory) {
 		
-		ResponseEntity<byte[]> entity = FileTaskUtils.toResponseEntity(directory + ".zip", FileTaskUtils.zipDirectory(directory));
+		ResponseEntity<byte[]> entity = FileUtils.toResponseEntity(directory + ".zip", FileUtils.zipDirectory(directory));
 	
 		return entity;
 	}
-
-	public UserTaskController() {
-		// TODO Auto-generated constructor stub
-	}
-
 }

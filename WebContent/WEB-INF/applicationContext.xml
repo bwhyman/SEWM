@@ -21,10 +21,10 @@
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 	
 	<!-- <aop:config proxy-target-class="true" /> -->
+	<!-- 基于服务器默认规则，过滤静态资源请求，需在web.xml中配置 -->
+	<mvc:default-servlet-handler />
 	<!-- SpringMVC使用注释 -->
 	<mvc:annotation-driven />
-	<!-- 过滤静态资源请求 -->
-	<mvc:default-servlet-handler />
 	<task:annotation-driven/>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -37,8 +37,6 @@
         <property name="minIdle" value="1" />
         <!-- 设置自动回收超时连接 -->  
         <property name="removeAbandoned" value="true" />
-         
-		
 	</bean>
 
 	<!-- Hibernate5 Session Factory -->
@@ -59,31 +57,32 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
+	
+	<!-- 静态资源由web容器handle，web.xml -->
+	<!-- <mvc:resources mapping="/resources/**" location="/resources/" /> -->
 	<!-- SpringMVC Interceptor -->
 	<mvc:interceptors>
-		<!-- 登录用户操作 -->
+		<!-- 登录/操作权限 -->
 		<mvc:interceptor>
-			<!-- 所有操作 -->
 			<mvc:mapping path="/**" />
 			<!-- 排除login操作 -->
 			<mvc:exclude-mapping path="/login" />
 			<mvc:exclude-mapping path="/ilogin" />
 			<mvc:exclude-mapping path="/logout" />
 			<!-- 排除资源 -->
-			<mvc:exclude-mapping path="/resources/**" />
-			<bean class="com.se.working.interceptor.UserInterceptor"></bean>
+			<!-- <mvc:exclude-mapping path="/resources/**" /> -->
+			<bean class="com.se.working.interceptor.AuthorityInterceptor"></bean>
 		</mvc:interceptor>
-		
 		<!-- 管理员操作 -->
-		<mvc:interceptor>
+		<!-- <mvc:interceptor>
 			<mvc:mapping path="/admin/**" />
 			<bean class="com.se.working.interceptor.AdminInterceptor"></bean>
 		</mvc:interceptor>
-		<!-- 超级管理员操作 -->
+		超级管理员操作
 		<mvc:interceptor>
 			<mvc:mapping path="/superadmin/**" />
 			<bean class="com.se.working.interceptor.SuperAdminInterceptor"></bean>
-		</mvc:interceptor>
+		</mvc:interceptor> -->
 	</mvc:interceptors>
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -100,6 +99,5 @@
 
 	<!-- 根目录重定向，设置welcome为空，定向view-name对应的视图名称，不调用controller -->
 	<mvc:view-controller path="/" view-name="/user/main" />
-	
-
+ 
 </beans>

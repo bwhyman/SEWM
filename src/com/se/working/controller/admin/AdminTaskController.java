@@ -2,41 +2,34 @@ package com.se.working.controller.admin;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.se.working.entity.User;
 import com.se.working.exception.SEWMException;
-import com.se.working.service.UserService;
 import com.se.working.task.entity.FileTask;
-import com.se.working.task.entity.FileType;
 import com.se.working.task.entity.Notification;
 import com.se.working.task.entity.TeacherTask;
 import com.se.working.task.service.TaskService;
 import com.se.working.util.DateUtils;
-import com.se.working.util.FileTaskUtils;
 
 @Controller
 @RequestMapping("/admin/task/")
 public class AdminTaskController {
-	private String basePath = "/admin/task/";
+
 	private String redirect = "redirect:";
 	private String USER = "user";
 
 	@Autowired
 	private TaskService taskService;
-	@Autowired
-	private UserService userService;
+	
 
 	/**
 	 * 加载创建任务
@@ -197,32 +190,6 @@ public class AdminTaskController {
 		User user = (User) session.getAttribute(USER);
 		notification.setCreateUser(new TeacherTask(user.getId()));
 		taskService.addNotification(notification, teachers);
-		
 		return redirect + "addnotification";
-		
 	}
-	
-	
-/*
- * ============================================
- */
-	@RequestMapping(path = "/{viewpath}", method = RequestMethod.GET)
-	public String getView(@PathVariable String viewpath) {
-		return basePath + viewpath;
-	}
-
-	@RequestMapping(path = "/{root}/{viewpath}", method = RequestMethod.GET)
-	public String getView(@PathVariable String root, @PathVariable String viewpath) {
-		return basePath + root + "/" + viewpath;
-	}
-
-	@RequestMapping(path = "/{root}/{root1}/{viewpath}", method = RequestMethod.GET)
-	public String getView(@PathVariable String root, @PathVariable String root1, @PathVariable String viewpath) {
-		return basePath + root + "/" + root1 + "/" + viewpath;
-	}
-
-	public AdminTaskController() {
-		// TODO Auto-generated constructor stub
-	}
-
 }

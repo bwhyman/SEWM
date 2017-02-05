@@ -1,9 +1,10 @@
+<%@page import="com.se.working.entity.UserAuthority"%>
+<%@page import="com.se.working.invigilation.entity.InvigilationStatusType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="mybase" tagdir="/WEB-INF/tags/"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<%@ taglib prefix="my" uri="/Mytld"%>
 
 <mybase:base>
 <jsp:attribute name="footer">
@@ -25,14 +26,14 @@
 	<c:import url="/WEB-INF/jsp/common/navinvilist.jsp"></c:import>
 	
 	</div>
-	<c:if test="${user.userAuthority.level>=15 }">
+	<my:authorize access="${set={UserAuthority.ADMIN, UserAuthority.SUPERADMIN} }">
 	<div class="row-fluid">
 	<p class="text-danger">说明: 
 	编辑，对监考信息进行修改，修改监考时间地点，添加监考课程名称等，提交后自动转到监考分配<br>
 	分配，对已分配监考完成重新分配，对未分配监考创建监考分配
 	</p>
 	</div>
-	</c:if>
+	</my:authorize>
 	<div>
             <ul class="pagination">
             <c:if test="${currentpage > 1 }">
@@ -60,9 +61,9 @@
                   <th>分配</th>
                   <th>状态</th>
                   <th>详细</th>
-                  <c:if test="${user.userAuthority.level>=15 }">
-                  <th>操作</th>
-                  </c:if>
+                  <my:authorize access="${set={UserAuthority.ADMIN, UserAuthority.SUPERADMIN} }">
+                 	 <th>操作</th>
+                  </my:authorize>
 			</tr>
 			</thead>
 			<tbody>
@@ -80,36 +81,43 @@
 				<td>${i.requiredNumber }</td>
 				<td>
 					<c:forEach items="${i.invigilations }" var="t">
-						<c:if test="${t.currentMessageType == null }">
-							<span class="label label-danger checkboxspan"></c:if>
-						<c:if test="${t.currentMessageType != null }">
-							<span class="label label-success checkboxspan"></c:if>
-							${t.teacher.user.name }
-							</span>
+						<c:set value="${t.currentMessageType}" var="mt"></c:set>
+						<c:choose>
+							<c:when test="${mt == null }">
+								<c:set value="label label-danger checkboxspan" var="mspanclass"></c:set>
+							</c:when>
+							<c:when test="${mt != null }">
+								<c:set value="label label-danger checkboxspan" var="mspanclass"></c:set>
+							</c:when>
+						</c:choose>
+							<span class="${mspanclass }"> ${t.teacher.user.name }</span>
 					<br>
 					</c:forEach>
 				</td>
-				
 				<td>
-					<c:if test="${i.currentStatusType.id == 1 }">
-						<span class="label label-danger checkboxspan">
-						
-				</c:if>
-				<c:if test="${i.currentStatusType.id == 2 }">
-						<span class="label label-success checkboxspan">
-				</c:if>
-				<c:if test="${i.currentStatusType.id == 3 }">
-						<span class="label label-info checkboxspan">
-				</c:if>
-				${i.currentStatusType.name }</span></td>
+					<c:set value="${i.currentStatusType.id }" var="sid"></c:set>
+					
+					<c:choose>
+						<c:when test="${sid == InvigilationStatusType.UNASSIGNED }">
+							<c:set value="label label-danger checkboxspan" var="tspanclass"></c:set>
+						</c:when>
+						<c:when test="${sid == InvigilationStatusType.ASSIGNED }">
+							<c:set value="label label-success checkboxspan" var="tspanclass"></c:set>
+						</c:when>
+						<c:when test="${sid == InvigilationStatusType.DONE }">
+							<c:set value="label label-info checkboxspan" var="tspanclass"></c:set>
+						</c:when>
+					</c:choose>
+
+					<span class="${tspanclass }">${i.currentStatusType.name }</span></td>
 				<%-- <td><fmt:formatDate pattern="MM-dd HH:mm" value="${i.invigilations.size}" /></td> --%>
 				<td>
 				<a class="btn btn-primary" href="invi/invinfodetail/${i.id }" role="button">详细</a>
 				</td>
-				<c:if test="${sessionScope.user.userAuthority.level>=15 }">
+				<my:authorize access="${set={UserAuthority.ADMIN, UserAuthority.SUPERADMIN} }">
 				<td><a class="btn btn-primary" href="admin/invi/updateinviinfo/${i.id }" role="button">编辑</a>
 						<a class="btn btn-primary"  href="admin/invi/assigninvi/${i.id }" role="button">分配</a></td>
-				</c:if>
+				</my:authorize>
 			</tr>
 			</c:forEach>
 			</tbody>

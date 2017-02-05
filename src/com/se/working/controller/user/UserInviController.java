@@ -18,6 +18,8 @@ import com.se.working.controller.ControllerMap;
 import com.se.working.controller.ControllerMap.UserInviReponseMap;
 import com.se.working.controller.ControllerMap.UserInviRequestMap;
 import com.se.working.entity.User;
+import com.se.working.interceptor.MyAuthorize;
+import com.se.working.interceptor.MyAuthorize.Authorize;
 import com.se.working.invigilation.entity.InvigilationInfo;
 import com.se.working.invigilation.entity.InvigilationStatusType;
 import com.se.working.invigilation.service.InviService;
@@ -25,6 +27,7 @@ import com.se.working.util.DateUtils;
 
 @Controller
 @SessionAttributes(value = ControllerMap.USER)
+@MyAuthorize({Authorize.SUPERADMIN, Authorize.TEACHER, Authorize.ADMIN})
 public class UserInviController {
 	@Autowired
 	private InviService inviService;
