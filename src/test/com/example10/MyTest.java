@@ -1,4 +1,4 @@
-package test;
+package test.com.example10;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.se.working.controller.ControllerMap.AdminSettingRequestMap;
+import com.se.working.controller.ControllerMapping.AdminSettingRequestMapping;
 import com.se.working.service.AdminService;
 import com.se.working.service.UserService;
 
@@ -71,7 +71,7 @@ public class MyTest {
 	@Test
 	public void test() throws Exception {
 		
-		RequestBuilder builder = MockMvcRequestBuilders.get(AdminSettingRequestMap.ADD_USER).session(session);
+		RequestBuilder builder = MockMvcRequestBuilders.get(AdminSettingRequestMapping.ADD_USER).session(session);
 		ResultActions resultActions = mockMvc.perform(builder).andDo(MockMvcResultHandlers.print());
 	}
 }

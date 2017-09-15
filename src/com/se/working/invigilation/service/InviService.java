@@ -83,8 +83,8 @@ public class InviService {
 	 * 
 	 * @return 用户监考信息
 	 */
-	public List<TeacherInvigilation> findTeacherInvigilations(long groupId) {
-		return teacherInviDao.list(groupId);
+	public List<TeacherInvigilation> getTeacherInvigilations(long groupId) {
+		return teacherInviDao.findTeacher(groupId);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class InviService {
 	 * @param uploadFile
 	 * @return
 	 */
-	public List<Course> importTimetable(MultipartFile uploadFile, long groupId) {
+	public List<Course> addTimetable(MultipartFile uploadFile, long groupId) {
 		String name = null;
 		List<Course> courses = null;
 		try {
@@ -102,7 +102,7 @@ public class InviService {
 			if (name == null) {
 				throw new SEWMException("不是课表文件，" + uploadFile.getOriginalFilename());
 			}
-			TeacherInvigilation teacher = teacherInviDao.get(name, groupId);
+			TeacherInvigilation teacher = teacherInviDao.find(name, groupId);
 			if (teacher == null) {
 				throw new SEWMException(name + "非本专业教师，" + uploadFile.getOriginalFilename());
 			}
@@ -110,7 +110,7 @@ public class InviService {
 			if (teacher.getCourses().size() > 0) {
 				for (Course course : teacher.getCourses()) {
 					// 级联清空相应CourseSection
-					courseDao.delete(course);
+					courseDao.remove(course);
 				}
 			}
 			courses = TimetableExcelUtil.getExcel(uploadFile.getInputStream());
@@ -159,16 +159,17 @@ public class InviService {
 	 * @param uploadFile
 	 * @return
 	 */
-	public List<InvigilationInfo> importInviInfos(MultipartFile uploadFile, boolean phaseInviInfo, long groupId) {
+	public List<InvigilationInfo> addInviInfos(MultipartFile uploadFile, boolean phaseInviInfo, long groupId) {
+		
 		List<InvigilationInfo> newInfos = null;
 		try (InputStream is = uploadFile.getInputStream()) {
-			Groups group = groupsDao.get(groupId);
+			Groups group = groupsDao.find(groupId);
 			// 封装监考人数，地点，起止时间
 			newInfos = InviExcelUtil.getExcel(is, group.getInviRegexPrefix());
 			if (newInfos == null || newInfos.size() == 0) {
 				throw new SEWMException("未读取到专业相关监考信息");
 			}
-			List<InvigilationInfo> oldInfos = inviInfoDao.list(groupId);
+			List<InvigilationInfo> oldInfos = inviInfoDao.findInviInfos(groupId);
 			for (int i = 0; i < newInfos.size(); i++) {
 				boolean exist = false;
 				InvigilationInfo info = newInfos.get(i);
@@ -233,7 +234,7 @@ public class InviService {
 			}
 			i.setGroups(new Groups(groupId));
 			// 新信息则创建，原信息则更新
-			inviInfoDao.saveOrUpdate(i);
+			inviInfoDao.merge(i);
 		}
 	}
 
@@ -243,9 +244,9 @@ public class InviService {
 	 * @param userId
 	 * @return
 	 */
-	public List<InvigilationInfo> findInviInfosByUserId(long userId) {
+	public List<InvigilationInfo> getInviInfos(long userId) {
 		List<InvigilationInfo> infos = new ArrayList<>();
-		for (Invigilation i : teacherInviDao.get(userId).getInvigilations()) {
+		for (Invigilation i : teacherInviDao.find(userId).getInvigilations()) {
 			infos.add(i.getInvInfo());
 		}
 		return infos;
@@ -258,9 +259,9 @@ public class InviService {
 	 * @param typeId
 	 * @return
 	 */
-	public List<InvigilationInfo> findInvisByUserIdAndTypeId(long userId, long typeId) {
+	public List<InvigilationInfo> getInvis(long userId, long typeId) {
 		List<InvigilationInfo> infos = new ArrayList<>();
-		for (Invigilation i : inviDao.list(userId, typeId)) {
+		for (Invigilation i : inviDao.findInvis(userId, typeId)) {
 			infos.add(i.getInvInfo());
 		}
 		return infos;
@@ -271,8 +272,8 @@ public class InviService {
 	 * 
 	 * @return
 	 */
-	public List<InvigilationInfo> findInviInfosByTypeId(long inviTypeId) {
-		return new ArrayList<>(inviTypeDao.get(inviTypeId).getInvInfo());
+	public List<InvigilationInfo> getInviInfosByTypeId(long inviTypeId) {
+		return new ArrayList<>(inviTypeDao.find(inviTypeId).getInvInfo());
 	}
 
 	/**
@@ -283,8 +284,8 @@ public class InviService {
 	 * @param maxResults
 	 * @return
 	 */
-	public List<InvigilationInfo> findInviInfosByTypeId(long groupId, long inviTypeId, int firstResult, int maxResults) {
-		return inviInfoDao.list(groupId, inviTypeId, firstResult, maxResults);
+	public List<InvigilationInfo> getInviInfos(long groupId, long inviTypeId, int firstResult, int maxResults) {
+		return inviInfoDao.find(groupId, inviTypeId, firstResult, maxResults);
 	}
 
 	/**
@@ -292,8 +293,8 @@ public class InviService {
 	 * 
 	 * @return
 	 */
-	public List<InvigilationInfo> findAllInviInfos(long groupId) {
-		return new ArrayList<>(inviInfoDao.list(groupId));
+	public List<InvigilationInfo> getInviInfosByGroupId(long groupId) {
+		return new ArrayList<>(inviInfoDao.findInviInfos(groupId));
 	}
 
 	/**
@@ -301,8 +302,8 @@ public class InviService {
 	 * 
 	 * @return
 	 */
-	public List<InvigilationInfo> findAllInviInfos(long groupId, int firstResult, int maxResults) {
-		return new ArrayList<>(inviInfoDao.list(groupId, firstResult, maxResults));
+	public List<InvigilationInfo> getInviInfosByGroupId(long groupId, int firstResult, int maxResults) {
+		return new ArrayList<>(inviInfoDao.find(groupId, firstResult, maxResults));
 	}
 
 	/**
@@ -311,8 +312,8 @@ public class InviService {
 	 * @param inviId
 	 * @return
 	 */
-	public InvigilationInfo findInviInfo(long inviId, long groupId) {
-		return inviInfoDao.get(inviId, groupId);
+	public InvigilationInfo getInviInfo(long inviId, long groupId) {
+		return inviInfoDao.findInviInfo(inviId, groupId);
 	}
 
 	/**
@@ -322,8 +323,8 @@ public class InviService {
 	 * @param endTime
 	 * @return
 	 */
-	private List<TeacherInvigilation> findSectionConflicts(Calendar startTime, Calendar endTime, long groupId) {
-		List<CourseSection> sections = courseSectionDao.list(startTime, endTime, groupId);
+	private List<TeacherInvigilation> getSectionConflicts(Calendar startTime, Calendar endTime, long groupId) {
+		List<CourseSection> sections = courseSectionDao.find(startTime, endTime, groupId);
 		
 		List<TeacherInvigilation> teachers = new ArrayList<>();
 		for (CourseSection cs : sections) {
@@ -339,8 +340,8 @@ public class InviService {
 	 * @param endTime
 	 * @return
 	 */
-	private List<TeacherInvigilation> findInviConfilicts(Calendar startTime, Calendar endTime, long groupId) {
-		List<InvigilationInfo> infos = inviInfoDao.list(startTime, endTime, groupId);
+	private List<TeacherInvigilation> getInviConfilicts(Calendar startTime, Calendar endTime, long groupId) {
+		List<InvigilationInfo> infos = inviInfoDao.find(startTime, endTime, groupId);
 		List<TeacherInvigilation> teachers = new ArrayList<>();
 		for (InvigilationInfo info : infos) {
 			for (Invigilation i : info.getInvigilations()) {
@@ -356,17 +357,17 @@ public class InviService {
 	 * @param info
 	 * @return
 	 */
-	public Map<Long, String> findConflicts(long inviId, long groupId) {
-		InvigilationInfo inviInfo = inviInfoDao.get(inviId);
+	public Map<Long, String> getConflicts(long inviId, long groupId) {
+		InvigilationInfo inviInfo = inviInfoDao.find(inviId);
 		Map<Long, String> map = new LinkedHashMap<>();
 		if (inviInfo == null) {
 			return map;
 		}
 		// 监考与授课时间冲突教师
-		List<TeacherInvigilation> sectionConfs = findSectionConflicts(inviInfo.getStartTime(), inviInfo.getEndTime(), groupId);
+		List<TeacherInvigilation> sectionConfs = getSectionConflicts(inviInfo.getStartTime(), inviInfo.getEndTime(), groupId);
 		
 		// 监考与监考时间冲突教师
-		List<TeacherInvigilation> inviConfis = findInviConfilicts(inviInfo.getStartTime(), inviInfo.getEndTime(), groupId);
+		List<TeacherInvigilation> inviConfis = getInviConfilicts(inviInfo.getStartTime(), inviInfo.getEndTime(), groupId);
 		// 去除相同教师
 		Set<TeacherInvigilation> teachers = new LinkedHashSet<>();
 		teachers.addAll(sectionConfs);
@@ -385,8 +386,8 @@ public class InviService {
 	 * @param inviId
 	 * @return
 	 */
-	public Map<Long, String> findUnRCDs(long inviId, long groupId) {
-		List<TeacherInvigilation> unRCDs = teacherInviDao.listUnRDCs(groupId);
+	public Map<Long, String> getUnRCDs(long inviId, long groupId) {
+		List<TeacherInvigilation> unRCDs = teacherInviDao.findUnRDCs(groupId);
 		Map<Long, String> map = new LinkedHashMap<>();
 		for (TeacherInvigilation t : unRCDs) {
 			map.put(t.getId(), t.getUser().getName() + "; ");
@@ -401,9 +402,9 @@ public class InviService {
 	 * @param inviId
 	 * @return
 	 */
-	public Map<Long, String> findRCDs(long inviId, long groupId) {
+	public Map<Long, String> getRCDs(long inviId, long groupId) {
 		Map<Long, String> map = new LinkedHashMap<>();
-		List<TeacherInvigilation> rcds = teacherInviDao.listRDCs(groupId);
+		List<TeacherInvigilation> rcds = teacherInviDao.findRDCs(groupId);
 		for (TeacherInvigilation t : rcds) {
 			map.put(t.getId(), t.getUser().getName() + "; ");
 		}
@@ -419,13 +420,13 @@ public class InviService {
 	 * @return
 	 */
 	private Map<Long, String> setDefaultInviMap(long inviId, Map<Long, String> map, long groupId) {
-		InvigilationInfo inviInfo = inviInfoDao.get(inviId);
+		InvigilationInfo inviInfo = inviInfoDao.find(inviId);
 		if (inviInfo == null) {
 			return map;
 		}
 		
 		// 当日所有课程片段
-		List<CourseSection> courseSections = courseSectionDao.list(inviInfo.getStartTime(), groupId);
+		List<CourseSection> courseSections = courseSectionDao.find(inviInfo.getStartTime(), groupId);
 		// LoggingUtils.getLogger().info(courseSections.get(1).getCourse().getName());
 		// 当日所有监考，当天00:00至次日00:00
 		Calendar cDate = Calendar.getInstance();
@@ -435,7 +436,7 @@ public class InviService {
 		Calendar nDate = Calendar.getInstance();
 		nDate.setTime(cDate.getTime());
 		nDate.add(Calendar.DAY_OF_MONTH, 1);
-		List<InvigilationInfo> inviInfos = inviInfoDao.list(cDate, nDate, groupId);
+		List<InvigilationInfo> inviInfos = inviInfoDao.find(cDate, nDate, groupId);
 
 		SimpleDateFormat sfDate = new SimpleDateFormat("MM-dd");
 		SimpleDateFormat sfTime = new SimpleDateFormat("HH:mm");
@@ -462,7 +463,7 @@ public class InviService {
 			}
 		}
 		// 添加监考次数
-		for (TeacherInvigilation t : teacherInviDao.list()) {
+		for (TeacherInvigilation t : teacherInviDao.find()) {
 			if (map.get(t.getId()) != null) {
 				String string = map.get(t.getId());
 				string = string + t.getInvigilations().size() + "; ";
@@ -480,7 +481,7 @@ public class InviService {
 	 * @param tIds
 	 */
 	public InvigilationInfo addinvi(long inviInfoId, long[] tIds) {
-		InvigilationInfo info = inviInfoDao.get(inviInfoId);
+		InvigilationInfo info = inviInfoDao.find(inviInfoId);
 		List<Invigilation> oldInvigilations = new ArrayList<>(info.getInvigilations());
 		// 原分配与新分配均包含的教师id
 		List<Long> oldTIds = new ArrayList<>();
@@ -499,7 +500,9 @@ public class InviService {
 			}
 			// 不存在
 			if (!exist) {
-				inviDao.delete(invigilation);
+				System.out.println(info.getInvigilations().size());
+				inviDao.remove(invigilation);
+				inviInfoDao.merge(info);
 			}
 		}
 
@@ -508,7 +511,7 @@ public class InviService {
 			if (!oldTIds.contains(tIds[i])) {
 				Invigilation invigilation = new Invigilation();
 				invigilation.setInvInfo(info);
-				invigilation.setTeacher(teacherInviDao.get(tIds[i]));
+				invigilation.setTeacher(teacherInviDao.find(tIds[i]));
 				inviDao.persist(invigilation);
 				inviDao.flush();
 				inviDao.refresh(invigilation);
@@ -525,10 +528,10 @@ public class InviService {
 	 * 
 	 * @param info
 	 */
-	public List<String> sendInviNoticeMessage(long[] inviids) {
+	public List<String> sendInviNoticeMessages(long[] inviids) {
 		List<Invigilation> invigilations = new ArrayList<>();
 		for (int i = 0; i < inviids.length; i++) {
-			Invigilation invigilation = inviDao.get(inviids[i]);
+			Invigilation invigilation = inviDao.find(inviids[i]);
 			updateInviMessageTypeDetail(invigilation, MessageStatusType.NOTIFIED);
 			invigilations.add(invigilation);
 		}
@@ -542,7 +545,7 @@ public class InviService {
 	 * @param newInfo
 	 */
 	public void updateInviInfo(InvigilationInfo newInfo) {
-		InvigilationInfo info = inviInfoDao.get(newInfo.getId());
+		InvigilationInfo info = inviInfoDao.find(newInfo.getId());
 		info.setComment(newInfo.getComment());
 		info.setStartTime(newInfo.getStartTime());
 		info.setEndTime(newInfo.getEndTime());
@@ -564,7 +567,7 @@ public class InviService {
 	 * @param inviInfoId
 	 */
 	public void splitInviInfo(long inviInfoId) {
-		InvigilationInfo info = inviInfoDao.get(inviInfoId);
+		InvigilationInfo info = inviInfoDao.find(inviInfoId);
 		List<Invigilation> invigilations = new ArrayList<>(info.getInvigilations());
 		int number = info.getRequiredNumber();
 		info.setRequiredNumber(1);
@@ -602,7 +605,7 @@ public class InviService {
 	 * @param inviInfoId
 	 */
 	public void deleteInviInfo(long inviInfoId) {
-		inviInfoDao.delete(inviInfoDao.get(inviInfoId));
+		inviInfoDao.remove(inviInfoDao.find(inviInfoId));
 	}
 
 	/**
@@ -631,7 +634,7 @@ public class InviService {
 		endTime.add(Calendar.DAY_OF_MONTH, 1);
 
 		// 基于已分配，发送监考提醒
-		List<InvigilationInfo> infos = inviInfoDao.list(startTime, endTime, InvigilationStatusType.ASSIGNED);
+		List<InvigilationInfo> infos = inviInfoDao.find(startTime, endTime, InvigilationStatusType.ASSIGNED);
 
 		for (InvigilationInfo i : infos) {
 			aMessage.sendInviRemind(i);
@@ -652,7 +655,7 @@ public class InviService {
 		// 基点时间减20天
 		sDate.add(Calendar.DAY_OF_MONTH, -20);
 		// 已分配状态
-		List<InvigilationInfo> infos = inviInfoDao.list(sDate, cDate, InvigilationStatusType.ASSIGNED);
+		List<InvigilationInfo> infos = inviInfoDao.find(sDate, cDate, InvigilationStatusType.ASSIGNED);
 		if (infos != null) {
 			for (InvigilationInfo i : infos) {
 				i.setCurrentStatusType(new InvigilationStatusType(InvigilationStatusType.DONE));
@@ -664,10 +667,10 @@ public class InviService {
 	 * 
 	 */
 	public ResponseEntity<byte[]> downloadInviInfoExcel(long groupId) {
-		List<InvigilationInfo> infos = findAllInviInfos(groupId);
-		Groups group = groupsDao.get(groupId);
+		List<InvigilationInfo> infos = getInviInfosByGroupId(groupId);
+		Groups group = groupsDao.find(groupId);
 		String title = group.getName() + "监考记录";
-		byte[] datas = InviExcelUtil.createInviDetailExcel(infos, findTeacherInvigilations(groupId), title);
+		byte[] datas = InviExcelUtil.createInviDetailExcel(infos, getTeacherInvigilations(groupId), title);
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
 		String fileName = title + "-" + date.format(new Date()) + ".xlsx";
 		ResponseEntity<byte[]> entity = FileUtils.toResponseEntity(fileName, datas);

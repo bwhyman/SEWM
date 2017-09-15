@@ -45,7 +45,7 @@ public class InviTimer {
 		endTime.add(Calendar.DAY_OF_MONTH, 1);
 		
 		// 基于已分配，发送监考提醒
-		List<InvigilationInfo> infos = infoDao.list(startTime, endTime, InvigilationStatusType.ASSIGNED);
+		List<InvigilationInfo> infos = infoDao.find(startTime, endTime, InvigilationStatusType.ASSIGNED);
 		
 		
 		for (InvigilationInfo i : infos) {

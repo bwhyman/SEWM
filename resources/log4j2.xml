@@ -7,7 +7,7 @@
 		</Console>
 	</appenders>
 	<loggers>
-		<logger name="com.se.working" level="info">
+		<logger name="com.se.working" level="debug">
 		</logger>
 		<logger name="test" level="info">
 		</logger>

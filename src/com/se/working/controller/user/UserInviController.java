@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.se.working.controller.ControllerMap;
-import com.se.working.controller.ControllerMap.UserInviReponseMap;
-import com.se.working.controller.ControllerMap.UserInviRequestMap;
+import com.se.working.controller.ControllerMapping;
+import com.se.working.controller.ControllerMapping.UserInviViewMapping;
+import com.se.working.controller.ControllerMapping.UserInviRequestMapping;
 import com.se.working.entity.User;
 import com.se.working.interceptor.MyAuthorize;
 import com.se.working.interceptor.MyAuthorize.Authorize;
@@ -26,7 +26,7 @@ import com.se.working.invigilation.service.InviService;
 import com.se.working.util.DateUtils;
 
 @Controller
-@SessionAttributes(value = ControllerMap.USER)
+@SessionAttributes(value = ControllerMapping.USER)
 @MyAuthorize({Authorize.SUPERADMIN, Authorize.TEACHER, Authorize.ADMIN})
 public class UserInviController {
 	@Autowired
@@ -40,23 +40,23 @@ public class UserInviController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(path = UserInviRequestMap.LIST_MY_INVIINFO, method = RequestMethod.GET)
-	public String listMyInviInfos(@ModelAttribute(ControllerMap.USER) User user, @PathVariable String invitype, Model model) {
+	@RequestMapping(path = UserInviRequestMapping.LIST_MY_INVIINFO, method = RequestMethod.GET)
+	public String listMyInviInfos(@ModelAttribute(ControllerMapping.USER) User user, @PathVariable String invitype, Model model) {
 		List<InvigilationInfo> infos = new ArrayList<>();
 		switch (invitype) {
 		case "undone":
-			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InvigilationStatusType.ASSIGNED);
+			infos = inviService.getInvis(user.getId(), InvigilationStatusType.ASSIGNED);
 			break;
 		case "done":
-			infos = inviService.findInvisByUserIdAndTypeId(user.getId(), InvigilationStatusType.DONE);
+			infos = inviService.getInvis(user.getId(), InvigilationStatusType.DONE);
 			break;
 		case "all":
-			infos = inviService.findInviInfosByUserId(user.getId());
+			infos = inviService.getInviInfos(user.getId());
 			break;
 		}
 		model.addAttribute("infos", infos);
 		model.addAttribute("type", invitype);
-		return UserInviReponseMap.LIST_MY_INVIINFO;
+		return UserInviViewMapping.LIST_MY_INVIINFO;
 	}
 
 	/**
@@ -64,9 +64,9 @@ public class UserInviController {
 	 * 
 	 * @param model
 	 */
-	@RequestMapping(path = { UserInviRequestMap.LIST_INVIINFO_INVITYPE,
-			UserInviRequestMap.LIST_INVIINFO_INVITYPE_MAX }, method = RequestMethod.GET)
-	public String listInviInfos(@ModelAttribute(ControllerMap.USER) User user, @PathVariable String invitype,
+	@RequestMapping(path = { UserInviRequestMapping.LIST_INVIINFO_INVITYPE,
+			UserInviRequestMapping.LIST_INVIINFO_INVITYPE_MAX }, method = RequestMethod.GET)
+	public String listInviInfos(@ModelAttribute(ControllerMapping.USER) User user, @PathVariable String invitype,
 			@PathVariable Optional<Integer> max, Model model) {
 		List<InvigilationInfo> infos = new ArrayList<>();
 		// 总页数
@@ -100,17 +100,17 @@ public class UserInviController {
 			inviTypeId = 0;
 			break;
 		default:
-			return ControllerMap.ERROR;
+			return ControllerMapping.ERROR;
 		}
 		if (inviTypeId == 0) {
-			infos = inviService.findAllInviInfos(user.getGroups().getId(), firstResult, maxResults);
-			typeSize = inviService.findAllInviInfos(user.getGroups().getId()).size();
+			infos = inviService.getInviInfosByGroupId(user.getGroups().getId(), firstResult, maxResults);
+			typeSize = inviService.getInviInfosByGroupId(user.getGroups().getId()).size();
 			// 指定监考状态的总页数
 			countpages = Math.ceil((double) typeSize / (double) maxResults);
 		} else {
 
-			infos = inviService.findInviInfosByTypeId(user.getGroups().getId(), inviTypeId, firstResult, maxResults);
-			typeSize = inviService.findInviInfosByTypeId(inviTypeId).size();
+			infos = inviService.getInviInfos(user.getGroups().getId(), inviTypeId, firstResult, maxResults);
+			typeSize = inviService.getInviInfosByTypeId(inviTypeId).size();
 			// 指定监考状态的总页数
 			countpages = Math.ceil((double) typeSize / (double) maxResults);
 		}
@@ -126,7 +126,7 @@ public class UserInviController {
 		model.addAttribute("currentpage", currentpage);
 		model.addAttribute("infos", infos);
 		model.addAttribute("type", invitype);
-		return UserInviReponseMap.LIST_INVIINFO;
+		return UserInviViewMapping.LIST_INVIINFO;
 	}
 
 	/**
@@ -136,16 +136,16 @@ public class UserInviController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(path = UserInviRequestMap.INVIINFO_DETAIL_ID, method = RequestMethod.GET)
-	public String listInviInfoDetail(@ModelAttribute(ControllerMap.USER) User user, @PathVariable long inviinfoid, Model model) {
-		InvigilationInfo info = inviService.findInviInfo(inviinfoid, user.getGroups().getId());
+	@RequestMapping(path = UserInviRequestMapping.INVIINFO_DETAIL_ID, method = RequestMethod.GET)
+	public String listInviInfoDetail(@ModelAttribute(ControllerMapping.USER) User user, @PathVariable long inviinfoid, Model model) {
+		InvigilationInfo info = inviService.getInviInfo(inviinfoid, user.getGroups().getId());
 		if (info == null) {
-			return ControllerMap.ERROR;
+			return ControllerMapping.ERROR;
 		}
 		int week = DateUtils.getWeekRelativeBaseDate(info.getStartTime());
 		model.addAttribute("info", info);
 		model.addAttribute("week", week);
-		return UserInviReponseMap.LIST_INVIINFO_DETAIL;
+		return UserInviViewMapping.LIST_INVIINFO_DETAIL;
 	}
 
 	/**
@@ -153,8 +153,8 @@ public class UserInviController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(path = UserInviRequestMap.DOWNLOAD_INVIINFO_EXCEL)
-	public ResponseEntity<byte[]> downloadInviInfoExcel(@ModelAttribute(ControllerMap.USER) User user) {
+	@RequestMapping(path = UserInviRequestMapping.DOWNLOAD_INVIINFO_EXCEL)
+	public ResponseEntity<byte[]> downloadInviInfoExcel(@ModelAttribute(ControllerMapping.USER) User user) {
 		return inviService.downloadInviInfoExcel(user.getGroups().getId());
 	}
 }

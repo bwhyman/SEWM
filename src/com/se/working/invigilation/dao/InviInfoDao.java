@@ -3,7 +3,8 @@ package com.se.working.invigilation.dao;
 import java.util.Calendar;
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.se.working.dao.GenericDao;
@@ -12,12 +13,12 @@ import com.se.working.invigilation.entity.InvigilationInfo;
 @Repository
 public class InviInfoDao extends GenericDao<InvigilationInfo> {
 	
-	public InvigilationInfo get(long inviinfoId, long groupId) {
+	public InvigilationInfo findInviInfo(long inviinfoId, long groupId) {
 		String HQL = "FROM InvigilationInfo i WHERE i.id=:inviinfoId AND i.groups.id=:groupId";
 		Query query = getCurrentSession().createQuery(HQL);
-		query.setLong("inviinfoId", inviinfoId);
-		query.setLong("groupId", groupId);
-		return (InvigilationInfo) query.uniqueResult();
+		query.setParameter("inviinfoId", inviinfoId);
+		query.setParameter("groupId", groupId);
+		return (InvigilationInfo) query.getSingleResult();
 	}
 	
 	/**
@@ -30,14 +31,14 @@ public class InviInfoDao extends GenericDao<InvigilationInfo> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<InvigilationInfo> list(Calendar startTime, Calendar endTime, long groupId) {
+	public List<InvigilationInfo> find(Calendar startTime, Calendar endTime, long groupId) {
 		String HQL = "FROM InvigilationInfo i WHERE (i.groups.id=:groupId) AND (:st>=i.startTime AND :st<=i.endTime) "
 				+ "OR (:et>=i.startTime AND :et<=i.endTime) " + "OR(:st<=i.startTime AND :et>=i.endTime)";
 		Query query = getCurrentSession().createQuery(HQL);
-		query.setCalendar("st", startTime);
-		query.setCalendar("et", endTime);
-		query.setLong("groupId", groupId);
-		return query.list();
+		query.setParameter("st", startTime);
+		query.setParameter("et", endTime);
+		query.setParameter("groupId", groupId);
+		return query.getResultList();
 	}
 
 	/**
@@ -69,38 +70,34 @@ public class InviInfoDao extends GenericDao<InvigilationInfo> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<InvigilationInfo> list(long groupId , long inviTypeId, int firstResult, int maxResults) {
+	public List<InvigilationInfo> find(long groupId , long inviTypeId, int firstResult, int maxResults) {
 		String HQL = "FROM InvigilationInfo i WHERE i.groups.id=:groupId AND i.currentStatusType.id = :typeId ORDER BY startTime";
 		Query query = getCurrentSession().createQuery(HQL);
 		query.setFirstResult(firstResult);
 		query.setMaxResults(maxResults);
-		query.setLong("typeId", inviTypeId);
-		query.setLong("groupId", groupId);
-		return query.list();
+		query.setParameter("typeId", inviTypeId);
+		query.setParameter("groupId", groupId);
+		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<InvigilationInfo> list(long groupId, int firstResult, int maxResults) {
+	public List<InvigilationInfo> find(long groupId, int firstResult, int maxResults) {
 		// TODO Auto-generated method stub
 		String HQL = "FROM InvigilationInfo i WHERE i.groups.id=:groupId ORDER BY startTime";
 		Query query = getCurrentSession().createQuery(HQL);
 		query.setFirstResult(firstResult);
 		query.setMaxResults(maxResults);
-		query.setLong("groupId", groupId);
-		return query.list();
-		
-		/*return getSessionFactory().getCurrentSession().createCriteria(InvigilationInfo.class)
-				.addOrder(org.hibernate.criterion.Order.asc("startTime")).setFirstResult(firstResult)
-				.setMaxResults(maxResults).list();*/
+		query.setParameter("groupId", groupId);
+		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<InvigilationInfo> list(long groupId) {
+	public List<InvigilationInfo> findInviInfos(long groupId) {
 		// TODO Auto-generated method stub
 		String HQL = "FROM InvigilationInfo i WHERE i.groups.id=:groupId ORDER BY startTime";
 		Query query = getCurrentSession().createQuery(HQL);
-		query.setLong("groupId", groupId);
-		return (List<InvigilationInfo>) query.list();
+		query.setParameter("groupId", groupId);
+		return (List<InvigilationInfo>) query.getResultList();
 	}
 
 }

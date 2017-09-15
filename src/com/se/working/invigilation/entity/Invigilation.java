@@ -40,12 +40,6 @@ public class Invigilation {
 	@Temporal(TemporalType.TIMESTAMP )
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date assignTime;
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return String.valueOf(this.getId());
-	}
-	
 	
 	public Invigilation() {
 		// TODO Auto-generated constructor stub

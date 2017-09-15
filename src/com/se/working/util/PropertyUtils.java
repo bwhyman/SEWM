@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Properties;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -28,12 +29,14 @@ public class PropertyUtils {
 	private static String COOKIE_NAME_VALUE = getProperty(COOKIE_NAME_KEY);
 	private static String INVI_REGEX_LOCATION_VALUE = getProperty(INVI_REGEX_LOCATION_KEY);
 	
+	
 	/**
 	 * 获取property中的basedate属性值
 	 * 
 	 * @return
 	 */
 	public static String getBaseDate() {
+		
 		return BASEDATE_VALUE;
 	}
 	/**

@@ -10,19 +10,11 @@ import com.se.working.dao.TeacherTitleDao;
 import com.se.working.dao.UserDao;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
-import com.se.working.invigilation.dao.CourseDao;
-import com.se.working.invigilation.dao.TeacherInviDao;
-import com.se.working.invigilation.entity.Course;
-import com.se.working.invigilation.entity.TeacherInvigilation;
 import com.se.working.util.MD5;
 @Service
 @Transactional
 public class UserService {
 
-	@Autowired
-	private TeacherInviDao teacherInviDao;
-	@Autowired
-	private CourseDao courseDao;
 	@Autowired
 	private UserDao userDao;
 	@Autowired
@@ -33,31 +25,29 @@ public class UserService {
 	 * @param password
 	 * @return
 	 */
-	public User findByPassword(String employeeNumber, String password) {
+	public User getUser(String employeeNumber, String password) {
 		
-		return userDao.getBypassword(employeeNumber, MD5.generateMD5(password));
+		return userDao.find(employeeNumber, MD5.generateMD5(password));
 	}
 	
 	/**
 	 * 
 	 */
-	public User findById(long id) {
-		return userDao.get(id);
+	public User getUser(long id) {
+		return userDao.find(id);
 	}
 	
 	/**
 	 * 
 	 * @return 所有职称
 	 */
-	public List<TeacherTitle> findTeacherTitles() {
-		return teacherTitleDao.list();
+	public List<TeacherTitle> getTeacherTitles() {
+		return teacherTitleDao.find();
 	}
-	/**
-	 * 重写update方法，重新封装
-	 */
-	public void update(User newUser) {
+	
+	public void updateUser(User newUser) {
 		// TODO Auto-generated method stub
-		User user = userDao.get(newUser.getId());
+		User user = userDao.find(newUser.getId());
 		user.setName(newUser.getName());
 		user.setEmployeeNumber(newUser.getEmployeeNumber());
 		user.setPhoneNumber(newUser.getPhoneNumber());
@@ -66,34 +56,8 @@ public class UserService {
 	}
 	
 	public void updatePassword(long userId, String newPwd) {
-		User user = userDao.get(userId);
+		User user = userDao.find(userId);
 		user.setPassword(MD5.generateMD5(newPwd));
 	}
 	
-	/**
-	 * 删除的课程数
-	 * @param userId
-	 * @return
-	 */
-	public int deleteCourseByUserId(long userId) {
-		TeacherInvigilation teacher = teacherInviDao.get(userId);
-		int count = teacher.getCourses().size();
-		for (Course c : teacher.getCourses()) {
-			 courseDao.delete(c);
-		}
-		return count;
-	}
-	
-	/**
-	 * 所有通知开启用户
-	 * @return
-	 */
-	/*public List<User> findEnabledUsers() {
-		return userDao.listEnabled(true);
-	}*/
-	
-	public UserService() {
-		// TODO Auto-generated constructor stub
-	}
-
 }

@@ -202,7 +202,7 @@ public class AlidayuMessage {
 	 * @param smsTemplateCode
 	 */
 	private boolean sendSMS(String smsParamString, String recNum, String smsTemplateCode) {
-		/*boolean result = false;
+		boolean result = false;
 		TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
 		AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
 		req.setSmsType("normal");
@@ -232,7 +232,7 @@ public class AlidayuMessage {
 			client = null;
 			req = null;
 			rsp = null;
-		}*/
+		}
 		
 		return true;
 	}
