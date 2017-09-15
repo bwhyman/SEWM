@@ -3,7 +3,8 @@ package com.se.working.task.dao;
 
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.se.working.dao.GenericDao;
@@ -19,10 +20,10 @@ public class FileTaskDetailDao extends GenericDao<FileTaskDetail> {
 	 */
 	public FileTaskDetail getByUserIdAndFileTaskId(long userId, long filetaskId) {
 		String HQL = "FROM FileTaskDetail f WHERE f.fileTask.id=:filetaskId AND f.teacher.id=:userId";
-		 Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
-		query.setLong("filetaskId", filetaskId);
-		query.setLong("userId", userId);
-		return (FileTaskDetail) query.uniqueResult();
+		 Query query = getCurrentSession().createQuery(HQL);
+		query.setParameter("filetaskId", filetaskId);
+		query.setParameter("userId", userId);
+		return (FileTaskDetail) query.getSingleResult();
 	}
 	
 	/**
@@ -33,11 +34,11 @@ public class FileTaskDetailDao extends GenericDao<FileTaskDetail> {
 	@SuppressWarnings("unchecked")
 	public List<FileTaskDetail> listByUserId(long userId, boolean done, long statusId) {
 		String HQL = "FROM FileTaskDetail f WHERE f.done=:done AND f.teacher.id=:userId AND f.fileTask.currentStatus.id=:statusId";
-		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
-		query.setLong("userId", userId);
-		query.setBoolean("done", done);
-		query.setLong("statusId", statusId);
-		return query.list();
+		Query query = getCurrentSession().createQuery(HQL);
+		query.setParameter("userId", userId);
+		query.setParameter("done", done);
+		query.setParameter("statusId", statusId);
+		return query.getResultList();
 	}
 	/**
 	 * 指定用户，指定任务状态，的任务详细信息
@@ -48,10 +49,10 @@ public class FileTaskDetailDao extends GenericDao<FileTaskDetail> {
 	@SuppressWarnings("unchecked")
 	public List<FileTaskDetail> listByUserId(long userId, boolean done) {
 		String HQL = "FROM FileTaskDetail f WHERE f.done=:done AND f.teacher.id=:userId";
-		Query query = getSessionFactory().getCurrentSession().createQuery(HQL);
-		query.setLong("userId", userId);
-		query.setBoolean("done", done);
-		return query.list();
+		Query query = getCurrentSession().createQuery(HQL);
+		query.setParameter("userId", userId);
+		query.setParameter("done", done);
+		return query.getResultList();
 	}
 	
 	

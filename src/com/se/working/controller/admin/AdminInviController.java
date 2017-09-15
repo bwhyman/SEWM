@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.se.working.controller.ControllerMap;
-import com.se.working.controller.ControllerMap.AdminInviRequestMap;
-import com.se.working.controller.ControllerMap.AdminInviResponseMap;
-import com.se.working.controller.ControllerMap.UserInviRequestMap;
+import com.se.working.controller.ControllerMapping;
+import com.se.working.controller.ControllerMapping.AdminInviRequestMapping;
+import com.se.working.controller.ControllerMapping.AdminInviViewMapping;
+import com.se.working.controller.ControllerMapping.UserInviRequestMapping;
 import com.se.working.entity.User;
 import com.se.working.exception.SEWMException;
 import com.se.working.interceptor.MyAuthorize;
@@ -43,7 +43,7 @@ import com.se.working.util.DateUtils;
 import com.se.working.util.StringUtils;
 
 @Controller
-@SessionAttributes(value = ControllerMap.USER)
+@SessionAttributes(value = ControllerMapping.USER)
 @MyAuthorize(value = {Authorize.SUPERADMIN, Authorize.ADMIN})
 public class AdminInviController {
 	private static Logger logger = LogManager.getLogger(AdminInviController.class);
@@ -64,8 +64,8 @@ public class AdminInviController {
 	 * @throws SEWMException
 	 * @throws Exception
 	 */
-	@RequestMapping(path = AdminInviRequestMap.IMPORT_TIMETABLE, method = RequestMethod.POST)
-	public String importTimetable(@ModelAttribute(ControllerMap.USER) User user, MultipartFile uploadFile,
+	@RequestMapping(path = AdminInviRequestMapping.IMPORT_TIMETABLE, method = RequestMethod.POST)
+	public String importTimetable(@ModelAttribute(ControllerMapping.USER) User user, MultipartFile uploadFile,
 			RedirectAttributes vMap) throws IOException {
 		if (uploadFile.isEmpty()) {
 			throw new SEWMException("上传文件为空");
@@ -77,10 +77,10 @@ public class AdminInviController {
 			throw new SEWMException("不是Excel表格文件");
 		}
 
-		List<Course> courses = inviService.importTimetable(uploadFile, user.getGroups().getId());
+		List<Course> courses = inviService.addTimetable(uploadFile, user.getGroups().getId());
 		uploadFile = null;
 		vMap.addFlashAttribute("courses", courses);
-		return ControllerMap.REDIRECT + AdminInviRequestMap.IMPORT_TIMETABLE;
+		return ControllerMapping.REDIRECT + AdminInviRequestMapping.IMPORT_TIMETABLE;
 	}
 
 	/**
@@ -90,8 +90,8 @@ public class AdminInviController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.IMPORT_INVIINFOS, method = RequestMethod.POST)
-	public String importInvigilation(@ModelAttribute(ControllerMap.USER) User user, MultipartFile uploadFile,
+	@RequestMapping(path = AdminInviRequestMapping.IMPORT_INVIINFOS, method = RequestMethod.POST)
+	public String importInvigilation(@ModelAttribute(ControllerMapping.USER) User user, MultipartFile uploadFile,
 			boolean checked, RedirectAttributes vMap, HttpSession session) {
 		if (uploadFile.isEmpty()) {
 			throw new SEWMException("上传文件为空");
@@ -103,25 +103,24 @@ public class AdminInviController {
 			throw new SEWMException("不是Excel表格文件");
 		}
 		long groupId = user.getGroups().getId();
-		List<InvigilationInfo> infos = inviService.importInviInfos(uploadFile, checked, groupId);
-
+		List<InvigilationInfo> infos = inviService.addInviInfos(uploadFile, checked, groupId);
 		vMap.addFlashAttribute("infos", infos);
 		// 置入@SessionAttributes
 		session.setAttribute("saveinfostemp", infos);
 		uploadFile = null;
-		return ControllerMap.REDIRECT + AdminInviRequestMap.IMPORT_INVIINFOS;
+		return ControllerMapping.REDIRECT + AdminInviRequestMapping.IMPORT_INVIINFOS;
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(path = AdminInviRequestMap.SAVE_INVIINFOS, method = RequestMethod.POST)
-	public String saveInviInfos(@ModelAttribute(ControllerMap.USER) User user, HttpSession session) {
+	@RequestMapping(path = AdminInviRequestMapping.SAVE_INVIINFOS, method = RequestMethod.POST)
+	public String saveInviInfos(@ModelAttribute(ControllerMapping.USER) User user, HttpSession session) {
 		List<InvigilationInfo> infos = (List<InvigilationInfo>) session.getAttribute("saveinfostemp");
 		if (infos != null) {
 			inviService.addInviInfos(infos, user.getGroups().getId());
 		}
 		// 清空
 		session.removeAttribute("saveinfostemp");
-		return ControllerMap.REDIRECT + UserInviRequestMap.LIST_INVIINFO_UNASSINVI;
+		return ControllerMapping.REDIRECT + UserInviRequestMapping.LIST_INVIINFO_UNASSINVI;
 	}
 
 	/**
@@ -131,23 +130,23 @@ public class AdminInviController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.ASSIGN_INVI_INVIID, method = RequestMethod.GET)
-	public String assignInvi(@ModelAttribute(ControllerMap.USER) User user, @PathVariable long inviid, Model model) {
+	@RequestMapping(path = AdminInviRequestMapping.ASSIGN_INVI_INVIID, method = RequestMethod.GET)
+	public String assignInvi(@ModelAttribute(ControllerMapping.USER) User user, @PathVariable long inviid, Model model) {
 		long start = System.nanoTime();
 		long groupId = user.getGroups().getId();
 		// 分配监考详细信息
-		InvigilationInfo inviInfo = inviService.findInviInfo(inviid, user.getGroups().getId());
+		InvigilationInfo inviInfo = inviService.getInviInfo(inviid, user.getGroups().getId());
 		if (inviInfo == null) {
-			return ControllerMap.ERROR;
+			return ControllerMapping.ERROR;
 		}
 		// 冲突
-		Map<Long, String> conflicts = inviService.findConflicts(inviid, groupId);
+		Map<Long, String> conflicts = inviService.getConflicts(inviid, groupId);
 		// 推荐关闭
-		Map<Long, String> urcds = inviService.findUnRCDs(inviid, groupId);
+		Map<Long, String> urcds = inviService.getUnRCDs(inviid, groupId);
 		// 推荐，所有非推荐关闭与非通知关闭，无时间冲突判断
-		Map<Long, String> rcds = inviService.findRCDs(inviid, groupId);
+		Map<Long, String> rcds = inviService.getRCDs(inviid, groupId);
 		// 通知关闭
-		List<User> disUsers = adminService.findUsers(false, groupId);
+		List<User> disUsers = adminService.getUsers(false, groupId);
 
 		// 从冲突中移除通知关闭
 		for (User u : disUsers) {
@@ -197,7 +196,7 @@ public class AdminInviController {
 		
 		logger.info(System.nanoTime() - start);
 		
-		return AdminInviResponseMap.ASSIGN_INVI;
+		return AdminInviViewMapping.ASSIGN_INVI;
 	}
 
 	/**
@@ -207,14 +206,14 @@ public class AdminInviController {
 	 * @param checkeds
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.ASSIGN_INVI, method = RequestMethod.POST)
+	@RequestMapping(path = AdminInviRequestMapping.ASSIGN_INVI, method = RequestMethod.POST)
 	public String assignInvi(long inviInfoId, long[] checkeds) {
 		if (checkeds == null) {
 			throw new SEWMException("没有分配监考教师");
 		}
 		InvigilationInfo info = inviService.addinvi(inviInfoId, checkeds);
 
-		return ControllerMap.REDIRECT + AdminInviRequestMap.SEND_INVI_MESSAGE + "/" + info.getId();
+		return ControllerMapping.REDIRECT + AdminInviRequestMapping.SEND_INVI_MESSAGE + "/" + info.getId();
 	}
 
 	/**
@@ -225,16 +224,16 @@ public class AdminInviController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.SEND_INVI_MESSAGE_INVIID, method = RequestMethod.GET)
-	public String sendInviMessage(@ModelAttribute(ControllerMap.USER) User user, @PathVariable long inviinfoid,
+	@RequestMapping(path = AdminInviRequestMapping.SEND_INVI_MESSAGE_INVIID, method = RequestMethod.GET)
+	public String sendInviMessage(@ModelAttribute(ControllerMapping.USER) User user, @PathVariable long inviinfoid,
 			Model model) {
-		InvigilationInfo info = inviService.findInviInfo(inviinfoid, user.getGroups().getId());
+		InvigilationInfo info = inviService.getInviInfo(inviinfoid, user.getGroups().getId());
 		if (info == null) {
-			return ControllerMap.ERROR;
+			return ControllerMapping.ERROR;
 		}
 		model.addAttribute("invis", info.getInvigilations());
 		model.addAttribute("inviinfoid", inviinfoid);
-		return AdminInviResponseMap.SEND_INVI_MESSAGE;
+		return AdminInviViewMapping.SEND_INVI_MESSAGE;
 	}
 
 	/**
@@ -245,16 +244,16 @@ public class AdminInviController {
 	 * @param vMap
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.SEND_INVI_MESSAGE, method = RequestMethod.POST)
+	@RequestMapping(path = AdminInviRequestMapping.SEND_INVI_MESSAGE, method = RequestMethod.POST)
 	public String sendIviMessage(long[] inviids, long inviinfoid, RedirectAttributes vMap) {
 		if (inviids != null) {
-			List<String> results = inviService.sendInviNoticeMessage(inviids);
+			List<String> results = inviService.sendInviNoticeMessages(inviids);
 			vMap.addFlashAttribute("results", results);
 		} else {
 			throw new SEWMException("没有选择发送短信教师！");
 		}
 
-		return ControllerMap.REDIRECT + AdminInviRequestMap.SEND_INVI_MESSAGE + "/" + inviinfoid;
+		return ControllerMapping.REDIRECT + AdminInviRequestMapping.SEND_INVI_MESSAGE + "/" + inviinfoid;
 	}
 
 	/**
@@ -265,15 +264,15 @@ public class AdminInviController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.UPDATE_INVI_INFO_INVIID, method = RequestMethod.GET)
-	public String updateInviInfo(@ModelAttribute(ControllerMap.USER) User user, @PathVariable long infoid,
+	@RequestMapping(path = AdminInviRequestMapping.UPDATE_INVI_INFO_INVIID, method = RequestMethod.GET)
+	public String updateInviInfo(@ModelAttribute(ControllerMapping.USER) User user, @PathVariable long infoid,
 			Model model) {
-		InvigilationInfo info = inviService.findInviInfo(infoid, user.getGroups().getId());
+		InvigilationInfo info = inviService.getInviInfo(infoid, user.getGroups().getId());
 		if (info == null) {
-			return ControllerMap.ERROR;
+			return ControllerMapping.ERROR;
 		}
 		model.addAttribute("info", info);
-		return AdminInviResponseMap.UPDATE_INVI_INFO;
+		return AdminInviViewMapping.UPDATE_INVI_INFO;
 	}
 
 	/**
@@ -285,7 +284,7 @@ public class AdminInviController {
 	 * @param etime
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.UPDATE_INVI_INFO, method = RequestMethod.POST)
+	@RequestMapping(path = AdminInviRequestMapping.UPDATE_INVI_INFO, method = RequestMethod.POST)
 	public String updateInviInfo(InvigilationInfo info, String date, String stime, String etime) {
 
 		Calendar start = DateUtils.getCalendar(date + " " + stime);
@@ -293,7 +292,7 @@ public class AdminInviController {
 		info.setStartTime(start);
 		info.setEndTime(end);
 		inviService.updateInviInfo(info);
-		return ControllerMap.REDIRECT + AdminInviRequestMap.ASSIGN_INVI + "/" + info.getId();
+		return ControllerMapping.REDIRECT + AdminInviRequestMapping.ASSIGN_INVI + "/" + info.getId();
 	}
 
 	/**
@@ -302,10 +301,10 @@ public class AdminInviController {
 	 * @param inviinfoid
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.SPLIT_INVIINFO, method = RequestMethod.POST)
+	@RequestMapping(path = AdminInviRequestMapping.SPLIT_INVIINFO, method = RequestMethod.POST)
 	public String splitInviInfo(long inviinfoid) {
 		inviService.splitInviInfo(inviinfoid);
-		return ControllerMap.REDIRECT + UserInviRequestMap.LIST_INVIINFO_UNASSINVI;
+		return ControllerMapping.REDIRECT + UserInviRequestMapping.LIST_INVIINFO_UNASSINVI;
 	}
 
 	/**
@@ -314,10 +313,10 @@ public class AdminInviController {
 	 * @param infoinviid
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.DEL_INVIINFO, method = RequestMethod.POST)
+	@RequestMapping(path = AdminInviRequestMapping.DEL_INVIINFO, method = RequestMethod.POST)
 	public String delInviInfo(long infoinviid) {
 		inviService.deleteInviInfo(infoinviid);
-		return ControllerMap.REDIRECT + UserInviRequestMap.LIST_INVIINFO_UNASSINVI;
+		return ControllerMapping.REDIRECT + UserInviRequestMapping.LIST_INVIINFO_UNASSINVI;
 	}
 
 	/**
@@ -329,8 +328,8 @@ public class AdminInviController {
 	 * @param info
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.ADD_INVIINFO, method = RequestMethod.POST)
-	public String addInviInfo(@ModelAttribute(ControllerMap.USER) User user, String date, String stime, String etime,
+	@RequestMapping(path = AdminInviRequestMapping.ADD_INVIINFO, method = RequestMethod.POST)
+	public String addInviInfo(@ModelAttribute(ControllerMapping.USER) User user, String date, String stime, String etime,
 			InvigilationInfo info) {
 		Calendar startTime = DateUtils.getCalendar(date + " " + stime);
 		Calendar endTime = DateUtils.getCalendar(date + " " + etime);
@@ -338,7 +337,7 @@ public class AdminInviController {
 		info.setEndTime(endTime);
 		info.setGroups(user.getGroups());
 		long inviInfoId = inviService.addInviInfo(info);
-		return ControllerMap.REDIRECT + AdminInviRequestMap.ASSIGN_INVI + "/" + inviInfoId;
+		return ControllerMapping.REDIRECT + AdminInviRequestMapping.ASSIGN_INVI + "/" + inviInfoId;
 
 	}
 
@@ -377,7 +376,7 @@ public class AdminInviController {
 
 		specInviService.addSpecInfo(info, checkeds);
 
-		return ControllerMap.REDIRECT + "addspecinviinfo";
+		return ControllerMapping.REDIRECT + "addspecinviinfo";
 	}
 
 	/**
@@ -424,10 +423,10 @@ public class AdminInviController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(path = AdminInviRequestMap.SET_INVIINFO_DONE, method = RequestMethod.POST)
+	@RequestMapping(path = AdminInviRequestMapping.SET_INVIINFO_DONE, method = RequestMethod.POST)
 	public String setInviInfoDone() {
 		inviService.setInviInfoDone();
-		return ControllerMap.REDIRECT + AdminInviResponseMap.INVI_MANAGEMENT;
+		return ControllerMapping.REDIRECT + AdminInviViewMapping.INVI_MANAGEMENT;
 	}
 	
 	/**
@@ -435,20 +434,20 @@ public class AdminInviController {
 	 * ==============================
 	 */
 	
-	@RequestMapping(value = AdminInviRequestMap.ADD_INVIINFO)
+	@RequestMapping(value = AdminInviRequestMapping.ADD_INVIINFO)
 	public void addInviInfo() {
 		
 	}
-	@RequestMapping(value = AdminInviRequestMap.ADD_SPECINVIINFO)
+	@RequestMapping(value = AdminInviRequestMapping.ADD_SPECINVIINFO)
 	public void addSpecInviInfo() {}
 	
-	@RequestMapping(value = AdminInviRequestMap.IMPORT_INVIINFOS)
+	@RequestMapping(value = AdminInviRequestMapping.IMPORT_INVIINFOS)
 	public void importInviInfos() {}
 	
-	@RequestMapping(value = AdminInviRequestMap.IMPORT_TIMETABLE)
+	@RequestMapping(value = AdminInviRequestMapping.IMPORT_TIMETABLE)
 	public void importTimetable() {}
 	
-	@RequestMapping(path = AdminInviRequestMap.INVI_MANAGEMENT)
+	@RequestMapping(path = AdminInviRequestMapping.INVI_MANAGEMENT)
 	public void getInviManagement() {
 		
 	}

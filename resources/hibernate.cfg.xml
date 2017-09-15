@@ -8,8 +8,8 @@
   <property name="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</property>
   <property name="hibernate.hbm2ddl.auto">update</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-  
-  <mapping class="com.se.working.entity.User"/>
+ 
+  <!-- <mapping class="com.se.working.entity.User"/>
   <mapping class="com.se.working.entity.Groups"/>
   <mapping class="com.se.working.entity.TeacherTitle"/>
   <mapping class="com.se.working.entity.UserAuthority"/>
@@ -27,12 +27,12 @@
   <mapping class="com.se.working.invigilation.entity.SpecialInvigilationType"/>
   <mapping class="com.se.working.invigilation.entity.TeacherInvigilation"/>
   
-  <!--  -->
+  
   <mapping class="com.se.working.task.entity.FileTask"/>
   <mapping class="com.se.working.task.entity.FileTaskDetail"/>
   <mapping class="com.se.working.task.entity.FileType"/>
   <mapping class="com.se.working.task.entity.TeacherTask"/>
   <mapping class="com.se.working.task.entity.FileTaskStatus"/>
-   <mapping class="com.se.working.task.entity.Notification"/>
+   <mapping class="com.se.working.task.entity.Notification"/> -->
  </session-factory>
 </hibernate-configuration>

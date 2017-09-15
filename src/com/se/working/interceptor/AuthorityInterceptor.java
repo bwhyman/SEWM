@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.se.working.controller.ControllerMap;
+import com.se.working.controller.ControllerMapping;
 import com.se.working.entity.User;
 import com.se.working.entity.UserAuthority;
 import com.se.working.interceptor.MyAuthorize.Authorize;
@@ -21,7 +21,7 @@ public class AuthorityInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		// TODO Auto-generated method stub
-		User user = (User) request.getSession().getAttribute(ControllerMap.USER);
+		User user = (User) request.getSession().getAttribute(ControllerMapping.USER);
 		// 登录
 		if (user == null) {
 			String path = request.getContextPath();

@@ -43,6 +43,7 @@
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+		<property name="packagesToScan" value="com.se.working.*" />
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	<!-- Hibernate5 Transaction Manager -->
@@ -54,6 +55,7 @@
 	<!-- SpringMVC -->
 	<bean id="jspViewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 	</bean>

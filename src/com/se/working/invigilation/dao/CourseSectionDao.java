@@ -3,7 +3,8 @@ package com.se.working.invigilation.dao;
 import java.util.Calendar;
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import com.se.working.dao.GenericDao;
@@ -20,15 +21,15 @@ public class CourseSectionDao extends GenericDao<CourseSection> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<CourseSection> list(Calendar startTime, Calendar endTime, long groupId) {
+	public List<CourseSection> find(Calendar startTime, Calendar endTime, long groupId) {
 		String HQL = "FROM CourseSection c WHERE (c.course.teacher.user.groups.id=:groupId) AND ((:st>=c.startTime AND :st<=c.endTime) "
 				+ "OR (:et>=c.startTime AND :et<=c.endTime) "
 				+ "OR(:st<=c.startTime AND :et>=c.endTime))";
 		Query query = getCurrentSession().createQuery(HQL);
-		query.setCalendar("st", startTime);
-		query.setCalendar("et", endTime);
-		query.setLong("groupId", groupId);
-		return query.list();
+		query.setParameter("st", startTime);
+		query.setParameter("et", endTime);
+		query.setParameter("groupId", groupId);
+		return query.getResultList();
 	}
 	/**
 	 * 返回当前全部课程片段
@@ -36,7 +37,7 @@ public class CourseSectionDao extends GenericDao<CourseSection> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<CourseSection> list(Calendar date, long groupId) {
+	public List<CourseSection> find(Calendar date, long groupId) {
 		Calendar cDate = Calendar.getInstance();
 		cDate.setTime(date.getTime());
 		cDate.set(Calendar.HOUR_OF_DAY, 0);
@@ -47,10 +48,10 @@ public class CourseSectionDao extends GenericDao<CourseSection> {
 		
 		String HQL = "FROM CourseSection c WHERE c.course.teacher.user.groups.id=:groupId AND c.startTime >= :date AND c.endTime<=:nextDate";
 		Query query = getCurrentSession().createQuery(HQL);
-		query.setCalendar("date", cDate);
-		query.setCalendar("nextDate", nDate);
-		query.setLong("groupId", groupId);
-		return query.list();
+		query.setParameter("date", cDate);
+		query.setParameter("nextDate", nDate);
+		query.setParameter("groupId", groupId);
+		return query.getResultList();
 	}
 	
 }

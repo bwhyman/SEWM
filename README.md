@@ -1,5 +1,20 @@
 ﻿# SEWM
 
+
+entitymanager 删除问题  
+
+使用<c:url>标签定义页面base   
+修复监考日期匹配表达式   
+修复当时间、地点等为空时监考表格读取错误，置为空字符串，是否应抛异常？    
+
+配置sessionfactory使用packagesToScan属性自动扫描entity，不必在hibernate中配置实体类
+
+
+移植到JPA使用Hibernate 5.2.8作为provider   
+由从JPA传回来Hibernate，简直是噩梦！   
+脱管状态对象不能直接删除，必须merge()到持久化状态，莫名其妙的无法直接删除many端对象，却没有任何异常    
+
+
 2017.02.05
 ------------------------------
 Bug    
@@ -27,10 +42,6 @@ EL3.0支获导入类及类中静态常量，使用JSP import引入后也可直�
 配置servlet，去除JSP编译后的空行，查看页面源码时更紧凑     
 Task    
 基于Junit4+Spring Test(4.2.1)完成整合测试    
-
-
-
-
 
 
 2017.01.27

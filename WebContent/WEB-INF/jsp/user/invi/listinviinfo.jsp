@@ -87,7 +87,7 @@
 								<c:set value="label label-danger checkboxspan" var="mspanclass"></c:set>
 							</c:when>
 							<c:when test="${mt != null }">
-								<c:set value="label label-danger checkboxspan" var="mspanclass"></c:set>
+								<c:set value="label label-success checkboxspan" var="mspanclass"></c:set>
 							</c:when>
 						</c:choose>
 							<span class="${mspanclass }"> ${t.teacher.user.name }</span>

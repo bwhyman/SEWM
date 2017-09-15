@@ -1,6 +1,6 @@
 package com.se.working.controller;
 
-public interface ControllerMap {
+public interface ControllerMapping {
 	String ERROR = "error";
 	String USER = "user";
 	String REDIRECT = "redirect:";
@@ -11,7 +11,7 @@ public interface ControllerMap {
 	 * @author BO
 	 *
 	 */
-	public interface UserRequestMap {
+	public interface UserRequestMapping {
 		String LOGIN = "/login";
 		String ILOGIN = "ilogin";
 		String MAIN = "/main";
@@ -26,12 +26,12 @@ public interface ControllerMap {
 	 * @author BO
 	 *
 	 */
-	public interface UserResponseMap {
+	public interface UserViewMapping {
 		// user jsp文件夹名称
 		String BASEPATH = "/user";
 		String LOGIN = "/login";
-		String MAIN = BASEPATH + UserRequestMap.MAIN;
-		String UPDATE_USERSETTING = BASEPATH + UserRequestMap.UPDATE_USERSETTING;
+		String MAIN = BASEPATH + UserRequestMapping.MAIN;
+		String UPDATE_USERSETTING = BASEPATH + UserRequestMapping.UPDATE_USERSETTING;
 	}
 
 	/**
@@ -40,7 +40,7 @@ public interface ControllerMap {
 	 * @author BO
 	 *
 	 */
-	public interface UserInviRequestMap {
+	public interface UserInviRequestMapping {
 		//
 		String BASEPATH = "/invi";
 		String LIST_MY_INVIINFO = BASEPATH + "/listmyinviinfo/{invitype}";
@@ -57,14 +57,14 @@ public interface ControllerMap {
 	 * @author BO
 	 *
 	 */
-	public interface UserInviReponseMap {
+	public interface UserInviViewMapping {
 		String BASEPATH = "/user/invi";
 		String LIST_MY_INVIINFO = BASEPATH + "/listmyinviinfo";
 		String LIST_INVIINFO = BASEPATH + "/listinviinfo";
 		String LIST_INVIINFO_DETAIL = BASEPATH + "/listinviinfodetail";
 	}
 
-	public interface AdminInviRequestMap {
+	public interface AdminInviRequestMapping {
 		String BASEPATH = "/admin/invi";
 		String IMPORT_TIMETABLE = BASEPATH + "/importtimetable";
 		String IMPORT_INVIINFOS = BASEPATH + "/importinviinfos";
@@ -86,7 +86,7 @@ public interface ControllerMap {
 
 	}
 
-	public interface AdminInviResponseMap {
+	public interface AdminInviViewMapping {
 		String BASEPATH = "/admin/invi";
 		String ASSIGN_INVI = BASEPATH + "/assigninvi";
 		String SEND_INVI_MESSAGE = BASEPATH + "/sendinvimessage";
@@ -94,7 +94,7 @@ public interface ControllerMap {
 		String INVI_MANAGEMENT = BASEPATH + "/invimanagement";
 	}
 
-	public interface AdminSettingRequestMap {
+	public interface AdminSettingRequestMapping {
 		String BASEPATH = "/admin/setting";
 		String ADD_USER = BASEPATH + "/adduser";
 		String UPDATE_USER = BASEPATH + "/updateuser";
@@ -106,13 +106,13 @@ public interface ControllerMap {
 		String USER_MANAGERMENT = BASEPATH + "/usermanagement";
 	}
 
-	public interface AdminSettingResponseMap {
+	public interface AdminSettingViewMapping {
 		// String BASEPATH = "/admin/setting";
 		// String ADD_USER = BASEPATH + "/adduser";
 	   // String UPDATE_USER = BASEPATH + "/updateuser";	
 	}
 
-	public interface SuperAdminRequestMap {
+	public interface SuperAdminRequestMapping {
 		String BASEPATH = "/superadmin";
 		String UPDATE_BASEDATE = BASEPATH + "/updatebasedate";
 		String INIT_USERS = BASEPATH + "/initusers";

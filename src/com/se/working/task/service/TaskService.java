@@ -56,7 +56,7 @@ public class TaskService {
 	 * @return
 	 */
 	public List<TeacherTask> findTeacherTasks() {
-		return teacherTaskDao.list();
+		return teacherTaskDao.find();
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class TaskService {
 		for (int i = 0; i < teachers.length; i++) {
 			FileTaskDetail taskDetail = new FileTaskDetail();
 			taskDetail.setFileTask(fileTask);
-			taskDetail.setTeacher(teacherTaskDao.get(teachers[i]));
+			taskDetail.setTeacher(teacherTaskDao.find(teachers[i]));
 			fileTaskDetailDao.persist(taskDetail);
 		}
 
@@ -115,7 +115,7 @@ public class TaskService {
 	 * @return
 	 */
 	public List<FileTask> findFileTasksByStatusId(long statusId) {
-		return new ArrayList<>(fileTaskStatusDao.get(statusId).getFileTasks());
+		return new ArrayList<>(fileTaskStatusDao.find(statusId).getFileTasks());
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class TaskService {
 	 * @return
 	 */
 	public List<FileTask> findFileTasks() {
-		return fileTaskDao.list();
+		return fileTaskDao.find();
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class TaskService {
 	 */
 	public List<FileTask> findFileTasksByUserId(long id) {
 		List<FileTask> fileTasks = new ArrayList<>();
-		for (FileTaskDetail d : teacherTaskDao.get(id).getfDetails()) {
+		for (FileTaskDetail d : teacherTaskDao.find(id).getfDetails()) {
 			fileTasks.add(d.getFileTask());
 		}
 		return fileTasks;
@@ -147,7 +147,7 @@ public class TaskService {
 	 * @return
 	 */
 	public List<FileType> findFileTypes() {
-		return fileTypeDao.list();
+		return fileTypeDao.find();
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class TaskService {
 	 * @throws SEWMException 
 	 */
 	public void implementFileTask(long userId, long fileTaskId, MultipartFile uploadFile) {
-		FileTask task = fileTaskDao.get(fileTaskId);
+		FileTask task = fileTaskDao.find(fileTaskId);
 		// 教师本任务细节
 		FileTaskDetail detail = findfileTaskDetail(userId, fileTaskId);
 		Calendar calendar = Calendar.getInstance();
@@ -244,7 +244,7 @@ public class TaskService {
 	 */
 	public List<TeacherTask> findTeachersByFileTaskId(long id) {
 		List<TeacherTask> teacherTasks = new ArrayList<>();
-		FileTask task = fileTaskDao.get(id);
+		FileTask task = fileTaskDao.find(id);
 		for (FileTaskDetail d : task.getFileTaskDetails()) {
 			teacherTasks.add(d.getTeacher());
 		}
@@ -263,7 +263,7 @@ public class TaskService {
 		// 删除任务文件夹
 		FileUtils.deleteDirectory(task.getDirectory());
 		// 删除数据信息
-		fileTaskDao.delete(findById(id));
+		fileTaskDao.remove(findById(id));
 	}
 
 	/**
@@ -292,13 +292,13 @@ public class TaskService {
 
 		// 删除原人员
 		for (FileTaskDetail d : old.getFileTaskDetails()) {
-			fileTaskDetailDao.delete(d);
+			fileTaskDetailDao.remove(d);
 		}
 		// 创建新任务及任务细节
 		for (int i = 0; i < teachers.length; i++) {
 			FileTaskDetail taskDetail = new FileTaskDetail();
 			taskDetail.setFileTask(old);
-			taskDetail.setTeacher(teacherTaskDao.get(teachers[i]));
+			taskDetail.setTeacher(teacherTaskDao.find(teachers[i]));
 			fileTaskDetailDao.persist(taskDetail);
 		}
 	}
@@ -354,6 +354,6 @@ public class TaskService {
 	}
 	
 	public FileTask findById(long id) {
-		return fileTaskDao.get(id);
+		return fileTaskDao.find(id);
 	}
 }

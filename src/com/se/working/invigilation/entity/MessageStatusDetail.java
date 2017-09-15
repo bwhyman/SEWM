@@ -24,11 +24,6 @@ public class MessageStatusDetail {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private Date insertTime;
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return String.valueOf(this.getId());
-	}
 	
 	public MessageStatusDetail() {
 		// TODO Auto-generated constructor stub

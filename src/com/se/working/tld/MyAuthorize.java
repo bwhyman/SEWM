@@ -10,21 +10,21 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.se.working.controller.ControllerMap;
+import com.se.working.controller.ControllerMapping;
 import com.se.working.entity.User;
 
 public class MyAuthorize extends SimpleTagSupport{
 
-	private Set<Object> access;
+	private Set<Long> access;
 	@Override
 	public void doTag() throws JspException, IOException {
 		// TODO Auto-generated method stub
 		if (access != null && access.size() > 0) {
 			ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-			User user= (User) attr.getRequest().getSession().getAttribute(ControllerMap.USER);
+			User user= (User) attr.getRequest().getSession().getAttribute(ControllerMapping.USER);
 			boolean show = false;
-			for (Object o : access) {
-				if (user.getUserAuthority().getId() == (long) o) {
+			for (long o : access) {
+				if (user.getUserAuthority().getId() ==  o) {
 					show = true;
 					break;
 				}
@@ -34,12 +34,11 @@ public class MyAuthorize extends SimpleTagSupport{
 			}
 		}
 	}
-	public Set<Object> getAccess() {
+	public Set<Long> getAccess() {
 		return access;
 	}
-	public void setAccess(Set<Object> access) {
+	public void setAccess(Set<Long> access) {
 		this.access = access;
 	}
-	
-	
+
 }

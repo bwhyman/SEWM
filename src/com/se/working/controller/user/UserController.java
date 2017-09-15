@@ -19,10 +19,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.se.working.controller.ControllerMap;
-import com.se.working.controller.ControllerMap.UserInviReponseMap;
-import com.se.working.controller.ControllerMap.UserRequestMap;
-import com.se.working.controller.ControllerMap.UserResponseMap;
+import com.se.working.controller.ControllerMapping;
+import com.se.working.controller.ControllerMapping.UserRequestMapping;
+import com.se.working.controller.ControllerMapping.UserViewMapping;
 import com.se.working.entity.TeacherTitle;
 import com.se.working.entity.User;
 import com.se.working.interceptor.MyAuthorize;
@@ -37,7 +36,7 @@ import com.se.working.util.PropertyUtils;
  *
  */
 @Controller
-@SessionAttributes(value = ControllerMap.USER)
+@SessionAttributes(value = ControllerMapping.USER)
 @MyAuthorize({Authorize.SUPERADMIN, Authorize.TEACHER, Authorize.ADMIN})
 public class UserController {
 	@Autowired
@@ -54,15 +53,15 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(UserRequestMap.LOGIN)
+	@RequestMapping(UserRequestMapping.LOGIN)
 	public String login(HttpServletRequest request, Model model) {
 		request.getSession().invalidate();
 		User user = getUserCookie(request);
-		if (getUserCookie(request) != null) {
+		if (user != null) {
 			model.addAttribute("remember", "true");
 			model.addAttribute("name", user.getName());
 		}
-		return UserResponseMap.LOGIN;
+		return UserViewMapping.LOGIN;
 	}
 
 	/**
@@ -76,21 +75,21 @@ public class UserController {
 	 * @param errorMap
 	 * @return
 	 */
-	@RequestMapping(path = UserRequestMap.LOGIN, method = RequestMethod.POST)
+	@RequestMapping(path = UserRequestMapping.LOGIN, method = RequestMethod.POST)
 	public String login(String employeeNumber, String password, String checked, HttpServletRequest request,
 			HttpServletResponse response, RedirectAttributes errorMap,Model model) {
 		User user = login(employeeNumber, password, request.getSession());
 		if (user != null) {
-			model.addAttribute(ControllerMap.USER, user);
+			model.addAttribute(ControllerMapping.USER, user);
 			if (checked != null) {
 				createCookie(response, employeeNumber, password, user.getName());
 			}
-			return ControllerMap.REDIRECT + UserRequestMap.MAIN;
+			return ControllerMapping.REDIRECT + UserRequestMapping.MAIN;
 		}
 		// 清空cookie
 		removeCookie(request, response);
 		errorMap.addFlashAttribute("exception", "员工号或密码错误！");
-		return ControllerMap.REDIRECT + UserRequestMap.LOGIN;
+		return ControllerMapping.REDIRECT + UserRequestMapping.LOGIN;
 	}
 
 	/**
@@ -100,20 +99,20 @@ public class UserController {
 	 * @param errorMap
 	 * @return
 	 */
-	@RequestMapping(path = UserRequestMap.ILOGIN, method = RequestMethod.POST)
+	@RequestMapping(path = UserRequestMapping.ILOGIN, method = RequestMethod.POST)
 	public String iLogin(HttpServletRequest request, HttpServletResponse response, RedirectAttributes errorMap, Model model) {
 		User userCookie = getUserCookie(request);
 		if (userCookie != null) {
 			User user = login(userCookie.getEmployeeNumber(), userCookie.getPassword(), request.getSession());
 			if ( user != null) {
-				model.addAttribute(ControllerMap.USER, user);
-				return ControllerMap.REDIRECT + UserRequestMap.MAIN;
+				model.addAttribute(ControllerMapping.USER, user);
+				return ControllerMapping.REDIRECT + UserRequestMapping.MAIN;
 			}
 		}
 		// 登录错误，清空Cookie
 		removeCookie(request, response);
 		errorMap.addFlashAttribute("exception", "员工号或密码错误！");
-		return ControllerMap.REDIRECT + UserRequestMap.LOGIN;
+		return ControllerMapping.REDIRECT + UserRequestMapping.LOGIN;
 	}
 
 	/**
@@ -123,11 +122,11 @@ public class UserController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(path = UserRequestMap.UPDATE_USERSETTING)
-	public String updateUserSetting(@ModelAttribute(ControllerMap.USER) User user, Model model) {
-		model.addAttribute("user", userService.findById(user.getId()));
-		model.addAttribute("titles", userService.findTeacherTitles());
-		return UserResponseMap.UPDATE_USERSETTING;
+	@RequestMapping(path = UserRequestMapping.UPDATE_USERSETTING)
+	public String updateUserSetting(@ModelAttribute(ControllerMapping.USER) User user, Model model) {
+		model.addAttribute("user", userService.getUser(user.getId()));
+		model.addAttribute("titles", userService.getTeacherTitles());
+		return UserViewMapping.UPDATE_USERSETTING;
 	}
 
 	/**
@@ -137,10 +136,10 @@ public class UserController {
 	 * @param pwd
 	 * @return
 	 */
-	@RequestMapping(path = UserRequestMap.UPDATE_PASSWORD, method = RequestMethod.POST)
-	public String updatePassword(@ModelAttribute(ControllerMap.USER) User user, String pwd) {
+	@RequestMapping(path = UserRequestMapping.UPDATE_PASSWORD, method = RequestMethod.POST)
+	public String updatePassword(@ModelAttribute(ControllerMapping.USER) User user, String pwd) {
 		userService.updatePassword(user.getId(), pwd);
-		return ControllerMap.REDIRECT + UserRequestMap.UPDATE_USERSETTING;
+		return ControllerMapping.REDIRECT + UserRequestMapping.UPDATE_USERSETTING;
 	}
 
 	/**
@@ -150,19 +149,19 @@ public class UserController {
 	 * @param titleId
 	 * @return
 	 */
-	@RequestMapping(path = UserRequestMap.UPDATE_USERSETTING, method = RequestMethod.POST)
-	public String updateUserSetting(@ModelAttribute(ControllerMap.USER) User user, long titleId) {
+	@RequestMapping(path = UserRequestMapping.UPDATE_USERSETTING, method = RequestMethod.POST)
+	public String updateUserSetting(@ModelAttribute(ControllerMapping.USER) User user, long titleId) {
 		user.setTitle(new TeacherTitle(titleId));
-		userService.update(user);
-		return ControllerMap.REDIRECT + UserRequestMap.UPDATE_USERSETTING;
+		userService.updateUser(user);
+		return ControllerMapping.REDIRECT + UserRequestMapping.UPDATE_USERSETTING;
 	}
 
-	@RequestMapping(path = UserRequestMap.LOGOUT)
+	@RequestMapping(path = UserRequestMapping.LOGOUT)
 	public String logout(HttpSession session, SessionStatus status) {
-		session.removeAttribute(ControllerMap.USER);
+		session.removeAttribute(ControllerMapping.USER);
 		session.invalidate();
 		status.setComplete();
-		return ControllerMap.REDIRECT + UserRequestMap.LOGIN;
+		return ControllerMapping.REDIRECT + UserRequestMapping.LOGIN;
 	}
 
 	/**
@@ -192,12 +191,12 @@ public class UserController {
 	 * @return
 	 */
 	private User login(String employeeNumber, String password, HttpSession session) {
-		User user = userService.findByPassword(employeeNumber, password);
+		User user = userService.getUser(employeeNumber, password);
 		if (user != null) {
 			// 延迟加载
 			user.getUserAuthority().getLevel();
 			user.getGroups().getId();
-			session.setAttribute(ControllerMap.USER, user);
+			session.setAttribute(ControllerMapping.USER, user);
 		}
 		return user;
 	}
@@ -281,9 +280,9 @@ public class UserController {
 	 * 静态页面
 	 * =============================
 	 */
-	@RequestMapping(value = {UserRequestMap.MAIN, "/"})
+	@RequestMapping(value = {UserRequestMapping.MAIN, "/"})
 	public String main() {
-		return UserResponseMap.MAIN;
+		return UserViewMapping.MAIN;
 	}
 	
 }

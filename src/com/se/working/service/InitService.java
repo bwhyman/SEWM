@@ -67,7 +67,7 @@ public class InitService {
 	 * @return
 	 */
 	public void initTeacherTitle() {
-		if (teacherTitleDao.list().size() == 0) {
+		if (teacherTitleDao.find().size() == 0) {
 			TeacherTitle lecture = new TeacherTitle();
 			lecture.setName("讲师");
 			teacherTitleDao.persist(lecture);
@@ -87,7 +87,7 @@ public class InitService {
 	 * 初始化权限
 	 */
 	public void initUserAuthority() {
-		if (userAuthorityDao.list().size() == 0) {
+		if (userAuthorityDao.find().size() == 0) {
 			UserAuthority teacher = new UserAuthority();
 			teacher.setName("教师");
 			teacher.setLevel(UserAuthority.TEACHER_LEVEL);
@@ -111,7 +111,7 @@ public class InitService {
 	 * 初始化监考状态
 	 */
 	public void initInviStatusType() {
-		if (invigilationStatusTypeDao.list().size() == 0) {
+		if (invigilationStatusTypeDao.find().size() == 0) {
 			InvigilationStatusType unass = new InvigilationStatusType();
 			unass.setName("未分配");
 			invigilationStatusTypeDao.persist(unass);
@@ -128,7 +128,7 @@ public class InitService {
 	 * 初始化监考消息类型
 	 */
 	public void initInviMessageType() {
-		if (messageStatusTypeDao.list().size() == 0) {
+		if (messageStatusTypeDao.find().size() == 0) {
 			MessageStatusType notice = new MessageStatusType();
 			notice.setName("已通知");
 			messageStatusTypeDao.persist(notice);
@@ -140,7 +140,7 @@ public class InitService {
 	}
 
 	public void initGroup() {
-		if (groupsDao.list().size() == 0) {
+		if (groupsDao.find().size() == 0) {
 			Groups group = new Groups();
 			group.setName("软件工程专业");
 			group.setInviRegexPrefix("软件");
@@ -153,7 +153,7 @@ public class InitService {
 	}
 
 	public void initSpecInviType() {
-		if (specialInviTypeDao.list().size() == 0) {
+		if (specialInviTypeDao.find().size() == 0) {
 			SpecialInvigilationType en46 = new SpecialInvigilationType();
 			en46.setName("英语四六级");
 			specialInviTypeDao.persist(en46);
@@ -169,7 +169,7 @@ public class InitService {
 	}
 
 	public void initFileType() {
-		if (fileTypeDao.list().size() == 0) {
+		if (fileTypeDao.find().size() == 0) {
 			FileType fnone = new FileType();
 			fnone.setName("无格式要求");
 			fnone.setType("");
@@ -187,7 +187,7 @@ public class InitService {
 	}
 
 	public void initFileTaskStatus() {
-		if (fileTaskStatusDao.list().size() == 0) {
+		if (fileTaskStatusDao.find().size() == 0) {
 			FileTaskStatus started = new FileTaskStatus();
 			started.setName("已开启");
 			fileTaskStatusDao.persist(started);
@@ -204,7 +204,7 @@ public class InitService {
 	 * 
 	 */
 	public void importUser() {
-		if (userDao.list().size() == 0) {
+		if (userDao.find().size() == 0) {
 			List<User> users = null;
 			try (InputStream is = FileUtils.getInitUsersExcel()) {
 				users = InitUsersUtils.getUsers(is);

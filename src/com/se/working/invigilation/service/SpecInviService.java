@@ -32,7 +32,7 @@ public class SpecInviService {
 	 * @return
 	 */
 	public List<SpecialInvigilationType> findSpecTypes() {
-		return specTypeDao.list();
+		return specTypeDao.find();
 	}
 	
 	public List<TeacherInvigilation> findTeacherOrderBySpecNumber() {
@@ -48,7 +48,7 @@ public class SpecInviService {
 		System.out.println(info.getLocation());
 		specInfoDao.persist(info);
 		for (int i = 0; i < checkeds.length; i++) {
-			TeacherInvigilation t = teacherInviDao.get(checkeds[i]);
+			TeacherInvigilation t = teacherInviDao.find(checkeds[i]);
 			t.setSqecQuantity(t.getSqecQuantity() + 1);
 			SpecialInvigilation sp = new SpecialInvigilation();
 			sp.setSpecInv(info);

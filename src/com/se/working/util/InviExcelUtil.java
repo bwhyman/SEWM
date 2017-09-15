@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.POIXMLProperties;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
@@ -37,7 +39,7 @@ import com.se.working.invigilation.entity.TeacherInvigilation;
  *
  */
 public class InviExcelUtil {
-	
+	private static Logger logger = LogManager.getLogger(InviExcelUtil.class);
 	private static final String REGEX_INVI_SUFFIX = "(\\d+)";
 	// 匹配地址
 	// private static final String REGEX_LOCATION = "(丹青楼.\\d+|锦绣楼.\\d+|成栋楼.\\d+|研究生楼.\\d+)";
@@ -45,12 +47,12 @@ public class InviExcelUtil {
 	/**
 	 * 独立的监考开始结束时间，日期与时间分别获取<br>
 	 */
-	private static final String REGEX_IND_DATE = "(^\\d{4}(-|/)\\d{1,2}(-|/)\\d{1,2})\\s+(\\d{2}:\\d{2})";
+	private static final String REGEX_IND_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})\\s+(\\d{2}:\\d{2})";
 	// 仅匹配日期，不会匹配班级
 	/**
 	 * 仅匹配日期，不会匹配班级<br>
 	 */
-	private static final String REGEX_DATE = "(^\\d{4}(-|/)\\d{1,2}(-|/)\\d{1,2})";
+	private static final String REGEX_DATE = "(^\\d{4}-\\d{1,2}-\\d{1,2})";
 	// 匹配时间，较模糊，有待修正
 	private static final String REGEX_TIME = "(.+)~(.+)";
 	// 匹配课程名称，去掉[]
@@ -130,12 +132,12 @@ public class InviExcelUtil {
 		Matcher mCourse = null;
 		boolean indTime = false;
 
-		String sNumber = null;
-		String sLocation = null;
-		String sDate = null;
-		String sStartTime = null;
-		String sEndTime = null;
-		String sCourse = null;
+		String sNumber = "";
+		String sLocation = "";
+		String sDate = "";
+		String sStartTime = "";
+		String sEndTime = "";
+		String sCourse = "";
 		for (int cellIndex = 0; cellIndex < row.getLastCellNum(); cellIndex++) {
 			Cell cell = row.getCell(cellIndex);
 			if (cell == null) {
@@ -191,6 +193,7 @@ public class InviExcelUtil {
 				 * 开始起止时间分别在2个段的获取方法，在日期，时间段前必配
 				 */
 				mDTime = pDtime.matcher(cellInfo);
+				
 				if (mDTime.find()) {
 					if (!indTime) {
 						sDate = mDTime.group(1);

@@ -5,18 +5,12 @@
 <%@tag import="com.se.working.entity.UserAuthority"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="my" uri="/Mytld"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-	response.setContentType("text/html; charset=UTF-8");
-%>
 
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<base href="<%=basePath%>">
-
+<c:url value="/"  var="basepath" />
+<base href="${basepath }">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -41,8 +35,6 @@
 <title>专业工作管理平台</title>
 </head>
 <body>
-	<%-- <my:constant clazz="com.se.working.entity.UserAuthority"/> --%>
-
 	<!-- 导航 -->
 	<nav class="navbar navbar-inverse">
 		<div class="navbar-header">

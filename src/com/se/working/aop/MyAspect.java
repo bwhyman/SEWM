@@ -1,20 +1,5 @@
 package com.se.working.aop;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-
-import javax.servlet.http.HttpSession;
-
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.se.working.util.LoggingUtils;
-
 //@Component
 //@Aspect
 public class MyAspect {
