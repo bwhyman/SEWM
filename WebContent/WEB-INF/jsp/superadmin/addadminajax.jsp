@@ -41,7 +41,8 @@
 			<div class="col-sm-10 col-md-4">
 				<select data-toggle="select" class="select select-primary mrs mbm" name="titleId">
 					<c:forEach items="${titles }" var="t">
-						<option value="${t }" <c:if test="${user.title == t}"> selected='selected'</c:if>>${t.name }
+					<c:if test="${user.title == t}"><c:set value="selected" var="s"></c:set></c:if>
+						<option value="${t }" ${s }>${t.name }</option>
 					</c:forEach>
 				</select>
 			</div>

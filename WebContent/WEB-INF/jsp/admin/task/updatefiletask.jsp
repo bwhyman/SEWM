@@ -97,11 +97,10 @@
 			<label for="title" class="col-sm-2 col-md-1 control-label">分值</label>
 			<div class="col-sm-10 col-md-3">
 				<select data-toggle="select" class="select select-primary mrs mbm" name="point">
-					<option value="1" <c:if test="${task.point == 1 }">selected</c:if>>1			
-					<option value="2" <c:if test="${task.point == 2 }">selected</c:if>>2
-					<option value="3" <c:if test="${task.point == 3 }">selected</c:if>>3
-					<option value="4" <c:if test="${task.point == 4 }">selected</c:if>>4
-					<option value="5" <c:if test="${task.point == 5 }">selected</c:if>>5
+				<c:forEach begin="1" end="5" varStatus="i">
+					<c:if test="${task.point == i.count }"><c:set value="selected" var="s"></c:set></c:if>
+					<option value="${i.count }" ${s }>${i.count }</option>
+				</c:forEach>
 				</select>
 			</div>
 		</div>
@@ -112,10 +111,10 @@
 				<select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info" name="teachers"
 					required>
 					<c:forEach items="${users }" var="a">
-						<option value="${a.id }"  
 						<c:forEach items="${teachers }" var="t">
-							<c:if test="${t.id == a.id }"> selected</c:if>
-						</c:forEach>>${a.name }
+							<c:if test="${t.id == a.id }"> <c:set value="selected" var="s"></c:set></c:if>
+						</c:forEach>
+						<option value="${a.id }"  ${s }>${a.name }</option>
 					</c:forEach>
 				</select>
 			</div>

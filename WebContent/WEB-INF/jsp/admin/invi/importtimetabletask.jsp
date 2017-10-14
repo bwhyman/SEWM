@@ -20,9 +20,9 @@
 			<label for="title" class="col-sm-2 col-md-2 control-label">课表任务</label>
 			<div class="col-sm-10 col-md-4">
 				<select data-toggle="select" class="select select-primary mrs mbm" name="filetaskId">
-					<option>课表任务
+					<option>课表任务</option>
 					<c:forEach items="${tasks }" var="t">
-						<option value="${t.id }" >${t.name }
+						<option value="${t.id }" >${t.name }</option>
 					</c:forEach>
 				</select>
 			</div>

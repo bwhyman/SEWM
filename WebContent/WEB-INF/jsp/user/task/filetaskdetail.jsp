@@ -189,7 +189,8 @@
 				<select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info"
 							name="undoneusers" id="select">
 					<c:forEach items="${task.fileTaskDetails }" var="f">
-						<option value="${f.teacher.id }" <c:if test="${f.done ==  false}">selected</c:if>>${f.teacher.user.name }
+					<c:if test="${f.done ==  false}"><c:set value="selected" var="s"></c:set></c:if>
+						<option value="${f.teacher.id }"  ${s }>${f.teacher.user.name }</option>
 							</c:forEach>
 				</select>
 			</div>
