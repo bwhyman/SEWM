@@ -96,11 +96,11 @@
 			<label for="title" class="col-sm-2 col-md-2 control-label">分值</label>
 			<div class="col-sm-10 col-md-4">
 				<select data-toggle="select" class="select select-primary mrs mbm" name="point">
-					<option value="1">1
-					<option value="2">2
-					<option value="3">3
-					<option value="4">4
-					<option value="5">5
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
 				</select>
 			</div>
 		</div>
@@ -111,7 +111,7 @@
 				<select data-toggle="select" multiple="multiple" class="form-control multiselect multiselect-info" name="teachers"
 					required>
 					<c:forEach items="${users }" var="t">
-						<option value="${t.id }" selected>${t.name }
+						<option value="${t.id }" selected>${t.name }</option>
 					</c:forEach>
 				</select>
 			</div>

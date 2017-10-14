@@ -1,6 +1,12 @@
 ﻿# SEWM
 
+2017.10.14
+-------------------------
+整合eclipse maven + git   
+更新至Spring 5.0.0.RC3， Hibernate 5.2.10, dbcp2
 
+
+-----------------------------------------
 entitymanager 删除问题  
 
 使用<c:url>标签定义页面base   

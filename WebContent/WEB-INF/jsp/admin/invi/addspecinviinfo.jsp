@@ -38,7 +38,7 @@
 						<div class="col-sm-10 col-md-4">
 						<select data-toggle="select" class="select select-primary mrs mbm" name="typeId">
 							<c:forEach items="${types }" var="t">
-								<option value="${t.id }">${t.name }
+								<option value="${t.id }">${t.name }</option>
 							</c:forEach>
 						</select>
 						</div>

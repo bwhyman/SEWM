@@ -146,10 +146,10 @@
 						<div class="col-sm-10 col-md-4">
 							<input type="text" class="form-control" list="location" required name="location">
 							<datalist id="location">
-								<option value="丹青楼">
-								<option value="成栋楼">
-								<option value="锦绣楼">
-								<option value="研究生楼">
+								<option>丹青楼</option>
+								<option>成栋楼</option>
+								<option>锦绣楼</option>
+								<option>研究生楼</option>
 							</datalist>
 						</div>
 					</div>
